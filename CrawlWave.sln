@@ -18,28 +18,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrawlWave.Common.UI", "Craw
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrawlWave.Common.WSCFilter", "CrawlWave.Common.WSCFilter\CrawlWave.Common.WSCFilter.csproj", "{D1E05FF9-5E43-41DC-889F-9AAA6DF9F75C}"
 EndProject
-Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "CrawlWave.Server", "http://localhost/CrawlWave.Server", "{5E826A2C-85BC-4526-BE4F-3951BBCC799B}"
-	ProjectSection(WebsiteProperties) = preProject
-		UseIISExpress = "false"
-		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
-		ProjectReferences = "{EE9BEAEB-5D8F-40FA-AB1B-6375A49B223F}|CrawlWave.Common.dll;{D1E05FF9-5E43-41DC-889F-9AAA6DF9F75C}|CrawlWave.Common.WSCFilter.dll;{6A8300EE-D051-49A5-89B2-EA606D8B0D83}|CrawlWave.ServerCommon.dll;{0E7413FF-EB9E-4714-ACF2-BE3A6A7B2FFD}|ICSharpCode.SharpZipLib.dll;"
-		Debug.AspNetCompiler.VirtualPath = "/CrawlWave.Server"
-		Debug.AspNetCompiler.PhysicalPath = "..\CrawlWave\CrawlWave.Server\"
-		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\CrawlWave.Server\"
-		Debug.AspNetCompiler.Updateable = "true"
-		Debug.AspNetCompiler.ForceOverwrite = "true"
-		Debug.AspNetCompiler.FixedNames = "false"
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.VirtualPath = "/CrawlWave.Server"
-		Release.AspNetCompiler.PhysicalPath = "..\CrawlWave\CrawlWave.Server\"
-		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\CrawlWave.Server\"
-		Release.AspNetCompiler.Updateable = "true"
-		Release.AspNetCompiler.ForceOverwrite = "true"
-		Release.AspNetCompiler.FixedNames = "false"
-		Release.AspNetCompiler.Debug = "False"
-		SlnRelativePath = "CrawlWave.Server\"
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrawlWave.ServerWorker", "CrawlWave.ServerWorker\CrawlWave.ServerWorker.csproj", "{F72A389B-DD26-4392-B160-D91828CF22FB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrawlWave.ServerPlugins.WordExtraction", "CrawlWave.ServerPlugins.WordExtraction\CrawlWave.ServerPlugins.WordExtraction.csproj", "{CB978B5E-DA78-4402-A74F-3E40197607F7}"
@@ -150,16 +128,6 @@ Global
 		{D1E05FF9-5E43-41DC-889F-9AAA6DF9F75C}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{D1E05FF9-5E43-41DC-889F-9AAA6DF9F75C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{D1E05FF9-5E43-41DC-889F-9AAA6DF9F75C}.Release|Win32.ActiveCfg = Release|Any CPU
-		{5E826A2C-85BC-4526-BE4F-3951BBCC799B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5E826A2C-85BC-4526-BE4F-3951BBCC799B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5E826A2C-85BC-4526-BE4F-3951BBCC799B}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{5E826A2C-85BC-4526-BE4F-3951BBCC799B}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{5E826A2C-85BC-4526-BE4F-3951BBCC799B}.Debug|Win32.ActiveCfg = Debug|Any CPU
-		{5E826A2C-85BC-4526-BE4F-3951BBCC799B}.Release|Any CPU.ActiveCfg = Debug|Any CPU
-		{5E826A2C-85BC-4526-BE4F-3951BBCC799B}.Release|Any CPU.Build.0 = Debug|Any CPU
-		{5E826A2C-85BC-4526-BE4F-3951BBCC799B}.Release|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{5E826A2C-85BC-4526-BE4F-3951BBCC799B}.Release|Mixed Platforms.Build.0 = Debug|Any CPU
-		{5E826A2C-85BC-4526-BE4F-3951BBCC799B}.Release|Win32.ActiveCfg = Debug|Any CPU
 		{F72A389B-DD26-4392-B160-D91828CF22FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F72A389B-DD26-4392-B160-D91828CF22FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F72A389B-DD26-4392-B160-D91828CF22FB}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU

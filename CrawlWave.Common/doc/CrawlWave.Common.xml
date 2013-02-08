@@ -4,346 +4,994 @@
         <name>CrawlWave.Common</name>
     </assembly>
     <members>
-        <member name="T:CrawlWave.Common.IValidator">
+        <member name="T:CrawlWave.Common.CompressionUtils">
             <summary>
-            Defines an interface for a generic Validator
+            CompressionUtils uses the Adapter Design Pattern to provide some functionality
+            using the SharpZipLib library. It provides static methods for easy compression
+            and decompression of data. It is a Wrapper for classes and methods available in
+            SharpZipLib. The compression is used for data passed between the different apps
+            of the system. This way the whole crawling process can require less bandwidth.
             </summary>
         </member>
-        <member name="M:CrawlWave.Common.IValidator.Validate(System.String)">
+        <member name="F:CrawlWave.Common.CompressionUtils.compressionLevel">
             <summary>
-            Performs Validation of an input string.
-            </summary>
-            <param name="input">The input string to validate.</param>
-            <returns>True if the input is valid, otherwise false.</returns>
-        </member>
-        <member name="T:CrawlWave.Common.EmailValidator">
-            <summary>
-            EmailValidator is a Singleton class that implements <see cref="T:CrawlWave.Common.IValidator"/>. It can
-            provide email address validation according to the RFC822 specification.
+            A Compression Level of 7 offers very good compression/speed ratio
             </summary>
         </member>
-        <member name="M:CrawlWave.Common.EmailValidator.#ctor">
+        <member name="M:CrawlWave.Common.CompressionUtils.CompressString(System.String@,System.Byte[]@)">
             <summary>
-            The constructor is private so that only the class itself can create an instance.
+            Compresses a string and stores the result in an array of bytes.
+            </summary>
+            <param name="uncompressed">The uncompressed string.</param>
+            <param name="compressed">An array of bytes where the compressed string will be stored.</param>
+            <remarks>
+            The compressed string is passed back to the calling method as an <b>out</b>
+            parameter. That means that the calling method doesn't need to initialize the
+            compressed string buffer.  
+            </remarks>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if the uncompressed input string is empty or null.
+            </exception>
+            <exception cref="T:CrawlWave.Common.CWZipException">
+            Thrown if a problem is encountered during the compression process.
+            </exception>
+        </member>
+        <member name="M:CrawlWave.Common.CompressionUtils.CompressBuffer(System.Byte[],System.Byte[]@)">
+            <summary>
+            Compresses an array of bytes and stores the result in a new array of bytes.
+            </summary>
+            <param name="uncompressed">The uncompressed buffer.</param>
+            <param name="compressed">An array of bytes where the compressed input will be stored.</param>
+            <remarks>
+            The compressed input is passed back to the calling method as an <b>out</b>
+            parameter. That means that the calling method doesn't need to initialize the
+            compressed buffer.  
+            </remarks>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if the uncompressed input buffer is empty or null.
+            </exception>
+            <exception cref="T:CrawlWave.Common.CWZipException">
+            Thrown if a problem is encountered during the compression process.
+            </exception>
+        </member>
+        <member name="M:CrawlWave.Common.CompressionUtils.DecompressToString(System.Byte[],System.String@)">
+            <summary>
+            Decompresses an array of bytes and stores the result into a string.
+            </summary>
+            <param name="compressed">An array of bytes containing the compressed string.</param>
+            <param name="decompressed">The string where the decompressed string will be returned.</param>
+            <remarks>
+            The decompressed string is passed back to the calling method as an <b>out</b>
+            parameter. That means that the calling method doesn't need to initialize the
+            decompressed string.  
+            </remarks>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if the compressed input buffer is empty or null.
+            </exception>
+            <exception cref="T:CrawlWave.Common.CWZipException">
+            Thrown if a problem is encountered during the decompression process.
+            </exception>
+        </member>
+        <member name="M:CrawlWave.Common.CompressionUtils.DecompressBuffer(System.Byte[],System.Byte[]@)">
+            <summary>
+            Decompresses an array of bytes and stores the result into a new array of bytes.
+            </summary>
+            <param name="compressed">An array of bytes containing the compressed input.</param>
+            <param name="decompressed">The buffer where the decompressed input will be returned.</param>
+            <remarks>
+            The decompressed buffer is passed back to the calling method as an <b>out</b>
+            parameter. That means that the calling method doesn't need to initialize the
+            decompressed buffer.  
+            </remarks>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if the compressed input buffer is empty or null.
+            </exception>
+            <exception cref="T:CrawlWave.Common.CWZipException">
+            Thrown if a problem is encountered during the decompression process.
+            </exception>
+        </member>
+        <member name="M:CrawlWave.Common.CompressionUtils.StringCRC(System.String)">
+            <summary>
+            Calculates the CRC (Cyclic Redundancy Check) Checksum of a string.
+            </summary>
+            <param name="input">The string whose the CRC is needed</param>
+            <returns>The CRC value of the string</returns>
+        </member>
+        <member name="M:CrawlWave.Common.CompressionUtils.BufferCRC(System.Byte[])">
+            <summary>
+            Returns the CRC (Cyclic Redundancy Check) Checksum of an array of bytes.
+            </summary>
+            <param name="input">The array of bytes whose CRC is needed</param>
+            <returns>The CRC value of the array of bytes</returns>
+        </member>
+        <member name="T:CrawlWave.Common.BinaryTrie">
+            <summary>
+            Represents a trie with keys that are binary values of length up to 32.
             </summary>
         </member>
-        <member name="M:CrawlWave.Common.EmailValidator.Instance">
+        <member name="M:CrawlWave.Common.BinaryTrie.#ctor">
             <summary>
-            Provides a global access point for the single instance of the <see cref="T:CrawlWave.Common.EmailValidator"/> class.
+            Constructs a <see cref="T:CrawlWave.Common.BinaryTrie"/> with an index length of 1.
             </summary>
-            <returns>A reference to the single instance of <see cref="T:CrawlWave.Common.EmailValidator"/>.</returns>
         </member>
-        <member name="M:CrawlWave.Common.EmailValidator.Validate(System.String)">
+        <member name="M:CrawlWave.Common.BinaryTrie.#ctor(System.Int32)">
             <summary>
-            Validates an email address according to the RFC822 specification.
+            Constructs a <see cref="T:CrawlWave.Common.BinaryTrie"/> with a given index length.
             </summary>
-            <param name="input">The email address to validate</param>
-            <returns>True if input is a valid email address, false otherwise</returns>
+            <param name="indexLength">The index length.</param>
         </member>
-        <member name="T:CrawlWave.Common.PhoneValidator">
+        <member name="M:CrawlWave.Common.BinaryTrie.AddInternal(System.Int32,System.Int32,System.Int32)">
             <summary>
-            PhoneValidator is a Singleton class that implements <see cref="T:CrawlWave.Common.IValidator"/>. It can
-            provide telephone number validation for Greece.
+            Adds a key with the given index to the trie.
+            </summary>
+            <param name="index">
+            The index of the root <see cref="T:CrawlWave.Common.BinaryTrieNode"/> for the given key value.
+            </param>
+            <param name="key">An <see cref="T:System.Int32"/> key value.</param>
+            <param name="keyLength">
+            The length in bits of the significant portion of the key.
+            </param>
+            <returns>The <see cref="T:CrawlWave.Common.BinaryTrieNode"/> that was added to the trie.</returns>
+        </member>
+        <member name="M:CrawlWave.Common.BinaryTrie.FindBestMatchInternal(System.Int32,System.Int32)">
+            <summary>
+            Finds the best internal match for a key.
+            </summary>
+            <param name="index">
+            The index of the root <see cref="T:CrawlWave.Common.BinaryTrieNode"/> for the given key value.
+            </param>
+            <param name="key">An <see cref="T:System.Int32"/> key value.</param>
+            <returns>A reference to the <see cref="T:System.Object"/> containing the key.</returns>
+        </member>
+        <member name="M:CrawlWave.Common.BinaryTrie.FindExactMatchInternal(System.Int32,System.Int32)">
+            <summary>
+            Finds the exact internal match for a key.
+            </summary>
+            <param name="index">
+            The index of the root <see cref="T:CrawlWave.Common.BinaryTrieNode"/> for the given key value.
+            </param>
+            <param name="key">An <see cref="T:System.Int32"/> key value.</param>
+            <returns>A reference to the <see cref="T:System.Object"/> containing the key.</returns>
+        </member>
+        <member name="M:CrawlWave.Common.BinaryTrie.Add(System.Int32,System.Int32)">
+            <summary>
+            Adds a node to the trie.
+            </summary>
+            <param name="key">An <see cref="T:System.Int32"/> key value.</param>
+            <param name="keyLength">
+            The length in bits of the significant portion of the key.
+            </param>
+            <returns>The <see cref="T:CrawlWave.Common.BinaryTrieNode"/> that was added to the trie.</returns>
+        </member>
+        <member name="M:CrawlWave.Common.BinaryTrie.FindBestMatch(System.Int32)">
+            <summary>
+            Finds the best match for a given key.
+            </summary>
+            <param name="key">An <see cref="T:System.Int32"/> key.</param>
+            <returns>The best match.</returns>
+        </member>
+        <member name="P:CrawlWave.Common.BinaryTrie.Roots">
+            <summary>
+            Gets the collection of root <see cref="T:CrawlWave.Common.BinaryTrieNode"/> objects in this 
+            <see cref="T:CrawlWave.Common.BinaryTrie"/>.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.BinaryTrie.CountInternal">
+            <summary>
+            Gets or sets the number of keys in the trie.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.BinaryTrie.IndexLength">
+            <summary>
+            Gets the index length of this <see cref="T:CrawlWave.Common.BinaryTrie"/>.
             </summary>
             <remarks>
-            The PhoneValidator accepts numbers in the following formats as valid:
-            <list type="bullet">
-            <item>2101234567</item>
-            <item>210 1234567</item>
-            <item>210-1234567</item>
-            <item>210 - 1234567</item>
-            <item>2120123456</item>
-            <item>2120 123456</item>
-            <item>2120-123456</item>
-            <item>2120 - 123456</item>
-            <item>2123012345</item>
-            <item>21230 12345</item>
-            <item>21230-12345</item>
-            <item>21230 - 12345</item>
-            <item>69x1234567</item>
-            <item>69x 1234567</item>
-            <item>69x-1234567</item>
-            <item>69x - 1234567</item>
-            <item>+30|0030... (one of the above)</item>
-            <item>(+30)|(0030)... (one of the above)</item>
-            </list>
+            The index length indicates the number of bits that is to be used to preselect
+            the root nodes.
             </remarks>
         </member>
-        <member name="M:CrawlWave.Common.PhoneValidator.#ctor">
+        <member name="P:CrawlWave.Common.BinaryTrie.Count">
             <summary>
-            The constructor is private so that only the class itself can create an instance.
+            Gets the number of keys in the trie.
             </summary>
         </member>
-        <member name="M:CrawlWave.Common.PhoneValidator.Instance">
+        <member name="T:CrawlWave.Common.BinaryTrieNode">
             <summary>
-            Provides a global access point for the single instance of the <see cref="T:CrawlWave.Common.PhoneValidator"/> class.
-            </summary>
-            <returns>A reference to the single instance of <see cref="T:CrawlWave.Common.PhoneValidator"/>.</returns>
-        </member>
-        <member name="M:CrawlWave.Common.PhoneValidator.Validate(System.String)">
-            <summary>
-            Validates a greek telephone number.
-            </summary>
-            <param name="input">The telephone number to validate.</param>
-            <returns>True if input is a valid telephone number, false otherwise.</returns>
-        </member>
-        <member name="T:CrawlWave.Common.UrlValidator">
-            <summary>
-            UrlValidator is a Singleton class that implements <see cref="T:CrawlWave.Common.IValidator"/>. It can
-            validate Uniform Resource Locators, according to RFC 1738
+            Represents an entry in an <see cref="T:CrawlWave.Common.IPCountryTable"/> table.
             </summary>
         </member>
-        <member name="M:CrawlWave.Common.UrlValidator.#ctor">
+        <member name="F:CrawlWave.Common.BinaryTrieNode.EmptyData">
             <summary>
-            The constructor is private so that only the class itself can create an instance.
+            Used to match nodes
             </summary>
         </member>
-        <member name="M:CrawlWave.Common.UrlValidator.Instance">
+        <member name="M:CrawlWave.Common.BinaryTrieNode.#ctor(System.Int32,System.Int32)">
             <summary>
-            Provides a global access point for the single instance of the <see cref="T:CrawlWave.Common.PhoneValidator"/> class.
+            Constructs a <see cref="T:CrawlWave.Common.BinaryTrieNode"/> object.
             </summary>
-            <returns>A reference to the single instance of <see cref="T:CrawlWave.Common.PhoneValidator"/>.</returns>
+            <param name="key">The key for the new object.</param>
+            <param name="keyLength">the length of the key</param>
         </member>
-        <member name="M:CrawlWave.Common.UrlValidator.Validate(System.String)">
+        <member name="M:CrawlWave.Common.BinaryTrieNode.AddInternal(System.Int32,System.Int32)">
             <summary>
-            Vaidates a Uniform Resource Locators (URLs)
-            </summary>
-            <param name="input">A string containing the Url to validate.</param>
-            <returns>True if the input is a valid Url, false otherwise.</returns>
-        </member>
-        <member name="T:CrawlWave.Common.FtpCommandType">
-            <summary>
-            Defines constants for the different types of FTP commands supported by the
-            <see cref="T:CrawlWave.Common.FtpWebRequest"/> class.
+            Adds a record to the trie using the internal representation of an IP address.
             </summary>
         </member>
-        <member name="F:CrawlWave.Common.FtpCommandType.FtpControlCommand">
+        <member name="M:CrawlWave.Common.BinaryTrieNode.FindExactMatch(System.Int32)">
             <summary>
-            Commands starting with 1 are Control Commands
+            Looks up a key value in the trie.
+            </summary>
+            <param name="key">The key to look up.</param>
+            <returns>The exact matching <see cref="T:CrawlWave.Common.BinaryTrieNode"/> in the trie.</returns>
+        </member>
+        <member name="M:CrawlWave.Common.BinaryTrieNode.FindBestMatch(System.Int32)">
+            <summary>
+            Looks up a key value in the trie.
+            </summary>
+            <param name="key">The key to look up.</param>
+            <returns>The best matching <see cref="T:CrawlWave.Common.BinaryTrieNode"/> in the trie.</returns>
+        </member>
+        <member name="P:CrawlWave.Common.BinaryTrieNode.UserData">
+            <summary>
+            Gets or sets the country code for this entry.
             </summary>
         </member>
-        <member name="F:CrawlWave.Common.FtpCommandType.FtpDataReceiveCommand">
+        <member name="P:CrawlWave.Common.BinaryTrieNode.Key">
             <summary>
-            Commands starting with 2 are Data receive related commands
+            Gets the key for this entry.
             </summary>
         </member>
-        <member name="F:CrawlWave.Common.FtpCommandType.FtpDataSendCommand">
+        <member name="P:CrawlWave.Common.BinaryTrieNode.IsKey">
             <summary>
-            Commands starting with 3 are Data send related commands
+            Gets a <see cref="T:System.Boolean"/> value indicating whether the entry is a key.
             </summary>
         </member>
-        <member name="F:CrawlWave.Common.FtpCommandType.FtpCommandNotSupported">
+        <member name="T:CrawlWave.Common.IPCountryTable">
             <summary>
-            Commands unsupported by the server return an error code starting with 4
+            Represents a trie that can be used to look up the country
+            corresponding to an IP address.
             </summary>
         </member>
-        <member name="T:CrawlWave.Common.ResponseDescription">
+        <member name="M:CrawlWave.Common.IPCountryTable.GetKeyLength(System.Int32)">
             <summary>
-            Contains simple methods that allow easy detection of the connection status, based
-            on the description of the server's response.
+            Calculates the length of the key in bits.
             </summary>
         </member>
-        <member name="P:CrawlWave.Common.ResponseDescription.Status">
+        <member name="M:CrawlWave.Common.IPCountryTable.#ctor(System.Int32)">
             <summary>
-            Gets or sets the response's status code
+            Constructs an <see cref="T:CrawlWave.Common.IPCountryTable"/> object.
             </summary>
         </member>
-        <member name="P:CrawlWave.Common.ResponseDescription.StatusDescription">
+        <member name="M:CrawlWave.Common.IPCountryTable.LoadStatisticsFile(System.String,System.Boolean)">
             <summary>
-            Gets ot sets the response's status description
+            Loads an IP-country database file into the trie.
+            </summary>
+            <param name="filename">
+            The path and filename of the file that holds the database.
+            </param>
+            <param name="calculateKeyLength">
+            A boolean value that indicates whether the <em>size</em> field in the database
+            contains the total length (<strong>true</strong>) or the exponent of the length
+            (<strong>false</strong> of the allocated segment.
+            </param>
+        </member>
+        <member name="M:CrawlWave.Common.IPCountryTable.GetCountry(System.String)">
+            <summary>
+            Attempts to find the country code corresponding to a given IP address.
+            </summary>
+            <param name="address">A <see cref="T:System.String"/> value representing the IP Address</param>
+            <returns>The two letter country code corresponding to the IP address, or 
+            <strong>"??"</strong> if it was not found.
+            </returns>
+        </member>
+        <member name="P:CrawlWave.Common.IPCountryTable.NetworkCodeCount">
+            <summary>
+            Gets the total number of entries in the trie.
             </summary>
         </member>
-        <member name="P:CrawlWave.Common.ResponseDescription.PositivePreliminary">
+        <member name="T:CrawlWave.Common.MD5Hash">
             <summary>
-            Gets a <see cref="T:System.Boolean"/> value indicating whether the status code begins 
-            with 1, which means it's a positive preliminary response.
+            MD5Hash provides a static method returning the MD5 Hash of a string, either as a 16 
+            byte array or formatted as a hexadecimal string. Its constructor is private, thus 
+            not allowing the creation of instances of the class.
             </summary>
         </member>
-        <member name="P:CrawlWave.Common.ResponseDescription.PositiveCompletion">
+        <member name="M:CrawlWave.Common.MD5Hash.#ctor">
             <summary>
-            Gets a <see cref="T:System.Boolean"/> value indicating whether the status code begins 
-            with 2, which means it's a positive completion response.
+            Default constructor. Not necessaty, since all members are static.
             </summary>
         </member>
-        <member name="P:CrawlWave.Common.ResponseDescription.PositiveIntermediate">
+        <member name="M:CrawlWave.Common.MD5Hash.md5(System.String)">
             <summary>
-            Gets a <see cref="T:System.Boolean"/> value indicating whether the status code begins 
-            with 3, which means it's a positive intermediate response.
+            Returns a Hash of a given string using RSA's MD5 Message Digest Algorithm. 
+            </summary>
+            <param name="text">The string to digest</param>
+            <returns>An array of 16 bytes containing the MD5 hash of the input</returns>
+        </member>
+        <member name="M:CrawlWave.Common.MD5Hash.md5string(System.String)">
+            <summary>
+            Returns a Hash of a given string using RSA's MD5 Messasge Digest Algorithm
+            after converting it in a string in hexadecimal format.
+            </summary>
+            <param name="text">The string to digest</param>
+            <returns>A string containing the input's hash value in hexadecimal form</returns>
+        </member>
+        <member name="T:CrawlWave.Common.SHA1Hash">
+            <summary>
+            SHA-1 Hash Algorithm implementation
             </summary>
         </member>
-        <member name="P:CrawlWave.Common.ResponseDescription.TransientNegativeCompletion">
+        <member name="M:CrawlWave.Common.SHA1Hash.SHA1(System.Byte[])">
             <summary>
-            Gets a <see cref="T:System.Boolean"/> value indicating whether the status code begins 
-            with 4, which means it's a transient negative response.
+            This method take a byte array, pads it according to the 
+            specifications in FIPS 180-2 and passes to the SHA-1
+            hash function. It returns a byte array containing 
+            the hash of the given message.
+            </summary>
+            <param name="message">Message to be hashed as byte array</param>
+            <returns>Message hash value as byte array</returns>
+        </member>
+        <member name="M:CrawlWave.Common.SHA1Hash.HashCore(System.Int32,System.Byte[])">
+            <summary>
+            SHA-1 Hash function - This method should only be used
+            with properly padded messages.  To hash an unpadded 
+            message use one of the other methods.  This method is
+            called by other methods once the message is padded
+            and loaded as a byte array.  For internal use only!
+            </summary>
+            <param name="n">Number of 512-bit message segments</param>
+            <param name="m">Message to be hashed as byte array</param>
+            <returns>Hash value as byte array</returns>
+        </member>
+        <member name="M:CrawlWave.Common.SHA1Hash.Func(System.Int32,System.UInt32,System.UInt32,System.UInt32)">
+            <summary>
+            Performs SHA-1 logical functions.  See FIPS 180-2 for
+            complete description.  For internal use only!
+            </summary>
+            <param name="t">function number</param>
+            <param name="x">first arguement</param>
+            <param name="y">second arguement</param>
+            <param name="z">third arguement</param>
+            <returns>Function results</returns>
+        </member>
+        <member name="T:CrawlWave.Common.HiResTimer">
+            <summary>
+            HiResTimer is a class that allows for time intervals measurement. 
+            The provided method returns results with accuracy of milliseconds.
+            It is currently being used by the Crawler class of the Client to
+            measure the time that it took for the data of a url to be downloaded.
+            Author:	Kostas Stroggylos [mod], kostas@circular.gr
+            Written:05/07/2003
+            Updated:24/08/2004 -&gt; General revision, better comments and naming conventions.
             </summary>
         </member>
-        <member name="P:CrawlWave.Common.ResponseDescription.PermanentNegativeCompletion">
+        <member name="M:CrawlWave.Common.HiResTimer.#ctor">
             <summary>
-            Gets a <see cref="T:System.Boolean"/> value indicating whether the status code begins 
-            with 5, which means it's a permanent negative response.
+            The default constructor
             </summary>
         </member>
-        <member name="T:CrawlWave.Common.FtpRequestCreator">
+        <member name="M:CrawlWave.Common.HiResTimer.Start">
             <summary>
-            Provides an implementation of the <see cref="T:System.Net.IWebRequestCreate"/> interface, thus
-            allowing the creation of <see cref="T:CrawlWave.Common.FtpWebRequest"/> class instances.
+            Signals the timer to start ticking.
             </summary>
         </member>
-        <member name="M:CrawlWave.Common.FtpRequestCreator.#ctor">
+        <member name="M:CrawlWave.Common.HiResTimer.Stop">
             <summary>
-            Constructs an <see cref="T:CrawlWave.Common.FtpRequestCreator"/> instance.
+            Signals the timer to stop ticking.
             </summary>
         </member>
-        <member name="M:CrawlWave.Common.FtpRequestCreator.Create(System.Uri)">
+        <member name="P:CrawlWave.Common.HiResTimer.Duration">
             <summary>
-            Creates an <see cref="T:CrawlWave.Common.FtpWebRequest"/> instance from a given <see cref="T:System.Uri"/>
+            Gets the amount of time that has passed in msec.
             </summary>
-            <param name="Url">The resource that the <see cref="T:CrawlWave.Common.FtpWebRequest"/> refers to.</param>
-            <returns>A <see cref="T:System.Net.WebRequest"/> object for the given Url</returns>
+            <remarks>
+            It is <b>important</b> to notice that the Duration property is <b>not</b> updated
+            automatically every millisecond. Its value will be the number of msec
+            that have passed from the previous call to <see cref="M:CrawlWave.Common.HiResTimer.Start">Start</see>
+            to the previous call to <see cref="M:CrawlWave.Common.HiResTimer.Stop">Stop</see>. In other words,
+            the value of this property is only updated when <see cref="M:CrawlWave.Common.HiResTimer.Stop">Stop</see>
+            is called.
+            </remarks>
         </member>
-        <member name="T:CrawlWave.Common.FtpStream">
+        <member name="T:CrawlWave.Common.IPlugin">
             <summary>
-            Provides an implementation of a <see cref="T:System.IO.Stream"/> that is used for tranferring
-            files over the FTP protocol.
-            </summary>
-        </member>
-        <member name="T:CrawlWave.Common.FtpWebResponse">
-            <summary>
-            Provides an implementation of <see cref="T:System.Net.WebResponse"/> that is used for transferring
-            using the File Transfer Protocol. Provides pluggable FTP protocol support for the
-            <see cref="N:System.Net"/> namespace.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.Common.FtpWebResponse.GetResponseStream">
-            <summary>
-            Provides access to the Stream related with the FTP file transfer.
-            </summary>
-            <returns>A <see cref="T:System.IO.Stream"/> with the contents of the requested resource.</returns>
-        </member>
-        <member name="P:CrawlWave.Common.FtpWebResponse.ContentType">
-            <summary>
-            Gets a <see cref="T:System.String"/> containing information about the content type of
-            the file being tranferred.
+            Defines the interface of all the plugins that will be hosted in an <see cref="T:CrawlWave.Common.IPluginHost"/>
+            and will be used for processing data in CrawlWave.ServerWorker.
             </summary>
         </member>
-        <member name="P:CrawlWave.Common.FtpWebResponse.Status">
+        <member name="M:CrawlWave.Common.IPlugin.Pause">
             <summary>
-            Gets the status code for the FTP connection.
+            Pauses the plugin's process temporarily.
             </summary>
         </member>
-        <member name="P:CrawlWave.Common.FtpWebResponse.StatusDescription">
+        <member name="M:CrawlWave.Common.IPlugin.Resume">
             <summary>
-            Gets a <see cref="T:System.String"/> with the description of the connection's status.
+            Resumes the plugin's process if it has been paused. 
             </summary>
         </member>
-        <member name="P:CrawlWave.Common.FtpWebResponse.TransactionLog">
+        <member name="M:CrawlWave.Common.IPlugin.Start">
             <summary>
-            Gets a <see cref="T:System.String"/> containing the entire transaction log of an FTP session.
+            Starts the plugin's process.
             </summary>
         </member>
-        <member name="T:CrawlWave.Common.FtpWebRequest">
+        <member name="M:CrawlWave.Common.IPlugin.Stop">
             <summary>
-            This is a descendant of <see cref="T:System.Net.WebRequest"/> and acts as the entry point for
-            all ftp:// requests.
+            Stops the plugin's process.
             </summary>
         </member>
-        <member name="M:CrawlWave.Common.FtpWebRequest.GetRequestStream">
+        <member name="M:CrawlWave.Common.IPlugin.ShowSettings">
             <summary>
-            Provides access to the <see cref="T:System.IO.Stream"/> related to the FTP request.
-            </summary>
-            <returns>A <see cref="T:System.IO.Stream"/> containing the request's data.</returns>
-        </member>
-        <member name="M:CrawlWave.Common.FtpWebRequest.#ctor(System.Uri)">
-            <summary>
-            Constructs a new <see cref="T:CrawlWave.Common.FtpWebRequest"/> instance that points to a given Uri.
-            </summary>
-            <param name="Url">The <see cref="T:System.Uri"/> of the requested file.</param>
-        </member>
-        <member name="M:CrawlWave.Common.FtpWebRequest.GetResponse">
-            <summary>
-            Sends the request to the FTP server and returns the response.
-            </summary>
-            <returns>A <see cref="T:System.Net.WebResponse"/> containing the FTP server's response.</returns>
-        </member>
-        <member name="M:CrawlWave.Common.FtpWebRequest.CloseDataConnection">
-            <summary>
-            Closes the Data Connection to the FTP Server and all the sockets related with it.
+            Displays a form that allows the configuration of the various plugin parameters.
             </summary>
         </member>
-        <member name="M:CrawlWave.Common.FtpWebRequest.GetServerCommand(System.String)">
+        <member name="E:CrawlWave.Common.IPlugin.StateChanged">
             <summary>
-            This method returns the status code if the response is OK, otherwise it returns -1.
-            </summary>
-            <param name="command">The Server Command</param>
-            <returns>The status code for the command if it is successfull, otherwise -1.</returns>
-            <exception cref="T:System.ArgumentNullException">Thrown if the command given is an empty string.</exception>
-            <exception cref="T:System.NotSupportedException">Thrown if a not supported FTP command is given.</exception>
-        </member>
-        <member name="M:CrawlWave.Common.FtpWebRequest.FindCommandType(System.String)">
-            <summary>
-            Checks what kind of an <see cref="T:CrawlWave.Common.FtpCommandType"/> a certain command is.
-            </summary>
-            <param name="command">The command to check.</param>
-            <returns>The <see cref="T:CrawlWave.Common.FtpCommandType"/> of the given command.</returns>
-        </member>
-        <member name="P:CrawlWave.Common.FtpWebRequest.Passive">
-            <summary>
-            Gets or sets a flag indicating whether Passive mode will be used for the FTP connection.
+            Raised when the <see cref="T:CrawlWave.Common.PluginState"/> of the plugin changes.
             </summary>
         </member>
-        <member name="P:CrawlWave.Common.FtpWebRequest.Method">
+        <member name="T:CrawlWave.Common.PluginBase">
             <summary>
-            Gets or sets the FTP Method command that will be used for the request, like
-            GET, PUT or LIST.
+            PluginBase provides the base class that all the plugins must inherit from.
             </summary>
-            <exception cref="T:System.ArgumentNullException">Thrown if the value provided is a null string.</exception>
-            <exception cref="T:System.NotSupportedException">Thrown if the specified command is not supported.</exception>
+            <remarks>
+            A plugin that is not statically referenced by another application and is meant to be
+            loaded dynamically must be attributed with the <see cref="T:CrawlWave.Common.CrawlWavePluginAttribute"/>
+            attribute, otherwise a <see cref="T:CrawlWave.Common.CWUnsupportedPluginException"/> will be thrown.
+            </remarks>
         </member>
-        <member name="P:CrawlWave.Common.FtpWebRequest.Credentials">
+        <member name="F:CrawlWave.Common.PluginBase.name">
             <summary>
-            Gets or sets the <see cref="T:System.Net.ICredentials"/> related with the FTP request.
-            </summary>
-        </member>
-        <member name="P:CrawlWave.Common.FtpWebRequest.ConnectionGroupName">
-            <summary>
-            ConnectionGroupName property is not supported.
+            The plugin's name.
             </summary>
         </member>
-        <member name="P:CrawlWave.Common.FtpWebRequest.ContentLength">
+        <member name="F:CrawlWave.Common.PluginBase.description">
             <summary>
-            Gets or sets the length of the resource related with the <see cref="T:CrawlWave.Common.FtpWebRequest"/>.
+            The plugin's description.
             </summary>
         </member>
-        <member name="P:CrawlWave.Common.FtpWebRequest.ContentType">
+        <member name="F:CrawlWave.Common.PluginBase.version">
             <summary>
-            Gets or sets a <see cref="T:System.String"/> describing the Content type of the resource
-            related to the <see cref="T:CrawlWave.Common.FtpWebRequest"/>.
+            The plugin's version.
             </summary>
         </member>
-        <member name="P:CrawlWave.Common.FtpWebRequest.Proxy">
+        <member name="F:CrawlWave.Common.PluginBase.state">
             <summary>
-            Gets or sets the <see cref="T:System.Net.IWebProxy"/> used for the <see cref="T:CrawlWave.Common.FtpWebRequest"/>
-            connection.
+            The plugin's <see cref="T:CrawlWave.Common.PluginState"/>
             </summary>
         </member>
-        <member name="P:CrawlWave.Common.FtpWebRequest.DataSendTimeout">
+        <member name="F:CrawlWave.Common.PluginBase.enabled">
             <summary>
-            Gets or sets the number of milliseconds before a Data Send Timeout occurs.
+            Indicated whether the plugin is enabled.
             </summary>
         </member>
-        <member name="P:CrawlWave.Common.FtpWebRequest.DataReceiveTimeout">
+        <member name="F:CrawlWave.Common.PluginBase.dataDependent">
             <summary>
-            Gets or sets the number of milliseconds before a Data Receive Timeout occurs.
+            Indicates whether the plugin requires access to the system's database.
             </summary>
         </member>
-        <member name="P:CrawlWave.Common.FtpWebRequest.ConnectTimeout">
+        <member name="F:CrawlWave.Common.PluginBase.connectionString">
             <summary>
-            Gets or sets the number of milliseconds before a Connect Timeout occurs.
+            Contains the database connection string for data-dependent plugins.
             </summary>
         </member>
-        <member name="P:CrawlWave.Common.FtpWebRequest.CommandTimeout">
+        <member name="F:CrawlWave.Common.PluginBase.settingsPath">
             <summary>
-            Gets or sets the number of milliseconds before a Command Timeout occurs.
+            Contains the path of the directory where the plugin can store its settings.
+            </summary>
+        </member>
+        <member name="F:CrawlWave.Common.PluginBase.percent">
+            <summary>
+            The percentage of work already completed by the plugin.
+            </summary>
+        </member>
+        <member name="F:CrawlWave.Common.PluginBase.loggers">
+            <summary>
+            An <see cref="T:System.Collections.ArrayList"/> containing <see cref="T:CrawlWave.Common.ILogger"/> objects, to which
+            the plugin will report its status and error messages.
+            </summary>
+        </member>
+        <member name="F:CrawlWave.Common.PluginBase.events">
+            <summary>
+            A queue holding <see cref="T:CrawlWave.Common.EventLoggerEntry"/> objects, one for each event that
+            must be reported when the plugin has a permission to report its status.
+            </summary>
+        </member>
+        <member name="F:CrawlWave.Common.PluginBase.host">
+            <summary>
+            A reference to the <see cref="T:CrawlWave.Common.IPluginHost"/> to which the plugin is attached.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.PluginBase.Report">
+            <summary>
+            Causes the plugin to report its status or errors to all <see cref="T:CrawlWave.Common.ILogger"/>,
+            after requesting permission from the <see cref="T:CrawlWave.Common.IPluginHost"/> hosting it. If
+            no host is hosting the plugin the report is performed anyway.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.PluginBase.ReportImmediately(CrawlWave.Common.CWLoggerEntryType,System.String)">
+            <summary>
+            Causes the plugin to report its status or errors to a <see cref="T:CrawlWave.Common.ILogger"/>,
+            without requesting permission from an <see cref="T:CrawlWave.Common.IPluginHost"/>.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.PluginBase.AddToReportQueue(CrawlWave.Common.CWLoggerEntryType,System.DateTime,System.String)">
+            <summary>
+            Enqueues an event message to the internal event queue.
+            </summary>
+            <param name="eventType">The <see cref="T:CrawlWave.Common.CWLoggerEntryType"/> of the event.</param>
+            <param name="eventDate">The <see cref="T:System.DateTime"/> when the event took place.</param>
+            <param name="msg">The message related to the event.</param>
+        </member>
+        <member name="M:CrawlWave.Common.PluginBase.AddToReportQueue(CrawlWave.Common.CWLoggerEntryType,System.String)">
+            <summary>
+            Enqueues an event message to the internal event queue.
+            </summary>
+            <param name="eventType">The <see cref="T:CrawlWave.Common.CWLoggerEntryType"/> of the event.</param>
+            <param name="msg">The message related to the event.</param>
+        </member>
+        <member name="M:CrawlWave.Common.PluginBase.AddToReportQueue(CrawlWave.Common.EventLoggerEntry)">
+            <summary>
+            Enqueues an <see cref="T:CrawlWave.Common.EventLoggerEntry"/> to the internal event queue.
+            </summary>
+            <param name="entry">The entry to enqueue.</param>
+        </member>
+        <member name="M:CrawlWave.Common.PluginBase.LoadSettings">
+            <summary>
+            Loads the plugin's settings. Must be overriden in the derived classes if their
+            settings are stored on a peristent storage.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.PluginBase.SaveSettings">
+            <summary>
+            Saves the plugin's settings. Must be overriden in the derived classes if their
+            settings are stored on a peristent storage.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.PluginBase.AttachLog(CrawlWave.Common.ILogger)">
+            <summary>
+            Attaches an <see cref="T:CrawlWave.Common.ILogger"/> to the plugin so that the plugin can use it
+            for reporting purposes.
+            </summary>
+            <param name="log">The <see cref="T:CrawlWave.Common.ILogger"/> to be used by the plugin.</param>
+        </member>
+        <member name="P:CrawlWave.Common.PluginBase.Name">
+            <summary>
+            Gets a string containing the plugin's name.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.PluginBase.Description">
+            <summary>
+            Gets a string containing a description for the plugin.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.PluginBase.Version">
+            <summary>
+            Gets a string containing the plugin's version.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.PluginBase.Enabled">
+            <summary>
+            Gets or sets a <see cref="T:System.Boolean"/> value indicating if the plugin is enabled.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.PluginBase.DataDependent">
+            <summary>
+            Gets a <see cref="T:System.Boolean"/> value indicating if the plugin needs access to the
+            system's database.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.PluginBase.DBConnectionString">
+            <summary>
+            Sets the Database Connection string that is used to allow the plugin to connect
+            to the system's database if the plugin is <see cref="P:CrawlWave.Common.PluginBase.DataDependent"/>. 
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.PluginBase.SettingsPath">
+            <summary>
+            Sets the path of the directory where the plugin can store its settings.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.PluginBase.Percent">
+            <summary>
+            Gets an integer value indicating the percentage of process that has been completed.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.PluginBase.State">
+            <summary>
+            Gets a <see cref="T:CrawlWave.Common.PluginState"/> value indicating the plugin's current state.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.PluginBase.Host">
+            <summary>
+            Sets the <see cref="T:CrawlWave.Common.IPluginHost"/> that is hosting the plugin. Can only be called
+            by an <see cref="T:CrawlWave.Common.IPluginHost"/> object.
+            </summary>
+        </member>
+        <member name="T:CrawlWave.Common.CrawlWavePluginAttribute">
+            <summary>
+            CrawlWavePluginAttribute is an attribute that must be used on all the plugins that
+            are not statically referenced by ServerWorker and will be dynamically loaded.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.CrawlWavePluginAttribute.#ctor">
+            <summary>
+            Constructs a new instance of the CrawlWavePluginAttribute class.
+            </summary>
+        </member>
+        <member name="T:CrawlWave.Common.IPluginHost">
+            <summary>
+            Defines the interface for a Plugin Host, a class that will control the operation
+            of one or more plugins.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.IPluginHost.Register(CrawlWave.Common.PluginBase)">
+            <summary>
+            Allows an Plugin to register itself in the plugin host.
+            </summary>
+            <param name="plugin">The Plugin to be registered.</param>
+        </member>
+        <member name="M:CrawlWave.Common.IPluginHost.PauseAllPlugins">
+            <summary>
+            Pauses the operation of all the plugins.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.IPluginHost.StartAllPlugins">
+            <summary>
+            Signals all the registered plugins to start operating.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.IPluginHost.StopAllPlugins">
+            <summary>
+            Signals all the registered plugins to stop operating.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.IPluginHost.PermitReport(CrawlWave.Common.PluginBase)">
+            <summary>
+            Checks if a plugin can report an event.
+            </summary>
+            <param name="plugin">The <see cref="T:CrawlWave.Common.IPlugin"/> that requests permission to report.</param>
+            <returns>A <see cref="T:System.Boolean"/> value indicating whether the plugin can report.</returns>
+        </member>
+        <member name="M:CrawlWave.Common.IPluginHost.LoadPlugin(System.String)">
+            <summary>
+            Loads a plugin dynamically and registers it with the <see cref="T:CrawlWave.Common.IPluginHost"/>.
+            </summary>
+            <param name="fileName">The file containing the plugin to be loaded.</param>
+        </member>
+        <member name="P:CrawlWave.Common.IPluginHost.RunningPlugins">
+            <summary>
+            Gets an integer indicating the number of plugins that are currently active
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.IPluginHost.Plugins">
+            <summary>
+            Gets an <see cref="T:System.Collections.Generic.List`1"/> containing all the plugins hosted by the host
+            </summary>
+        </member>
+        <member name="T:CrawlWave.Common.BackoffSpeed">
+            <summary>
+            BackOffSpeed is an enumeration that allows the user to select a function
+            that produces integers in logarithmic, linear or exponential intervals.
+            </summary>
+        </member>
+        <member name="F:CrawlWave.Common.BackoffSpeed.Constant">
+            <summary>
+            Does not rise at all, causes <see cref="M:CrawlWave.Common.ExponentialBackoff.Next"/> to return
+            a constant delay of 30 seconds, not dependent on the number of calls.
+            </summary>
+        </member>
+        <member name="F:CrawlWave.Common.BackoffSpeed.Slow">
+            <summary>
+            Rises slowly, according to the function e^(log10(x*sqrt(x))) - pretty nice!
+            </summary>
+        </member>
+        <member name="F:CrawlWave.Common.BackoffSpeed.Linear">
+            <summary>
+            Rises linearly, according to the function x
+            </summary>
+        </member>
+        <member name="F:CrawlWave.Common.BackoffSpeed.Fast">
+            <summary>
+            Rises fast, according to the function 2^sqrt(3^ln(x))
+            </summary>
+        </member>
+        <member name="F:CrawlWave.Common.BackoffSpeed.Declining">
+            <summary>
+            Falling smoothly, according to the function 30/(1+sqrt(x-1))
+            </summary>
+        </member>
+        <member name="T:CrawlWave.Common.ExponentialBackoff">
+            <summary>
+            ExponentialBackoff provides easy access to Exponential Backoff functions. It is
+            used whenever there is need for a method that provides delay intervals (in msec)
+            based on the number of calls (that correspond to the number of failed attempts).
+            Author:	Kostas Stroggylos [mod], kostas@circular.gr
+            Written:10/07/2003
+            Updated:24/08/2004 -&gt; Changed variable names, added comments, general revision.
+            		15/11/2004 -&gt; Added support for declining function.
+            		17/01/2005 -&gt; Added MaximumDelay Property and constructor parameter checking.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.ExponentialBackoff.#ctor">
+            <summary>
+            Default contructor for an ExponentialBackoff object. It sets the <see cref="T:CrawlWave.Common.BackoffSpeed"/>
+            to Linear and the Maximum Delay to 10 minutes.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.ExponentialBackoff.#ctor(CrawlWave.Common.BackoffSpeed)">
+            <summary>
+            Contructor for an ExponentialBackoff object, sets the Maximum Delay to 10 min.
+            </summary>
+            <param name="Speed">The <see cref="T:CrawlWave.Common.BackoffSpeed"/> that will be used for this instance</param>
+        </member>
+        <member name="M:CrawlWave.Common.ExponentialBackoff.#ctor(System.Int32)">
+            <summary>
+            Contructor for an ExponentialBackoff object, sets the <see cref="T:CrawlWave.Common.BackoffSpeed"/> to Linear.
+            </summary>
+            <param name="MaxDelay">The maximum delay that must be returned by the <see cref="M:CrawlWave.Common.ExponentialBackoff.Next"/> method, in milliseconds.</param>
+        </member>
+        <member name="M:CrawlWave.Common.ExponentialBackoff.#ctor(CrawlWave.Common.BackoffSpeed,System.Int32)">
+            <summary>
+            Contructor for an ExponentialBackoff object.
+            </summary>
+            <param name="Speed">The <see cref="T:CrawlWave.Common.BackoffSpeed"/> that will be used for this instance</param>
+            <param name="MaxDelay">The maximum delay in milliseconds</param>
+        </member>
+        <member name="M:CrawlWave.Common.ExponentialBackoff.Next">
+            <summary>
+            Calculates the interval in msec that must precede the next call of a method
+            because of a previous failure.
+            </summary>
+            <returns>The backoff interval in milliseconds</returns>
+        </member>
+        <member name="M:CrawlWave.Common.ExponentialBackoff.Reset">
+            <summary>
+            Resets the delay interval
+            </summary>
+            <remarks>
+            Reset() can be used whenever there is need to re-initialize the ExponentialBackOff
+            object, that will start producing intervals as if it were just created.
+            </remarks>
+        </member>
+        <member name="P:CrawlWave.Common.ExponentialBackoff.Speed">
+            <summary>
+            Gets or sets the <see cref="T:CrawlWave.Common.ExponentialBackoff"/> object's <see cref="T:CrawlWave.Common.BackoffSpeed"/>.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.ExponentialBackoff.MaximumDelay">
+            <summary>
+            Gets or sets the <see cref="T:CrawlWave.Common.ExponentialBackoff"/> object's Maximum delay in millisecods.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.ExponentialBackoff.DefaultBackoff">
+            <summary>
+            Gets a default value for the BackOff that corresponds to 30 seconds.
+            </summary>
+        </member>
+        <member name="T:CrawlWave.Common.CWException">
+            <summary>
+            CWException is a child of <see cref="T:System.ApplicationException"/>, which is used to 
+            represent any CrawlWave-specific exceptions.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.CWException.#ctor">
+            <summary>
+            Constructs an instance of <see cref="T:CrawlWave.Common.CWException"/> class.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.CWException.#ctor(System.String)">
+            <summary>
+            Constructs an instance of <see cref="T:CrawlWave.Common.CWException"/> with a given Message.
+            </summary>
+            <param name="msg">The Exception message string</param>
+        </member>
+        <member name="T:CrawlWave.Common.CWMalformedUrlException">
+            <summary>
+            CWMalformedUrlException is a child of <see cref="T:CrawlWave.Common.CWException"/>, it is thrown when
+            a malformed Url is encountered.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.CWMalformedUrlException.#ctor">
+            <summary>
+            Constructs an instance of <see cref="T:CrawlWave.Common.CWMalformedUrlException"/> class.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.CWMalformedUrlException.#ctor(System.String)">
+            <summary>
+            Constructs an instance of <see cref="T:CrawlWave.Common.CWMalformedUrlException"/> with a given Message.
+            </summary>
+            <param name="msg">The Exception message string</param>
+        </member>
+        <member name="T:CrawlWave.Common.CWZipException">
+            <summary>
+            CWZipException is a child of <see cref="T:CrawlWave.Common.CWException"/>, it is thrown when
+            a problem is encountered during a compression or decompression process.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.CWZipException.#ctor">
+            <summary>
+            Constructs an instance of <see cref="T:CrawlWave.Common.CWZipException"/> class.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.CWZipException.#ctor(System.String)">
+            <summary>
+            Constructs an instance of <see cref="T:CrawlWave.Common.CWZipException"/> with a given Message.
+            </summary>
+            <param name="msg">The Exception message string</param>
+        </member>
+        <member name="T:CrawlWave.Common.CWDBConnectionFailedException">
+            <summary>
+            CWDBConnectionFailedException is a child of <see cref="T:CrawlWave.Common.CWException"/>, it is thrown
+            when a problem is encountered connecting to the system's database.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.CWDBConnectionFailedException.#ctor">
+            <summary>
+            Constructs an instance of <see cref="T:CrawlWave.Common.CWDBConnectionFailedException"/> class.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.CWDBConnectionFailedException.#ctor(System.String)">
+            <summary>
+            Constructs an instance of <see cref="T:CrawlWave.Common.CWDBConnectionFailedException"/> with a given Message.
+            </summary>
+            <param name="msg">The Exception message string</param>
+        </member>
+        <member name="T:CrawlWave.Common.CWUnsupportedPluginException">
+            <summary>
+            CWUnsupportedPluginException is a child of <see cref="T:CrawlWave.Common.CWException"/>, it is thrown 
+            when an application tries to load a plugin that does not implement the interfaces
+            it is required to.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.CWUnsupportedPluginException.#ctor">
+            <summary>
+            Constructs an instance of <see cref="T:CrawlWave.Common.CWUnsupportedPluginException"/> class.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.CWUnsupportedPluginException.#ctor(System.String)">
+            <summary>
+            Constructs an instance of <see cref="T:CrawlWave.Common.CWUnsupportedPluginException"/> with a given Message.
+            </summary>
+            <param name="msg">The Exception message string</param>
+        </member>
+        <member name="T:CrawlWave.Common.CWUserExistsException">
+            <summary>
+            CWUserExistsException is a child of <see cref="T:CrawlWave.Common.CWException"/>, it is thrown when
+            a problem is encountered during the registration of a new user.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.CWUserExistsException.#ctor">
+            <summary>
+            Constructs an instance of <see cref="T:CrawlWave.Common.CWUserExistsException"/> class.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.CWUserExistsException.#ctor(System.String)">
+            <summary>
+            Constructs an instance of <see cref="T:CrawlWave.Common.CWUserExistsException"/> with a given Message.
+            </summary>
+            <param name="msg">The Exception message string</param>
+        </member>
+        <member name="T:CrawlWave.Common.SerializedException">
+            <summary>
+            SerializedException is a class that is used to pass information about an exception
+            that has occured in an application over a Web Service. It can throw a new exception
+            of the appropriate type if necessary or an application can use its fields to check
+            what type of an exception has occured and all the related information.
+            </summary>
+        </member>
+        <member name="F:CrawlWave.Common.SerializedException.Type">
+            <summary>
+            The string containing the type of the exception
+            </summary>
+        </member>
+        <member name="F:CrawlWave.Common.SerializedException.Message">
+            <summary>
+            The message string related to the exception
+            </summary>
+        </member>
+        <member name="F:CrawlWave.Common.SerializedException.StackTrace">
+            <summary>
+            The exception's stack trace
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.SerializedException.#ctor">
+            <summary>
+            Constructs a new instance of the <see cref="T:CrawlWave.Common.SerializedException"/> class, and by
+            default it supposes an <see cref="T:System.ApplicationException"/> has occured.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.SerializedException.#ctor(System.String,System.String,System.String)">
+            <summary>
+            Constructs a new instance of the <see cref="T:CrawlWave.Common.SerializedException"/> class with the
+            supplied arguments.
+            </summary>
+            <param name="type">A string containing the type of the exception.</param>
+            <param name="msg">The message related to the exception.</param>
+            <param name="trace">The exception's stack trace.</param>
+        </member>
+        <member name="M:CrawlWave.Common.SerializedException.ThrowException">
+            <summary>
+            Causes the <see cref="T:CrawlWave.Common.SerializedException"/> to throw an <see cref="T:System.Exception"/>
+            of the type of the exception it encapsulates.
+            </summary>
+        </member>
+        <member name="T:CrawlWave.Common.AlarmTriggerEventArgs">
+            <summary>
+            AlarmTriggerEventArgs is a class derived from EventArgs and is used for
+            passing aguments to the OnAlarmTrigger events of the AlarmTimer class.
+            </summary>
+        </member>
+        <member name="F:CrawlWave.Common.AlarmTriggerEventArgs.dtAlarm">
+            <summary>
+            The <see cref="T:System.DateTime">DateTime</see> when the Alarm is set.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.AlarmTriggerEventArgs.#ctor(System.DateTime)">
+            <summary>
+            The constructor for the AlarmTriggerEventArgs
+            </summary>
+            <param name="dt">The <see cref="T:System.DateTime">DateTime</see> when the AlarmTimer has been set</param>
+        </member>
+        <member name="T:CrawlWave.Common.AlarmTimer">
+            <summary>
+            AlarmTimer is a timer that raises an event at a specified time. The alarm
+            stops after raising the first OnAlarmTrigger/OnAlarmBell Event. It is used
+            as a simple Time Scheduler in applications that need to be 'waken up' at a
+            given time . The AlarmTimer supports simultaneous notification of multiple
+            clients (observers), by implementing the Observer Design Pattern for the 2
+            public events it publishes (OnAlarmBell + OnAlarmTrigger). The OnAlarmBell
+            event is a simple event that doesn't require the use of any any delegates.
+            OnAlarmTrigger on the other hand uses  the AlarmTriggerEventArgs delegate,
+            so that the clients can find out the exact time the AlarmTimer was set to.
+            It has a (configurable) accuracy of 1 minute which is more than enough for
+            the scope of this project.
+            Author:	Kostas Stroggylos [mod], kostas@circular.gr
+            Written:10/05/2003
+            Updated:24/08/2004 -> Added the OnAlarmBell event.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.AlarmTimer.#ctor">
+            <summary>
+            The default constructor
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.AlarmTimer.Start">
+            <summary>
+            Sets the AlarmTimer in motion
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.AlarmTimer.tmrAlarm_Elapsed(System.Object,System.Timers.ElapsedEventArgs)">
+            <summary>
+            If the AlarmTimer is enabled this method is called every minute. If the current
+            time is equal to the Alarm Time (with an accuracy of 1 minute) then the events
+            are fired and the Alarm is disabled.
+            </summary>
+            <param name="alarm">The AlarmTimer used</param>
+            <param name="e">The internal timer's EventArgs</param>
+        </member>
+        <member name="E:CrawlWave.Common.AlarmTimer.OnAlarmBell">
+            <summary>
+            The OnAlarmBell event the clients will subscribe to
+            </summary>
+        </member>
+        <member name="E:CrawlWave.Common.AlarmTimer.OnAlarmTrigger">
+            <summary>
+            The OnAlarmTrigger event the clients will subscribe to
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.AlarmTimer.AlarmTime">
+            <summary>
+            The DateTime when the events will be fired
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.AlarmTimer.Enabled">
+            <summary>
+            Gets/sets a value indicating if the Alarm is enabled
+            </summary>
+        </member>
+        <member name="T:CrawlWave.Common.AlarmTimer.AlarmTrigger">
+            <summary>
+            The delegate for the observer of the AlarmTimer's Events
             </summary>
         </member>
         <member name="T:CrawlWave.Common.InternetUrl">
@@ -663,6 +1311,867 @@
         <member name="P:CrawlWave.Common.InternetUrlToIndex.Priority">
             <summary>
             Gets or sets an unsigned 8 bit integer indicating the Url's crawling priority.
+            </summary>
+        </member>
+        <member name="T:CrawlWave.Common.FtpCommandType">
+            <summary>
+            Defines constants for the different types of FTP commands supported by the
+            <see cref="T:CrawlWave.Common.FtpWebRequest"/> class.
+            </summary>
+        </member>
+        <member name="F:CrawlWave.Common.FtpCommandType.FtpControlCommand">
+            <summary>
+            Commands starting with 1 are Control Commands
+            </summary>
+        </member>
+        <member name="F:CrawlWave.Common.FtpCommandType.FtpDataReceiveCommand">
+            <summary>
+            Commands starting with 2 are Data receive related commands
+            </summary>
+        </member>
+        <member name="F:CrawlWave.Common.FtpCommandType.FtpDataSendCommand">
+            <summary>
+            Commands starting with 3 are Data send related commands
+            </summary>
+        </member>
+        <member name="F:CrawlWave.Common.FtpCommandType.FtpCommandNotSupported">
+            <summary>
+            Commands unsupported by the server return an error code starting with 4
+            </summary>
+        </member>
+        <member name="T:CrawlWave.Common.ResponseDescription">
+            <summary>
+            Contains simple methods that allow easy detection of the connection status, based
+            on the description of the server's response.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.ResponseDescription.Status">
+            <summary>
+            Gets or sets the response's status code
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.ResponseDescription.StatusDescription">
+            <summary>
+            Gets ot sets the response's status description
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.ResponseDescription.PositivePreliminary">
+            <summary>
+            Gets a <see cref="T:System.Boolean"/> value indicating whether the status code begins 
+            with 1, which means it's a positive preliminary response.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.ResponseDescription.PositiveCompletion">
+            <summary>
+            Gets a <see cref="T:System.Boolean"/> value indicating whether the status code begins 
+            with 2, which means it's a positive completion response.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.ResponseDescription.PositiveIntermediate">
+            <summary>
+            Gets a <see cref="T:System.Boolean"/> value indicating whether the status code begins 
+            with 3, which means it's a positive intermediate response.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.ResponseDescription.TransientNegativeCompletion">
+            <summary>
+            Gets a <see cref="T:System.Boolean"/> value indicating whether the status code begins 
+            with 4, which means it's a transient negative response.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.ResponseDescription.PermanentNegativeCompletion">
+            <summary>
+            Gets a <see cref="T:System.Boolean"/> value indicating whether the status code begins 
+            with 5, which means it's a permanent negative response.
+            </summary>
+        </member>
+        <member name="T:CrawlWave.Common.FtpRequestCreator">
+            <summary>
+            Provides an implementation of the <see cref="T:System.Net.IWebRequestCreate"/> interface, thus
+            allowing the creation of <see cref="T:CrawlWave.Common.FtpWebRequest"/> class instances.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.FtpRequestCreator.#ctor">
+            <summary>
+            Constructs an <see cref="T:CrawlWave.Common.FtpRequestCreator"/> instance.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.FtpRequestCreator.Create(System.Uri)">
+            <summary>
+            Creates an <see cref="T:CrawlWave.Common.FtpWebRequest"/> instance from a given <see cref="T:System.Uri"/>
+            </summary>
+            <param name="Url">The resource that the <see cref="T:CrawlWave.Common.FtpWebRequest"/> refers to.</param>
+            <returns>A <see cref="T:System.Net.WebRequest"/> object for the given Url</returns>
+        </member>
+        <member name="T:CrawlWave.Common.FtpStream">
+            <summary>
+            Provides an implementation of a <see cref="T:System.IO.Stream"/> that is used for tranferring
+            files over the FTP protocol.
+            </summary>
+        </member>
+        <member name="T:CrawlWave.Common.FtpWebResponse">
+            <summary>
+            Provides an implementation of <see cref="T:System.Net.WebResponse"/> that is used for transferring
+            using the File Transfer Protocol. Provides pluggable FTP protocol support for the
+            <see cref="N:System.Net"/> namespace.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.FtpWebResponse.GetResponseStream">
+            <summary>
+            Provides access to the Stream related with the FTP file transfer.
+            </summary>
+            <returns>A <see cref="T:System.IO.Stream"/> with the contents of the requested resource.</returns>
+        </member>
+        <member name="P:CrawlWave.Common.FtpWebResponse.ContentType">
+            <summary>
+            Gets a <see cref="T:System.String"/> containing information about the content type of
+            the file being tranferred.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.FtpWebResponse.Status">
+            <summary>
+            Gets the status code for the FTP connection.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.FtpWebResponse.StatusDescription">
+            <summary>
+            Gets a <see cref="T:System.String"/> with the description of the connection's status.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.FtpWebResponse.TransactionLog">
+            <summary>
+            Gets a <see cref="T:System.String"/> containing the entire transaction log of an FTP session.
+            </summary>
+        </member>
+        <member name="T:CrawlWave.Common.FtpWebRequest">
+            <summary>
+            This is a descendant of <see cref="T:System.Net.WebRequest"/> and acts as the entry point for
+            all ftp:// requests.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.FtpWebRequest.GetRequestStream">
+            <summary>
+            Provides access to the <see cref="T:System.IO.Stream"/> related to the FTP request.
+            </summary>
+            <returns>A <see cref="T:System.IO.Stream"/> containing the request's data.</returns>
+        </member>
+        <member name="M:CrawlWave.Common.FtpWebRequest.#ctor(System.Uri)">
+            <summary>
+            Constructs a new <see cref="T:CrawlWave.Common.FtpWebRequest"/> instance that points to a given Uri.
+            </summary>
+            <param name="Url">The <see cref="T:System.Uri"/> of the requested file.</param>
+        </member>
+        <member name="M:CrawlWave.Common.FtpWebRequest.GetResponse">
+            <summary>
+            Sends the request to the FTP server and returns the response.
+            </summary>
+            <returns>A <see cref="T:System.Net.WebResponse"/> containing the FTP server's response.</returns>
+        </member>
+        <member name="M:CrawlWave.Common.FtpWebRequest.CloseDataConnection">
+            <summary>
+            Closes the Data Connection to the FTP Server and all the sockets related with it.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.FtpWebRequest.GetServerCommand(System.String)">
+            <summary>
+            This method returns the status code if the response is OK, otherwise it returns -1.
+            </summary>
+            <param name="command">The Server Command</param>
+            <returns>The status code for the command if it is successfull, otherwise -1.</returns>
+            <exception cref="T:System.ArgumentNullException">Thrown if the command given is an empty string.</exception>
+            <exception cref="T:System.NotSupportedException">Thrown if a not supported FTP command is given.</exception>
+        </member>
+        <member name="M:CrawlWave.Common.FtpWebRequest.FindCommandType(System.String)">
+            <summary>
+            Checks what kind of an <see cref="T:CrawlWave.Common.FtpCommandType"/> a certain command is.
+            </summary>
+            <param name="command">The command to check.</param>
+            <returns>The <see cref="T:CrawlWave.Common.FtpCommandType"/> of the given command.</returns>
+        </member>
+        <member name="P:CrawlWave.Common.FtpWebRequest.Passive">
+            <summary>
+            Gets or sets a flag indicating whether Passive mode will be used for the FTP connection.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.FtpWebRequest.Method">
+            <summary>
+            Gets or sets the FTP Method command that will be used for the request, like
+            GET, PUT or LIST.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if the value provided is a null string.</exception>
+            <exception cref="T:System.NotSupportedException">Thrown if the specified command is not supported.</exception>
+        </member>
+        <member name="P:CrawlWave.Common.FtpWebRequest.Credentials">
+            <summary>
+            Gets or sets the <see cref="T:System.Net.ICredentials"/> related with the FTP request.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.FtpWebRequest.ConnectionGroupName">
+            <summary>
+            ConnectionGroupName property is not supported.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.FtpWebRequest.ContentLength">
+            <summary>
+            Gets or sets the length of the resource related with the <see cref="T:CrawlWave.Common.FtpWebRequest"/>.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.FtpWebRequest.ContentType">
+            <summary>
+            Gets or sets a <see cref="T:System.String"/> describing the Content type of the resource
+            related to the <see cref="T:CrawlWave.Common.FtpWebRequest"/>.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.FtpWebRequest.Proxy">
+            <summary>
+            Gets or sets the <see cref="T:System.Net.IWebProxy"/> used for the <see cref="T:CrawlWave.Common.FtpWebRequest"/>
+            connection.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.FtpWebRequest.DataSendTimeout">
+            <summary>
+            Gets or sets the number of milliseconds before a Data Send Timeout occurs.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.FtpWebRequest.DataReceiveTimeout">
+            <summary>
+            Gets or sets the number of milliseconds before a Data Receive Timeout occurs.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.FtpWebRequest.ConnectTimeout">
+            <summary>
+            Gets or sets the number of milliseconds before a Connect Timeout occurs.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.FtpWebRequest.CommandTimeout">
+            <summary>
+            Gets or sets the number of milliseconds before a Command Timeout occurs.
+            </summary>
+        </member>
+        <member name="T:CrawlWave.Common.ILogger">
+            <summary>
+            ILogger defines the interface for all classes that can be used to log events to
+            different repositories.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.ILogger.LogInfo(System.String)">
+            <summary>
+            Defines the prototype for a method that logs an event of type Information.
+            </summary>
+            <param name="msg">The message to log.</param>
+        </member>
+        <member name="M:CrawlWave.Common.ILogger.LogWarning(System.String)">
+            <summary>
+            Defines the prototype for a method that logs an event of type Warning.
+            </summary>
+            <param name="msg">The message to log.</param>
+        </member>
+        <member name="M:CrawlWave.Common.ILogger.LogError(System.String)">
+            <summary>
+            Defines the prototype for a method that logs an event of type Error.
+            </summary>
+            <param name="msg">The message to log.</param>
+        </member>
+        <member name="M:CrawlWave.Common.ILogger.LogEventEntry(CrawlWave.Common.EventLoggerEntry)">
+            <summary>
+            Defines the prototype for a method that logs an event contained in an <see cref="T:CrawlWave.Common.EventLoggerEntry"/> object.
+            </summary>
+            <param name="entry">The <see cref="T:CrawlWave.Common.EventLoggerEntry"/> to log.</param>
+        </member>
+        <member name="P:CrawlWave.Common.ILogger.LastEntry">
+            <summary>
+            Gets the string contained in the last Log Entry.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.ILogger.RememberLastEntry">
+            <summary>
+            Defines whether the Logger must remember the last entry logged.
+            </summary>
+        </member>
+        <member name="T:CrawlWave.Common.SystemEventLogger">
+            <summary>
+            SystemEventLogger allows creating System Event Logs (available on
+            Windows NT/2K/XP). It could be extended in order to create a custom
+            XML log file, but for the time being the System Log will have to do.
+            Author: Kostas Stroggylos [mod], kostas@circular.gr
+            Written:09/05/03
+            Updated:24/08/2004 -> Added the ILogger implementation and thread safety measures.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.SystemEventLogger.#ctor">
+            <summary>
+            The default constructor for the SystemEventLogger class
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.SystemEventLogger.#ctor(System.String)">
+            <summary>
+            Constructs an instance of the <see cref="T:CrawlWave.Common.SystemEventLogger"/> class and sets the
+            appropriate Event Source Name.
+            </summary>
+            <param name="EventSourceName">A string containing the Event Source name.</param>
+        </member>
+        <member name="M:CrawlWave.Common.SystemEventLogger.CheckEventSource">
+            <summary>
+            Checks if there is an event source named "CrawlWave"
+            in the system and if not it creates it.
+            </summary>
+            <remarks>
+            It chokes all Exceptions that might occur.
+            </remarks>
+        </member>
+        <member name="M:CrawlWave.Common.SystemEventLogger.LogInfo(System.String)">
+            <summary>
+            Creates a System Log Entry of type Information
+            </summary>
+            <param name="msg">
+            The log Message
+            </param>
+        </member>
+        <member name="M:CrawlWave.Common.SystemEventLogger.LogError(System.String)">
+            <summary>
+            Creates a System Log Entry of type Error
+            </summary>
+            <param name="msg">
+            The log Message
+            </param>
+        </member>
+        <member name="M:CrawlWave.Common.SystemEventLogger.LogWarning(System.String)">
+            <summary>
+            Creates a System Log Entry of type Warning
+            </summary>
+            <param name="msg">
+            The log Message
+            </param>
+        </member>
+        <member name="M:CrawlWave.Common.SystemEventLogger.LogEventEntry(CrawlWave.Common.EventLoggerEntry)">
+            <summary>
+            Creates a system log entry according to the type of the entry's event
+            </summary>
+            <param name="entry">The <see cref="T:CrawlWave.Common.EventLoggerEntry"/> to log.</param>
+        </member>
+        <member name="P:CrawlWave.Common.SystemEventLogger.LastEntry">
+            <summary>
+            Gets the message of the last Event Log entry.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.SystemEventLogger.RememberLastEntry">
+            <summary>
+            Gets or sets a Boolean value indicating whether the logger must remember the last
+            entry.
+            </summary>
+        </member>
+        <member name="T:CrawlWave.Common.FileEventLogger">
+            <summary>
+            FileEventLogger is a simple thread-safe Event Logger that uses a flat text file as
+            the log entries' repository. It implements the <see cref="T:CrawlWave.Common.ILogger"/> interface and
+            provides some extra functionality, such as Backup and automatic log truncation.
+            Author:	Kostas Stroggylos [mod],kostas@circular.gr
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.FileEventLogger.#ctor(System.String,System.Boolean,System.Boolean,System.String)">
+            <summary>
+            The FileEventLogger constructor. Initializes the File Streams and the thread
+            safety / synchronization mechanism. If the appropriate flag has been set and
+            the size of the log file has exceeded a certain limit it performs truncation.
+            </summary>
+            <param name="FileName">The full path of the file that will be used as a log.</param>
+            <param name="AutoTruncate">Indicates whether the log file will be truncated automatically.</param>
+            <param name="Shared">Indicates whether the log file will be opened in shared mode, thus allowing two or more processes to use it.</param>
+            <param name="EventSourceName">The description of the event source application.</param>
+            <exception cref="T:System.ArgumentException">It is thrown if the given FileName is null or empty.</exception>
+            <exception cref="T:CrawlWave.Common.CWException">It is thrown if the Logger fails to open the given file in append mode.</exception>
+            <remarks>
+            If the <b>Shared</b> parameter is set to True then there may occur corruption of
+            th log file, since each instance of the class will hool it's own copy of the file
+            stream and each instance will overwrite the other's log. It must be used with great
+            care, unless only the first instance is used for logging and the others are only
+            reading the log file.
+            </remarks>
+        </member>
+        <member name="M:CrawlWave.Common.FileEventLogger.#ctor(System.String,System.Boolean,System.String)">
+            <summary>
+            The FileEventLogger constructor. Initializes the File Streams and the thread
+            safety / synchronization mechanism. If the appropriate flag has been set and
+            the size of the log file has exceeded a certain limit it performs truncation.
+            </summary>
+            <param name="FileName">The full path of the file that will be used as a log.</param>
+            <param name="AutoTruncate">Indicates whether the log file will be truncated automatically.</param>
+            <param name="EventSourceName">The description of the event source application.</param>
+            <exception cref="T:System.ArgumentException">It is thrown if the given FileName is null or empty.</exception>
+            <exception cref="T:CrawlWave.Common.CWException">It is thrown if the Logger fails to open the given file in append mode.</exception>
+        </member>
+        <member name="M:CrawlWave.Common.FileEventLogger.#ctor(System.String,System.String)">
+            <summary>
+            The FileEventLogger constructor. Initializes the File Streams and the thread
+            safety / synchronization mechanism. This version assumes AutoTruncate is off.
+            </summary>
+            <param name="FileName">The full path of the file that will be used as a log.</param>
+            <param name="EventSourceName">The description of the event source application.</param>
+            <exception cref="T:System.ArgumentException">It is thrown if the given FileName is null or empty.</exception>
+            <exception cref="T:CrawlWave.Common.CWException">It is thrown if the Logger fails to open the given file in append mode.</exception>
+        </member>
+        <member name="M:CrawlWave.Common.FileEventLogger.#ctor(System.String)">
+            <summary>
+            The FileEventLogger constructor. Initializes the File Streams and the thread
+            safety / synchronization mechanism. This version assumes AutoTruncate is off
+            and the EventSourceName is an empty string.
+            </summary>
+            <param name="FileName">The full path of the file that will be used as a log.</param>
+            <exception cref="T:System.ArgumentException">It is thrown if the given FileName is null or empty.</exception>
+            <exception cref="T:CrawlWave.Common.CWException">It is thrown if the Logger fails to open the given file in append mode.</exception>
+        </member>
+        <member name="M:CrawlWave.Common.FileEventLogger.LogInfo(System.String)">
+            <summary>
+            Creates a Log Entry of type Information in the log file in a thread-safe manner.
+            </summary>
+            <param name="msg">
+            The log Message
+            </param>
+        </member>
+        <member name="M:CrawlWave.Common.FileEventLogger.LogWarning(System.String)">
+            <summary>
+            Creates a Log Entry of type Warning in the log file in a thread-safe manner.
+            </summary>
+            <param name="msg">
+            The log Message
+            </param>
+        </member>
+        <member name="M:CrawlWave.Common.FileEventLogger.LogError(System.String)">
+            <summary>
+            Creates a Log Entry of type Error in the log file in a thread-safe manner.
+            </summary>
+            <param name="msg">
+            The log Message
+            </param>
+        </member>
+        <member name="M:CrawlWave.Common.FileEventLogger.LogEventEntry(CrawlWave.Common.EventLoggerEntry)">
+            <summary>
+            Creates a Log Entry in the log file according to the type of the entry's event.
+            </summary>
+            <param name="entry">The <see cref="T:CrawlWave.Common.EventLoggerEntry"/> to log.</param>
+        </member>
+        <member name="M:CrawlWave.Common.FileEventLogger.Dispose">
+            <summary>
+            Cleans up resources used by the File Event Logger, closes any open File Streams
+            and releases all synchronization mechanisms.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.FileEventLogger.Backup">
+            <summary>
+            Backs up the current version of the log file to another file with the same name
+            and a .bak extension. Not thread-safe.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.FileEventLogger.Restore">
+            <summary>
+            Restores the log file from another file with the same name and a .bak extension.
+            Not thread-safe.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.FileEventLogger.Truncate">
+            <summary>
+            Performs the truncation of the Log File, according to the values defined for
+            the maximum file size and the number of entries to save.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.FileEventLogger.LastEntry">
+            <summary>
+            Gets the message of the last Event Log entry.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.FileEventLogger.RememberLastEntry">
+            <summary>
+            Gets or sets a Boolean value indicating whether the logger must remember the last
+            entry.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.FileEventLogger.AutoTruncate">
+            <summary>
+            Gets/sets the Automatic Truncate property, which determines whether the log
+            file will be truncated down to a certain number of entries when it grows up
+            to a certain size.
+            </summary>
+        </member>
+        <member name="T:CrawlWave.Common.QueueEventLogger">
+            <summary>
+            QueueEventLogger is a simple thread-safe Event Logger that buffers events into a
+            Queue from which the clients can later on dequeue the <see cref="T:CrawlWave.Common.EventLoggerEntry"/>
+            objects. It implements <see cref="T:CrawlWave.Common.ILogger"/> and offers some extra functionality
+            such as setting an upper limit in the number of events that the queue will hold and
+            clearing the queue of events.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.QueueEventLogger.#ctor">
+            <summary>
+            Creates a new instance of <see cref="T:CrawlWave.Common.QueueEventLogger"/> with default values.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.QueueEventLogger.#ctor(System.String)">
+            <summary>
+            Creates a new instance of <see cref="T:CrawlWave.Common.QueueEventLogger"/> with the given Event
+            Source name.
+            </summary>
+            <param name="EventSourceName">The Event Source name.</param>
+        </member>
+        <member name="M:CrawlWave.Common.QueueEventLogger.#ctor(System.Int32)">
+            <summary>
+            Creates a new instance of <see cref="T:CrawlWave.Common.QueueEventLogger"/> with the given capacity.
+            </summary>
+            <param name="MaxSize">The capacity of the Event Queue.</param>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown if a negative value is supplied for MaxSize.</exception>
+        </member>
+        <member name="M:CrawlWave.Common.QueueEventLogger.#ctor(System.Int32,System.String)">
+            <summary>
+            Creates a new instance of <see cref="T:CrawlWave.Common.QueueEventLogger"/> with the given Event
+            Source Name and Queue capacity.
+            </summary>
+            <param name="MaxSize">The capacity of the Event Queue.</param>
+            <param name="EventSourceName">The Event Source name.</param>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown if a negative value is supplied for MaxSize.</exception>
+        </member>
+        <member name="M:CrawlWave.Common.QueueEventLogger.Enqueue(CrawlWave.Common.EventLoggerEntry)">
+            <summary>
+            Enqueues an <see cref="T:CrawlWave.Common.EventLoggerEntry"/> object in the <see cref="T:CrawlWave.Common.QueueEventLogger"/>.
+            </summary>
+            <param name="entry">The <see cref="T:CrawlWave.Common.EventLoggerEntry"/> to be logged.</param>
+        </member>
+        <member name="M:CrawlWave.Common.QueueEventLogger.Dequeue">
+            <summary>
+            Dequeues the first <see cref="T:CrawlWave.Common.EventLoggerEntry"/> logged by the <see cref="T:CrawlWave.Common.QueueEventLogger"/>.
+            </summary>
+            <returns>An <see cref="T:CrawlWave.Common.EventLoggerEntry"/> containing the first event logged.</returns>
+            <exception cref="T:System.InvalidOperationException">Thrown if the method is called when QueueEventLogger contains no entries.</exception>
+        </member>
+        <member name="M:CrawlWave.Common.QueueEventLogger.LogInfo(System.String)">
+            <summary>
+            Logs an event of type Info
+            </summary>
+            <param name="msg">The message related to the event to be logged.</param>
+        </member>
+        <member name="M:CrawlWave.Common.QueueEventLogger.LogWarning(System.String)">
+            <summary>
+            Logs an event of type Warning
+            </summary>
+            <param name="msg">The message related to the event to be logged.</param>
+        </member>
+        <member name="M:CrawlWave.Common.QueueEventLogger.LogError(System.String)">
+            <summary>
+            Logs an event of type Error
+            </summary>
+            <param name="msg">The message related to the event to be logged.</param>
+        </member>
+        <member name="M:CrawlWave.Common.QueueEventLogger.LogEventEntry(CrawlWave.Common.EventLoggerEntry)">
+            <summary>
+            Creates a log according to the type of the entry's event
+            </summary>
+            <param name="entry">The <see cref="T:CrawlWave.Common.EventLoggerEntry"/> to log.</param>
+        </member>
+        <member name="P:CrawlWave.Common.QueueEventLogger.MaxSize">
+            <summary>
+            Gets or sets the maximum number of <see cref="T:CrawlWave.Common.EventLoggerEntry"/> objects that
+            the <see cref="T:CrawlWave.Common.QueueEventLogger"/> will hold.
+            </summary>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown if a negative value is supplied for MaxSize.</exception>
+        </member>
+        <member name="P:CrawlWave.Common.QueueEventLogger.Count">
+            <summary>
+            Gets the number of events logged in the <see cref="T:CrawlWave.Common.QueueEventLogger"/>.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.QueueEventLogger.EventQueue">
+            <summary>
+            Provides access to the internal Queue used by the <see cref="T:CrawlWave.Common.QueueEventLogger"/>.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.QueueEventLogger.LastEntry">
+            <summary>
+            Gets the message of the last Event Log entry.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.QueueEventLogger.RememberLastEntry">
+            <summary>
+            Gets or sets a Boolean value indicating whether the logger must remember the last
+            entry.
+            </summary>
+        </member>
+        <member name="T:CrawlWave.Common.IValidator">
+            <summary>
+            Defines an interface for a generic Validator
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.IValidator.Validate(System.String)">
+            <summary>
+            Performs Validation of an input string.
+            </summary>
+            <param name="input">The input string to validate.</param>
+            <returns>True if the input is valid, otherwise false.</returns>
+        </member>
+        <member name="T:CrawlWave.Common.EmailValidator">
+            <summary>
+            EmailValidator is a Singleton class that implements <see cref="T:CrawlWave.Common.IValidator"/>. It can
+            provide email address validation according to the RFC822 specification.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.EmailValidator.#ctor">
+            <summary>
+            The constructor is private so that only the class itself can create an instance.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.EmailValidator.Instance">
+            <summary>
+            Provides a global access point for the single instance of the <see cref="T:CrawlWave.Common.EmailValidator"/> class.
+            </summary>
+            <returns>A reference to the single instance of <see cref="T:CrawlWave.Common.EmailValidator"/>.</returns>
+        </member>
+        <member name="M:CrawlWave.Common.EmailValidator.Validate(System.String)">
+            <summary>
+            Validates an email address according to the RFC822 specification.
+            </summary>
+            <param name="input">The email address to validate</param>
+            <returns>True if input is a valid email address, false otherwise</returns>
+        </member>
+        <member name="T:CrawlWave.Common.PhoneValidator">
+            <summary>
+            PhoneValidator is a Singleton class that implements <see cref="T:CrawlWave.Common.IValidator"/>. It can
+            provide telephone number validation for Greece.
+            </summary>
+            <remarks>
+            The PhoneValidator accepts numbers in the following formats as valid:
+            <list type="bullet">
+            <item>2101234567</item>
+            <item>210 1234567</item>
+            <item>210-1234567</item>
+            <item>210 - 1234567</item>
+            <item>2120123456</item>
+            <item>2120 123456</item>
+            <item>2120-123456</item>
+            <item>2120 - 123456</item>
+            <item>2123012345</item>
+            <item>21230 12345</item>
+            <item>21230-12345</item>
+            <item>21230 - 12345</item>
+            <item>69x1234567</item>
+            <item>69x 1234567</item>
+            <item>69x-1234567</item>
+            <item>69x - 1234567</item>
+            <item>+30|0030... (one of the above)</item>
+            <item>(+30)|(0030)... (one of the above)</item>
+            </list>
+            </remarks>
+        </member>
+        <member name="M:CrawlWave.Common.PhoneValidator.#ctor">
+            <summary>
+            The constructor is private so that only the class itself can create an instance.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.PhoneValidator.Instance">
+            <summary>
+            Provides a global access point for the single instance of the <see cref="T:CrawlWave.Common.PhoneValidator"/> class.
+            </summary>
+            <returns>A reference to the single instance of <see cref="T:CrawlWave.Common.PhoneValidator"/>.</returns>
+        </member>
+        <member name="M:CrawlWave.Common.PhoneValidator.Validate(System.String)">
+            <summary>
+            Validates a greek telephone number.
+            </summary>
+            <param name="input">The telephone number to validate.</param>
+            <returns>True if input is a valid telephone number, false otherwise.</returns>
+        </member>
+        <member name="T:CrawlWave.Common.UrlValidator">
+            <summary>
+            UrlValidator is a Singleton class that implements <see cref="T:CrawlWave.Common.IValidator"/>. It can
+            validate Uniform Resource Locators, according to RFC 1738
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.UrlValidator.#ctor">
+            <summary>
+            The constructor is private so that only the class itself can create an instance.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.UrlValidator.Instance">
+            <summary>
+            Provides a global access point for the single instance of the <see cref="T:CrawlWave.Common.PhoneValidator"/> class.
+            </summary>
+            <returns>A reference to the single instance of <see cref="T:CrawlWave.Common.PhoneValidator"/>.</returns>
+        </member>
+        <member name="M:CrawlWave.Common.UrlValidator.Validate(System.String)">
+            <summary>
+            Vaidates a Uniform Resource Locators (URLs)
+            </summary>
+            <param name="input">A string containing the Url to validate.</param>
+            <returns>True if the input is a valid Url, false otherwise.</returns>
+        </member>
+        <member name="T:CrawlWave.Common.UrlCrawlData">
+            <summary>
+            This class represents the results of the crawling process on a Url. It contains
+            the URL's location, CRC, HTTP Status Code, the timestamp of the retrieval, the
+            last modification time and, finally, the data as a simple string form. It is a
+            big class (an instance could consume >100K) but we'll have to live with that.
+            </summary>
+        </member>
+        <member name="F:CrawlWave.Common.UrlCrawlData.url">
+            <summary>
+            the url entity, perhaps we could change it with System.Uri
+            </summary>
+        </member>
+        <member name="F:CrawlWave.Common.UrlCrawlData.updated">
+            <summary>
+            A boolean flag indicating whether the Url has been updated since the last visit
+            </summary>
+        </member>
+        <member name="F:CrawlWave.Common.UrlCrawlData.redirected">
+            <summary>
+            A boolean flag indicating whether the Url has redirected the crawler to another
+            </summary>
+        </member>
+        <member name="F:CrawlWave.Common.UrlCrawlData.redirectedFlagRobots">
+            <summary>
+            A boolean flag indicating whether the url where the crawler has been redirected
+            is allowed to be crawled according to the Robots Exclusion Standard
+            </summary>
+        </member>
+        <member name="F:CrawlWave.Common.UrlCrawlData.redirectedFlagDomain">
+            <summary>
+            A flag indicating whether the url where the crawler has been redirected belongs
+            to the part of the web we wish to crawl
+            </summary>
+        </member>
+        <member name="F:CrawlWave.Common.UrlCrawlData.redirectedPriority">
+            <summary>
+            A flag indicating the priority of the url where the crawler has been redirected
+            </summary>
+        </member>
+        <member name="F:CrawlWave.Common.UrlCrawlData.httpStatusCode">
+            <summary>
+            The <see cref="P:CrawlWave.Common.UrlCrawlData.HttpStatusCode"/> that the server returned during the crawling
+            </summary>
+        </member>
+        <member name="F:CrawlWave.Common.UrlCrawlData.data">
+            <summary>
+            The contents of the Url in string format
+            </summary>
+        </member>
+        <member name="F:CrawlWave.Common.UrlCrawlData.timeStamp">
+            <summary>
+            The <see cref="T:System.DateTime"/> when the Url was last visited
+            </summary>
+        </member>
+        <member name="F:CrawlWave.Common.UrlCrawlData.retrievalTime">
+            <summary>
+            The time it took (in msec) to download the contents of the url.
+            </summary>
+        </member>
+        <member name="F:CrawlWave.Common.UrlCrawlData.outLinks">
+            <summary>
+            An array of <see cref="T:CrawlWave.Common.InternetUrlToIndex"/> with the out links contained in a
+            Url's contents.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.UrlCrawlData.#ctor">
+            <summary>
+            Constructs an instance of the <see cref="T:CrawlWave.Common.UrlCrawlData"/> class and initializes
+            it with the default values.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.UrlCrawlData.Url">
+            <summary>
+            Gets or sets the Url of the <see cref="T:CrawlWave.Common.InternetUrlToCrawl"/> encapsulated by a 
+            <see cref="T:CrawlWave.Common.UrlCrawlData"/> object.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.UrlCrawlData.UrlToCrawl">
+            <summary>
+            Gets or sets the <see cref="T:CrawlWave.Common.InternetUrlToCrawl"/> encapsulated by this object.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.UrlCrawlData.ID">
+            <summary>
+            Gets or sets a unique number that corresponds to the ID associated with an
+            instance of the <see cref="T:CrawlWave.Common.UrlCrawlData"/> class.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.UrlCrawlData.MD5">
+            <summary>
+            Gets or sets the MD5 Hash Code for the Url that the object points to.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.UrlCrawlData.Updated">
+            <summary>
+            Gets or sets a boolean value indicating whether the Url has been updated
+            since the last visit.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.UrlCrawlData.Redirected">
+            <summary>
+            Gets or sets a boolean flag indicating whether the Url has redirected the
+            crawler to another Url.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.UrlCrawlData.RedirectedFlagRobots">
+            <summary>
+            Gets or sets a boolean flag indicating whether the url where the crawler has 
+            been redirected is allowed to be crawled by the Robots Exclusion Standard
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.UrlCrawlData.RedirectedFlagDomain">
+            <summary>
+            Gets or sets a flag indicating whether the url where the crawler has been 
+            redirected belongs to the part of the web we wish to crawl
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.UrlCrawlData.RedirectedPriority">
+            <summary>
+            Gets or sets a flag indicating the priority of the url where the crawler has
+            been redirected
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.UrlCrawlData.CRC">
+            <summary>
+            Gets or sets the Cyclic Reduncancy Check value that is calculated from the
+            contents of this Url.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.UrlCrawlData.FlagFetchRobots">
+            <summary>
+            Gets or sets a flag indicating whether the server has asked the client to fetch
+            the robots.txt file from the host.
+            </summary>
+            <remarks>
+            For more information see also <see cref="P:CrawlWave.Common.InternetUrlToCrawl.FlagFetchRobots"/>.
+            <seealso cref="P:CrawlWave.Common.InternetUrlToCrawl.FlagFetchRobots">InternetUrl.FlagFetchRobots</seealso>
+            </remarks>
+        </member>
+        <member name="P:CrawlWave.Common.UrlCrawlData.RobotsDisallowedPaths">
+            <summary>
+            Gets or sets a string containing the paths disallowed by the robots.txt file on
+            the host, separated by a space.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.UrlCrawlData.HttpStatusCode">
+            <summary>
+            Gets or sets the <see cref="P:CrawlWave.Common.UrlCrawlData.HttpStatusCode"/> that the server returned during
+            the last visit to the Url encapsulated by this object.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.UrlCrawlData.Data">
+            <summary>
+            Gets or sets a string that contains the Url's data.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.UrlCrawlData.TimeStamp">
+            <summary>
+            Gets or sets the <see cref="T:System.DateTime"/> when the Url was last visited.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.UrlCrawlData.RetrievalTime">
+            <summary>
+            Gets or sets the time it took (in msec) to download the contents of the Url.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.UrlCrawlData.OutLinks">
+            <summary>
+            Gets or sets an array of <see cref="T:CrawlWave.Common.InternetUrlToIndex"/> with the out links
+            contained in a Url's contents.
             </summary>
         </member>
         <member name="T:CrawlWave.Common.CWLogLevel">
@@ -1313,1092 +2822,6 @@
             Constructs a new instance of the CrawlWaveUpdaterAttribute class.
             </summary>
         </member>
-        <member name="T:CrawlWave.Common.CompressionUtils">
-            <summary>
-            CompressionUtils uses the Adapter Design Pattern to provide some functionality
-            using the SharpZipLib library. It provides static methods for easy compression
-            and decompression of data. It is a Wrapper for classes and methods available in
-            SharpZipLib. The compression is used for data passed between the different apps
-            of the system. This way the whole crawling process can require less bandwidth.
-            </summary>
-        </member>
-        <member name="F:CrawlWave.Common.CompressionUtils.compressionLevel">
-            <summary>
-            A Compression Level of 7 offers very good compression/speed ratio
-            </summary>
-        </member>
-        <member name="M:CrawlWave.Common.CompressionUtils.CompressString(System.String@,System.Byte[]@)">
-            <summary>
-            Compresses a string and stores the result in an array of bytes.
-            </summary>
-            <param name="uncompressed">The uncompressed string.</param>
-            <param name="compressed">An array of bytes where the compressed string will be stored.</param>
-            <remarks>
-            The compressed string is passed back to the calling method as an <b>out</b>
-            parameter. That means that the calling method doesn't need to initialize the
-            compressed string buffer.  
-            </remarks>
-            <exception cref="T:System.ArgumentNullException">
-            Thrown if the uncompressed input string is empty or null.
-            </exception>
-            <exception cref="T:CrawlWave.Common.CWZipException">
-            Thrown if a problem is encountered during the compression process.
-            </exception>
-        </member>
-        <member name="M:CrawlWave.Common.CompressionUtils.CompressBuffer(System.Byte[],System.Byte[]@)">
-            <summary>
-            Compresses an array of bytes and stores the result in a new array of bytes.
-            </summary>
-            <param name="uncompressed">The uncompressed buffer.</param>
-            <param name="compressed">An array of bytes where the compressed input will be stored.</param>
-            <remarks>
-            The compressed input is passed back to the calling method as an <b>out</b>
-            parameter. That means that the calling method doesn't need to initialize the
-            compressed buffer.  
-            </remarks>
-            <exception cref="T:System.ArgumentNullException">
-            Thrown if the uncompressed input buffer is empty or null.
-            </exception>
-            <exception cref="T:CrawlWave.Common.CWZipException">
-            Thrown if a problem is encountered during the compression process.
-            </exception>
-        </member>
-        <member name="M:CrawlWave.Common.CompressionUtils.DecompressToString(System.Byte[],System.String@)">
-            <summary>
-            Decompresses an array of bytes and stores the result into a string.
-            </summary>
-            <param name="compressed">An array of bytes containing the compressed string.</param>
-            <param name="decompressed">The string where the decompressed string will be returned.</param>
-            <remarks>
-            The decompressed string is passed back to the calling method as an <b>out</b>
-            parameter. That means that the calling method doesn't need to initialize the
-            decompressed string.  
-            </remarks>
-            <exception cref="T:System.ArgumentNullException">
-            Thrown if the compressed input buffer is empty or null.
-            </exception>
-            <exception cref="T:CrawlWave.Common.CWZipException">
-            Thrown if a problem is encountered during the decompression process.
-            </exception>
-        </member>
-        <member name="M:CrawlWave.Common.CompressionUtils.DecompressBuffer(System.Byte[],System.Byte[]@)">
-            <summary>
-            Decompresses an array of bytes and stores the result into a new array of bytes.
-            </summary>
-            <param name="compressed">An array of bytes containing the compressed input.</param>
-            <param name="decompressed">The buffer where the decompressed input will be returned.</param>
-            <remarks>
-            The decompressed buffer is passed back to the calling method as an <b>out</b>
-            parameter. That means that the calling method doesn't need to initialize the
-            decompressed buffer.  
-            </remarks>
-            <exception cref="T:System.ArgumentNullException">
-            Thrown if the compressed input buffer is empty or null.
-            </exception>
-            <exception cref="T:CrawlWave.Common.CWZipException">
-            Thrown if a problem is encountered during the decompression process.
-            </exception>
-        </member>
-        <member name="M:CrawlWave.Common.CompressionUtils.StringCRC(System.String)">
-            <summary>
-            Calculates the CRC (Cyclic Redundancy Check) Checksum of a string.
-            </summary>
-            <param name="input">The string whose the CRC is needed</param>
-            <returns>The CRC value of the string</returns>
-        </member>
-        <member name="M:CrawlWave.Common.CompressionUtils.BufferCRC(System.Byte[])">
-            <summary>
-            Returns the CRC (Cyclic Redundancy Check) Checksum of an array of bytes.
-            </summary>
-            <param name="input">The array of bytes whose CRC is needed</param>
-            <returns>The CRC value of the array of bytes</returns>
-        </member>
-        <member name="T:CrawlWave.Common.ILogger">
-            <summary>
-            ILogger defines the interface for all classes that can be used to log events to
-            different repositories.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.Common.ILogger.LogInfo(System.String)">
-            <summary>
-            Defines the prototype for a method that logs an event of type Information.
-            </summary>
-            <param name="msg">The message to log.</param>
-        </member>
-        <member name="M:CrawlWave.Common.ILogger.LogWarning(System.String)">
-            <summary>
-            Defines the prototype for a method that logs an event of type Warning.
-            </summary>
-            <param name="msg">The message to log.</param>
-        </member>
-        <member name="M:CrawlWave.Common.ILogger.LogError(System.String)">
-            <summary>
-            Defines the prototype for a method that logs an event of type Error.
-            </summary>
-            <param name="msg">The message to log.</param>
-        </member>
-        <member name="M:CrawlWave.Common.ILogger.LogEventEntry(CrawlWave.Common.EventLoggerEntry)">
-            <summary>
-            Defines the prototype for a method that logs an event contained in an <see cref="T:CrawlWave.Common.EventLoggerEntry"/> object.
-            </summary>
-            <param name="entry">The <see cref="T:CrawlWave.Common.EventLoggerEntry"/> to log.</param>
-        </member>
-        <member name="P:CrawlWave.Common.ILogger.LastEntry">
-            <summary>
-            Gets the string contained in the last Log Entry.
-            </summary>
-        </member>
-        <member name="P:CrawlWave.Common.ILogger.RememberLastEntry">
-            <summary>
-            Defines whether the Logger must remember the last entry logged.
-            </summary>
-        </member>
-        <member name="T:CrawlWave.Common.SystemEventLogger">
-            <summary>
-            SystemEventLogger allows creating System Event Logs (available on
-            Windows NT/2K/XP). It could be extended in order to create a custom
-            XML log file, but for the time being the System Log will have to do.
-            Author: Kostas Stroggylos [mod], kostas@circular.gr
-            Written:09/05/03
-            Updated:24/08/2004 -> Added the ILogger implementation and thread safety measures.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.Common.SystemEventLogger.#ctor">
-            <summary>
-            The default constructor for the SystemEventLogger class
-            </summary>
-        </member>
-        <member name="M:CrawlWave.Common.SystemEventLogger.#ctor(System.String)">
-            <summary>
-            Constructs an instance of the <see cref="T:CrawlWave.Common.SystemEventLogger"/> class and sets the
-            appropriate Event Source Name.
-            </summary>
-            <param name="EventSourceName">A string containing the Event Source name.</param>
-        </member>
-        <member name="M:CrawlWave.Common.SystemEventLogger.CheckEventSource">
-            <summary>
-            Checks if there is an event source named "CrawlWave"
-            in the system and if not it creates it.
-            </summary>
-            <remarks>
-            It chokes all Exceptions that might occur.
-            </remarks>
-        </member>
-        <member name="M:CrawlWave.Common.SystemEventLogger.LogInfo(System.String)">
-            <summary>
-            Creates a System Log Entry of type Information
-            </summary>
-            <param name="msg">
-            The log Message
-            </param>
-        </member>
-        <member name="M:CrawlWave.Common.SystemEventLogger.LogError(System.String)">
-            <summary>
-            Creates a System Log Entry of type Error
-            </summary>
-            <param name="msg">
-            The log Message
-            </param>
-        </member>
-        <member name="M:CrawlWave.Common.SystemEventLogger.LogWarning(System.String)">
-            <summary>
-            Creates a System Log Entry of type Warning
-            </summary>
-            <param name="msg">
-            The log Message
-            </param>
-        </member>
-        <member name="M:CrawlWave.Common.SystemEventLogger.LogEventEntry(CrawlWave.Common.EventLoggerEntry)">
-            <summary>
-            Creates a system log entry according to the type of the entry's event
-            </summary>
-            <param name="entry">The <see cref="T:CrawlWave.Common.EventLoggerEntry"/> to log.</param>
-        </member>
-        <member name="P:CrawlWave.Common.SystemEventLogger.LastEntry">
-            <summary>
-            Gets the message of the last Event Log entry.
-            </summary>
-        </member>
-        <member name="P:CrawlWave.Common.SystemEventLogger.RememberLastEntry">
-            <summary>
-            Gets or sets a Boolean value indicating whether the logger must remember the last
-            entry.
-            </summary>
-        </member>
-        <member name="T:CrawlWave.Common.FileEventLogger">
-            <summary>
-            FileEventLogger is a simple thread-safe Event Logger that uses a flat text file as
-            the log entries' repository. It implements the <see cref="T:CrawlWave.Common.ILogger"/> interface and
-            provides some extra functionality, such as Backup and automatic log truncation.
-            Author:	Kostas Stroggylos [mod],kostas@circular.gr
-            </summary>
-        </member>
-        <member name="M:CrawlWave.Common.FileEventLogger.#ctor(System.String,System.Boolean,System.Boolean,System.String)">
-            <summary>
-            The FileEventLogger constructor. Initializes the File Streams and the thread
-            safety / synchronization mechanism. If the appropriate flag has been set and
-            the size of the log file has exceeded a certain limit it performs truncation.
-            </summary>
-            <param name="FileName">The full path of the file that will be used as a log.</param>
-            <param name="AutoTruncate">Indicates whether the log file will be truncated automatically.</param>
-            <param name="Shared">Indicates whether the log file will be opened in shared mode, thus allowing two or more processes to use it.</param>
-            <param name="EventSourceName">The description of the event source application.</param>
-            <exception cref="T:System.ArgumentException">It is thrown if the given FileName is null or empty.</exception>
-            <exception cref="T:CrawlWave.Common.CWException">It is thrown if the Logger fails to open the given file in append mode.</exception>
-            <remarks>
-            If the <b>Shared</b> parameter is set to True then there may occur corruption of
-            th log file, since each instance of the class will hool it's own copy of the file
-            stream and each instance will overwrite the other's log. It must be used with great
-            care, unless only the first instance is used for logging and the others are only
-            reading the log file.
-            </remarks>
-        </member>
-        <member name="M:CrawlWave.Common.FileEventLogger.#ctor(System.String,System.Boolean,System.String)">
-            <summary>
-            The FileEventLogger constructor. Initializes the File Streams and the thread
-            safety / synchronization mechanism. If the appropriate flag has been set and
-            the size of the log file has exceeded a certain limit it performs truncation.
-            </summary>
-            <param name="FileName">The full path of the file that will be used as a log.</param>
-            <param name="AutoTruncate">Indicates whether the log file will be truncated automatically.</param>
-            <param name="EventSourceName">The description of the event source application.</param>
-            <exception cref="T:System.ArgumentException">It is thrown if the given FileName is null or empty.</exception>
-            <exception cref="T:CrawlWave.Common.CWException">It is thrown if the Logger fails to open the given file in append mode.</exception>
-        </member>
-        <member name="M:CrawlWave.Common.FileEventLogger.#ctor(System.String,System.String)">
-            <summary>
-            The FileEventLogger constructor. Initializes the File Streams and the thread
-            safety / synchronization mechanism. This version assumes AutoTruncate is off.
-            </summary>
-            <param name="FileName">The full path of the file that will be used as a log.</param>
-            <param name="EventSourceName">The description of the event source application.</param>
-            <exception cref="T:System.ArgumentException">It is thrown if the given FileName is null or empty.</exception>
-            <exception cref="T:CrawlWave.Common.CWException">It is thrown if the Logger fails to open the given file in append mode.</exception>
-        </member>
-        <member name="M:CrawlWave.Common.FileEventLogger.#ctor(System.String)">
-            <summary>
-            The FileEventLogger constructor. Initializes the File Streams and the thread
-            safety / synchronization mechanism. This version assumes AutoTruncate is off
-            and the EventSourceName is an empty string.
-            </summary>
-            <param name="FileName">The full path of the file that will be used as a log.</param>
-            <exception cref="T:System.ArgumentException">It is thrown if the given FileName is null or empty.</exception>
-            <exception cref="T:CrawlWave.Common.CWException">It is thrown if the Logger fails to open the given file in append mode.</exception>
-        </member>
-        <member name="M:CrawlWave.Common.FileEventLogger.LogInfo(System.String)">
-            <summary>
-            Creates a Log Entry of type Information in the log file in a thread-safe manner.
-            </summary>
-            <param name="msg">
-            The log Message
-            </param>
-        </member>
-        <member name="M:CrawlWave.Common.FileEventLogger.LogWarning(System.String)">
-            <summary>
-            Creates a Log Entry of type Warning in the log file in a thread-safe manner.
-            </summary>
-            <param name="msg">
-            The log Message
-            </param>
-        </member>
-        <member name="M:CrawlWave.Common.FileEventLogger.LogError(System.String)">
-            <summary>
-            Creates a Log Entry of type Error in the log file in a thread-safe manner.
-            </summary>
-            <param name="msg">
-            The log Message
-            </param>
-        </member>
-        <member name="M:CrawlWave.Common.FileEventLogger.LogEventEntry(CrawlWave.Common.EventLoggerEntry)">
-            <summary>
-            Creates a Log Entry in the log file according to the type of the entry's event.
-            </summary>
-            <param name="entry">The <see cref="T:CrawlWave.Common.EventLoggerEntry"/> to log.</param>
-        </member>
-        <member name="M:CrawlWave.Common.FileEventLogger.Dispose">
-            <summary>
-            Cleans up resources used by the File Event Logger, closes any open File Streams
-            and releases all synchronization mechanisms.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.Common.FileEventLogger.Backup">
-            <summary>
-            Backs up the current version of the log file to another file with the same name
-            and a .bak extension. Not thread-safe.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.Common.FileEventLogger.Restore">
-            <summary>
-            Restores the log file from another file with the same name and a .bak extension.
-            Not thread-safe.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.Common.FileEventLogger.Truncate">
-            <summary>
-            Performs the truncation of the Log File, according to the values defined for
-            the maximum file size and the number of entries to save.
-            </summary>
-        </member>
-        <member name="P:CrawlWave.Common.FileEventLogger.LastEntry">
-            <summary>
-            Gets the message of the last Event Log entry.
-            </summary>
-        </member>
-        <member name="P:CrawlWave.Common.FileEventLogger.RememberLastEntry">
-            <summary>
-            Gets or sets a Boolean value indicating whether the logger must remember the last
-            entry.
-            </summary>
-        </member>
-        <member name="P:CrawlWave.Common.FileEventLogger.AutoTruncate">
-            <summary>
-            Gets/sets the Automatic Truncate property, which determines whether the log
-            file will be truncated down to a certain number of entries when it grows up
-            to a certain size.
-            </summary>
-        </member>
-        <member name="T:CrawlWave.Common.QueueEventLogger">
-            <summary>
-            QueueEventLogger is a simple thread-safe Event Logger that buffers events into a
-            Queue from which the clients can later on dequeue the <see cref="T:CrawlWave.Common.EventLoggerEntry"/>
-            objects. It implements <see cref="T:CrawlWave.Common.ILogger"/> and offers some extra functionality
-            such as setting an upper limit in the number of events that the queue will hold and
-            clearing the queue of events.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.Common.QueueEventLogger.#ctor">
-            <summary>
-            Creates a new instance of <see cref="T:CrawlWave.Common.QueueEventLogger"/> with default values.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.Common.QueueEventLogger.#ctor(System.String)">
-            <summary>
-            Creates a new instance of <see cref="T:CrawlWave.Common.QueueEventLogger"/> with the given Event
-            Source name.
-            </summary>
-            <param name="EventSourceName">The Event Source name.</param>
-        </member>
-        <member name="M:CrawlWave.Common.QueueEventLogger.#ctor(System.Int32)">
-            <summary>
-            Creates a new instance of <see cref="T:CrawlWave.Common.QueueEventLogger"/> with the given capacity.
-            </summary>
-            <param name="MaxSize">The capacity of the Event Queue.</param>
-            <exception cref="T:System.ArgumentOutOfRangeException">Thrown if a negative value is supplied for MaxSize.</exception>
-        </member>
-        <member name="M:CrawlWave.Common.QueueEventLogger.#ctor(System.Int32,System.String)">
-            <summary>
-            Creates a new instance of <see cref="T:CrawlWave.Common.QueueEventLogger"/> with the given Event
-            Source Name and Queue capacity.
-            </summary>
-            <param name="MaxSize">The capacity of the Event Queue.</param>
-            <param name="EventSourceName">The Event Source name.</param>
-            <exception cref="T:System.ArgumentOutOfRangeException">Thrown if a negative value is supplied for MaxSize.</exception>
-        </member>
-        <member name="M:CrawlWave.Common.QueueEventLogger.Enqueue(CrawlWave.Common.EventLoggerEntry)">
-            <summary>
-            Enqueues an <see cref="T:CrawlWave.Common.EventLoggerEntry"/> object in the <see cref="T:CrawlWave.Common.QueueEventLogger"/>.
-            </summary>
-            <param name="entry">The <see cref="T:CrawlWave.Common.EventLoggerEntry"/> to be logged.</param>
-        </member>
-        <member name="M:CrawlWave.Common.QueueEventLogger.Dequeue">
-            <summary>
-            Dequeues the first <see cref="T:CrawlWave.Common.EventLoggerEntry"/> logged by the <see cref="T:CrawlWave.Common.QueueEventLogger"/>.
-            </summary>
-            <returns>An <see cref="T:CrawlWave.Common.EventLoggerEntry"/> containing the first event logged.</returns>
-            <exception cref="T:System.InvalidOperationException">Thrown if the method is called when QueueEventLogger contains no entries.</exception>
-        </member>
-        <member name="M:CrawlWave.Common.QueueEventLogger.LogInfo(System.String)">
-            <summary>
-            Logs an event of type Info
-            </summary>
-            <param name="msg">The message related to the event to be logged.</param>
-        </member>
-        <member name="M:CrawlWave.Common.QueueEventLogger.LogWarning(System.String)">
-            <summary>
-            Logs an event of type Warning
-            </summary>
-            <param name="msg">The message related to the event to be logged.</param>
-        </member>
-        <member name="M:CrawlWave.Common.QueueEventLogger.LogError(System.String)">
-            <summary>
-            Logs an event of type Error
-            </summary>
-            <param name="msg">The message related to the event to be logged.</param>
-        </member>
-        <member name="M:CrawlWave.Common.QueueEventLogger.LogEventEntry(CrawlWave.Common.EventLoggerEntry)">
-            <summary>
-            Creates a log according to the type of the entry's event
-            </summary>
-            <param name="entry">The <see cref="T:CrawlWave.Common.EventLoggerEntry"/> to log.</param>
-        </member>
-        <member name="P:CrawlWave.Common.QueueEventLogger.MaxSize">
-            <summary>
-            Gets or sets the maximum number of <see cref="T:CrawlWave.Common.EventLoggerEntry"/> objects that
-            the <see cref="T:CrawlWave.Common.QueueEventLogger"/> will hold.
-            </summary>
-            <exception cref="T:System.ArgumentOutOfRangeException">Thrown if a negative value is supplied for MaxSize.</exception>
-        </member>
-        <member name="P:CrawlWave.Common.QueueEventLogger.Count">
-            <summary>
-            Gets the number of events logged in the <see cref="T:CrawlWave.Common.QueueEventLogger"/>.
-            </summary>
-        </member>
-        <member name="P:CrawlWave.Common.QueueEventLogger.EventQueue">
-            <summary>
-            Provides access to the internal Queue used by the <see cref="T:CrawlWave.Common.QueueEventLogger"/>.
-            </summary>
-        </member>
-        <member name="P:CrawlWave.Common.QueueEventLogger.LastEntry">
-            <summary>
-            Gets the message of the last Event Log entry.
-            </summary>
-        </member>
-        <member name="P:CrawlWave.Common.QueueEventLogger.RememberLastEntry">
-            <summary>
-            Gets or sets a Boolean value indicating whether the logger must remember the last
-            entry.
-            </summary>
-        </member>
-        <member name="T:CrawlWave.Common.IPlugin">
-            <summary>
-            Defines the interface of all the plugins that will be hosted in an <see cref="T:CrawlWave.Common.IPluginHost"/>
-            and will be used for processing data in CrawlWave.ServerWorker.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.Common.IPlugin.Pause">
-            <summary>
-            Pauses the plugin's process temporarily.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.Common.IPlugin.Resume">
-            <summary>
-            Resumes the plugin's process if it has been paused. 
-            </summary>
-        </member>
-        <member name="M:CrawlWave.Common.IPlugin.Start">
-            <summary>
-            Starts the plugin's process.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.Common.IPlugin.Stop">
-            <summary>
-            Stops the plugin's process.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.Common.IPlugin.ShowSettings">
-            <summary>
-            Displays a form that allows the configuration of the various plugin parameters.
-            </summary>
-        </member>
-        <member name="E:CrawlWave.Common.IPlugin.StateChanged">
-            <summary>
-            Raised when the <see cref="T:CrawlWave.Common.PluginState"/> of the plugin changes.
-            </summary>
-        </member>
-        <member name="T:CrawlWave.Common.PluginBase">
-            <summary>
-            PluginBase provides the base class that all the plugins must inherit from.
-            </summary>
-            <remarks>
-            A plugin that is not statically referenced by another application and is meant to be
-            loaded dynamically must be attributed with the <see cref="T:CrawlWave.Common.CrawlWavePluginAttribute"/>
-            attribute, otherwise a <see cref="T:CrawlWave.Common.CWUnsupportedPluginException"/> will be thrown.
-            </remarks>
-        </member>
-        <member name="F:CrawlWave.Common.PluginBase.name">
-            <summary>
-            The plugin's name.
-            </summary>
-        </member>
-        <member name="F:CrawlWave.Common.PluginBase.description">
-            <summary>
-            The plugin's description.
-            </summary>
-        </member>
-        <member name="F:CrawlWave.Common.PluginBase.version">
-            <summary>
-            The plugin's version.
-            </summary>
-        </member>
-        <member name="F:CrawlWave.Common.PluginBase.state">
-            <summary>
-            The plugin's <see cref="T:CrawlWave.Common.PluginState"/>
-            </summary>
-        </member>
-        <member name="F:CrawlWave.Common.PluginBase.enabled">
-            <summary>
-            Indicated whether the plugin is enabled.
-            </summary>
-        </member>
-        <member name="F:CrawlWave.Common.PluginBase.dataDependent">
-            <summary>
-            Indicates whether the plugin requires access to the system's database.
-            </summary>
-        </member>
-        <member name="F:CrawlWave.Common.PluginBase.connectionString">
-            <summary>
-            Contains the database connection string for data-dependent plugins.
-            </summary>
-        </member>
-        <member name="F:CrawlWave.Common.PluginBase.settingsPath">
-            <summary>
-            Contains the path of the directory where the plugin can store its settings.
-            </summary>
-        </member>
-        <member name="F:CrawlWave.Common.PluginBase.percent">
-            <summary>
-            The percentage of work already completed by the plugin.
-            </summary>
-        </member>
-        <member name="F:CrawlWave.Common.PluginBase.loggers">
-            <summary>
-            An <see cref="T:System.Collections.ArrayList"/> containing <see cref="T:CrawlWave.Common.ILogger"/> objects, to which
-            the plugin will report its status and error messages.
-            </summary>
-        </member>
-        <member name="F:CrawlWave.Common.PluginBase.events">
-            <summary>
-            A queue holding <see cref="T:CrawlWave.Common.EventLoggerEntry"/> objects, one for each event that
-            must be reported when the plugin has a permission to report its status.
-            </summary>
-        </member>
-        <member name="F:CrawlWave.Common.PluginBase.host">
-            <summary>
-            A reference to the <see cref="T:CrawlWave.Common.IPluginHost"/> to which the plugin is attached.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.Common.PluginBase.Report">
-            <summary>
-            Causes the plugin to report its status or errors to all <see cref="T:CrawlWave.Common.ILogger"/>,
-            after requesting permission from the <see cref="T:CrawlWave.Common.IPluginHost"/> hosting it. If
-            no host is hosting the plugin the report is performed anyway.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.Common.PluginBase.ReportImmediately(CrawlWave.Common.CWLoggerEntryType,System.String)">
-            <summary>
-            Causes the plugin to report its status or errors to a <see cref="T:CrawlWave.Common.ILogger"/>,
-            without requesting permission from an <see cref="T:CrawlWave.Common.IPluginHost"/>.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.Common.PluginBase.AddToReportQueue(CrawlWave.Common.CWLoggerEntryType,System.DateTime,System.String)">
-            <summary>
-            Enqueues an event message to the internal event queue.
-            </summary>
-            <param name="eventType">The <see cref="T:CrawlWave.Common.CWLoggerEntryType"/> of the event.</param>
-            <param name="eventDate">The <see cref="T:System.DateTime"/> when the event took place.</param>
-            <param name="msg">The message related to the event.</param>
-        </member>
-        <member name="M:CrawlWave.Common.PluginBase.AddToReportQueue(CrawlWave.Common.CWLoggerEntryType,System.String)">
-            <summary>
-            Enqueues an event message to the internal event queue.
-            </summary>
-            <param name="eventType">The <see cref="T:CrawlWave.Common.CWLoggerEntryType"/> of the event.</param>
-            <param name="msg">The message related to the event.</param>
-        </member>
-        <member name="M:CrawlWave.Common.PluginBase.AddToReportQueue(CrawlWave.Common.EventLoggerEntry)">
-            <summary>
-            Enqueues an <see cref="T:CrawlWave.Common.EventLoggerEntry"/> to the internal event queue.
-            </summary>
-            <param name="entry">The entry to enqueue.</param>
-        </member>
-        <member name="M:CrawlWave.Common.PluginBase.LoadSettings">
-            <summary>
-            Loads the plugin's settings. Must be overriden in the derived classes if their
-            settings are stored on a peristent storage.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.Common.PluginBase.SaveSettings">
-            <summary>
-            Saves the plugin's settings. Must be overriden in the derived classes if their
-            settings are stored on a peristent storage.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.Common.PluginBase.AttachLog(CrawlWave.Common.ILogger)">
-            <summary>
-            Attaches an <see cref="T:CrawlWave.Common.ILogger"/> to the plugin so that the plugin can use it
-            for reporting purposes.
-            </summary>
-            <param name="log">The <see cref="T:CrawlWave.Common.ILogger"/> to be used by the plugin.</param>
-        </member>
-        <member name="P:CrawlWave.Common.PluginBase.Name">
-            <summary>
-            Gets a string containing the plugin's name.
-            </summary>
-        </member>
-        <member name="P:CrawlWave.Common.PluginBase.Description">
-            <summary>
-            Gets a string containing a description for the plugin.
-            </summary>
-        </member>
-        <member name="P:CrawlWave.Common.PluginBase.Version">
-            <summary>
-            Gets a string containing the plugin's version.
-            </summary>
-        </member>
-        <member name="P:CrawlWave.Common.PluginBase.Enabled">
-            <summary>
-            Gets or sets a <see cref="T:System.Boolean"/> value indicating if the plugin is enabled.
-            </summary>
-        </member>
-        <member name="P:CrawlWave.Common.PluginBase.DataDependent">
-            <summary>
-            Gets a <see cref="T:System.Boolean"/> value indicating if the plugin needs access to the
-            system's database.
-            </summary>
-        </member>
-        <member name="P:CrawlWave.Common.PluginBase.DBConnectionString">
-            <summary>
-            Sets the Database Connection string that is used to allow the plugin to connect
-            to the system's database if the plugin is <see cref="P:CrawlWave.Common.PluginBase.DataDependent"/>. 
-            </summary>
-        </member>
-        <member name="P:CrawlWave.Common.PluginBase.SettingsPath">
-            <summary>
-            Sets the path of the directory where the plugin can store its settings.
-            </summary>
-        </member>
-        <member name="P:CrawlWave.Common.PluginBase.Percent">
-            <summary>
-            Gets an integer value indicating the percentage of process that has been completed.
-            </summary>
-        </member>
-        <member name="P:CrawlWave.Common.PluginBase.State">
-            <summary>
-            Gets a <see cref="T:CrawlWave.Common.PluginState"/> value indicating the plugin's current state.
-            </summary>
-        </member>
-        <member name="P:CrawlWave.Common.PluginBase.Host">
-            <summary>
-            Sets the <see cref="T:CrawlWave.Common.IPluginHost"/> that is hosting the plugin. Can only be called
-            by an <see cref="T:CrawlWave.Common.IPluginHost"/> object.
-            </summary>
-        </member>
-        <member name="T:CrawlWave.Common.CrawlWavePluginAttribute">
-            <summary>
-            CrawlWavePluginAttribute is an attribute that must be used on all the plugins that
-            are not statically referenced by ServerWorker and will be dynamically loaded.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.Common.CrawlWavePluginAttribute.#ctor">
-            <summary>
-            Constructs a new instance of the CrawlWavePluginAttribute class.
-            </summary>
-        </member>
-        <member name="T:CrawlWave.Common.IPluginHost">
-            <summary>
-            Defines the interface for a Plugin Host, a class that will control the operation
-            of one or more plugins.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.Common.IPluginHost.Register(CrawlWave.Common.PluginBase)">
-            <summary>
-            Allows an Plugin to register itself in the plugin host.
-            </summary>
-            <param name="plugin">The Plugin to be registered.</param>
-        </member>
-        <member name="M:CrawlWave.Common.IPluginHost.PauseAllPlugins">
-            <summary>
-            Pauses the operation of all the plugins.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.Common.IPluginHost.StartAllPlugins">
-            <summary>
-            Signals all the registered plugins to start operating.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.Common.IPluginHost.StopAllPlugins">
-            <summary>
-            Signals all the registered plugins to stop operating.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.Common.IPluginHost.PermitReport(CrawlWave.Common.PluginBase)">
-            <summary>
-            Checks if a plugin can report an event.
-            </summary>
-            <param name="plugin">The <see cref="T:CrawlWave.Common.IPlugin"/> that requests permission to report.</param>
-            <returns>A <see cref="T:System.Boolean"/> value indicating whether the plugin can report.</returns>
-        </member>
-        <member name="M:CrawlWave.Common.IPluginHost.LoadPlugin(System.String)">
-            <summary>
-            Loads a plugin dynamically and registers it with the <see cref="T:CrawlWave.Common.IPluginHost"/>.
-            </summary>
-            <param name="fileName">The file containing the plugin to be loaded.</param>
-        </member>
-        <member name="P:CrawlWave.Common.IPluginHost.RunningPlugins">
-            <summary>
-            Gets an integer indicating the number of plugins that are currently active
-            </summary>
-        </member>
-        <member name="P:CrawlWave.Common.IPluginHost.Plugins">
-            <summary>
-            Gets an <see cref="T:System.Collections.Generic.List`1"/> containing all the plugins hosted by the host
-            </summary>
-        </member>
-        <member name="T:CrawlWave.Common.HiResTimer">
-            <summary>
-            HiResTimer is a class that allows for time intervals measurement. 
-            The provided method returns results with accuracy of milliseconds.
-            It is currently being used by the Crawler class of the Client to
-            measure the time that it took for the data of a url to be downloaded.
-            Author:	Kostas Stroggylos [mod], kostas@circular.gr
-            Written:05/07/2003
-            Updated:24/08/2004 -&gt; General revision, better comments and naming conventions.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.Common.HiResTimer.#ctor">
-            <summary>
-            The default constructor
-            </summary>
-        </member>
-        <member name="M:CrawlWave.Common.HiResTimer.Start">
-            <summary>
-            Signals the timer to start ticking.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.Common.HiResTimer.Stop">
-            <summary>
-            Signals the timer to stop ticking.
-            </summary>
-        </member>
-        <member name="P:CrawlWave.Common.HiResTimer.Duration">
-            <summary>
-            Gets the amount of time that has passed in msec.
-            </summary>
-            <remarks>
-            It is <b>important</b> to notice that the Duration property is <b>not</b> updated
-            automatically every millisecond. Its value will be the number of msec
-            that have passed from the previous call to <see cref="M:CrawlWave.Common.HiResTimer.Start">Start</see>
-            to the previous call to <see cref="M:CrawlWave.Common.HiResTimer.Stop">Stop</see>. In other words,
-            the value of this property is only updated when <see cref="M:CrawlWave.Common.HiResTimer.Stop">Stop</see>
-            is called.
-            </remarks>
-        </member>
-        <member name="T:CrawlWave.Common.BackoffSpeed">
-            <summary>
-            BackOffSpeed is an enumeration that allows the user to select a function
-            that produces integers in logarithmic, linear or exponential intervals.
-            </summary>
-        </member>
-        <member name="F:CrawlWave.Common.BackoffSpeed.Constant">
-            <summary>
-            Does not rise at all, causes <see cref="M:CrawlWave.Common.ExponentialBackoff.Next"/> to return
-            a constant delay of 30 seconds, not dependent on the number of calls.
-            </summary>
-        </member>
-        <member name="F:CrawlWave.Common.BackoffSpeed.Slow">
-            <summary>
-            Rises slowly, according to the function e^(log10(x*sqrt(x))) - pretty nice!
-            </summary>
-        </member>
-        <member name="F:CrawlWave.Common.BackoffSpeed.Linear">
-            <summary>
-            Rises linearly, according to the function x
-            </summary>
-        </member>
-        <member name="F:CrawlWave.Common.BackoffSpeed.Fast">
-            <summary>
-            Rises fast, according to the function 2^sqrt(3^ln(x))
-            </summary>
-        </member>
-        <member name="F:CrawlWave.Common.BackoffSpeed.Declining">
-            <summary>
-            Falling smoothly, according to the function 30/(1+sqrt(x-1))
-            </summary>
-        </member>
-        <member name="T:CrawlWave.Common.ExponentialBackoff">
-            <summary>
-            ExponentialBackoff provides easy access to Exponential Backoff functions. It is
-            used whenever there is need for a method that provides delay intervals (in msec)
-            based on the number of calls (that correspond to the number of failed attempts).
-            Author:	Kostas Stroggylos [mod], kostas@circular.gr
-            Written:10/07/2003
-            Updated:24/08/2004 -&gt; Changed variable names, added comments, general revision.
-            		15/11/2004 -&gt; Added support for declining function.
-            		17/01/2005 -&gt; Added MaximumDelay Property and constructor parameter checking.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.Common.ExponentialBackoff.#ctor">
-            <summary>
-            Default contructor for an ExponentialBackoff object. It sets the <see cref="T:CrawlWave.Common.BackoffSpeed"/>
-            to Linear and the Maximum Delay to 10 minutes.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.Common.ExponentialBackoff.#ctor(CrawlWave.Common.BackoffSpeed)">
-            <summary>
-            Contructor for an ExponentialBackoff object, sets the Maximum Delay to 10 min.
-            </summary>
-            <param name="Speed">The <see cref="T:CrawlWave.Common.BackoffSpeed"/> that will be used for this instance</param>
-        </member>
-        <member name="M:CrawlWave.Common.ExponentialBackoff.#ctor(System.Int32)">
-            <summary>
-            Contructor for an ExponentialBackoff object, sets the <see cref="T:CrawlWave.Common.BackoffSpeed"/> to Linear.
-            </summary>
-            <param name="MaxDelay">The maximum delay that must be returned by the <see cref="M:CrawlWave.Common.ExponentialBackoff.Next"/> method, in milliseconds.</param>
-        </member>
-        <member name="M:CrawlWave.Common.ExponentialBackoff.#ctor(CrawlWave.Common.BackoffSpeed,System.Int32)">
-            <summary>
-            Contructor for an ExponentialBackoff object.
-            </summary>
-            <param name="Speed">The <see cref="T:CrawlWave.Common.BackoffSpeed"/> that will be used for this instance</param>
-            <param name="MaxDelay">The maximum delay in milliseconds</param>
-        </member>
-        <member name="M:CrawlWave.Common.ExponentialBackoff.Next">
-            <summary>
-            Calculates the interval in msec that must precede the next call of a method
-            because of a previous failure.
-            </summary>
-            <returns>The backoff interval in milliseconds</returns>
-        </member>
-        <member name="M:CrawlWave.Common.ExponentialBackoff.Reset">
-            <summary>
-            Resets the delay interval
-            </summary>
-            <remarks>
-            Reset() can be used whenever there is need to re-initialize the ExponentialBackOff
-            object, that will start producing intervals as if it were just created.
-            </remarks>
-        </member>
-        <member name="P:CrawlWave.Common.ExponentialBackoff.Speed">
-            <summary>
-            Gets or sets the <see cref="T:CrawlWave.Common.ExponentialBackoff"/> object's <see cref="T:CrawlWave.Common.BackoffSpeed"/>.
-            </summary>
-        </member>
-        <member name="P:CrawlWave.Common.ExponentialBackoff.MaximumDelay">
-            <summary>
-            Gets or sets the <see cref="T:CrawlWave.Common.ExponentialBackoff"/> object's Maximum delay in millisecods.
-            </summary>
-        </member>
-        <member name="P:CrawlWave.Common.ExponentialBackoff.DefaultBackoff">
-            <summary>
-            Gets a default value for the BackOff that corresponds to 30 seconds.
-            </summary>
-        </member>
-        <member name="T:CrawlWave.Common.CWException">
-            <summary>
-            CWException is a child of <see cref="T:System.ApplicationException"/>, which is used to 
-            represent any CrawlWave-specific exceptions.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.Common.CWException.#ctor">
-            <summary>
-            Constructs an instance of <see cref="T:CrawlWave.Common.CWException"/> class.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.Common.CWException.#ctor(System.String)">
-            <summary>
-            Constructs an instance of <see cref="T:CrawlWave.Common.CWException"/> with a given Message.
-            </summary>
-            <param name="msg">The Exception message string</param>
-        </member>
-        <member name="T:CrawlWave.Common.CWMalformedUrlException">
-            <summary>
-            CWMalformedUrlException is a child of <see cref="T:CrawlWave.Common.CWException"/>, it is thrown when
-            a malformed Url is encountered.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.Common.CWMalformedUrlException.#ctor">
-            <summary>
-            Constructs an instance of <see cref="T:CrawlWave.Common.CWMalformedUrlException"/> class.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.Common.CWMalformedUrlException.#ctor(System.String)">
-            <summary>
-            Constructs an instance of <see cref="T:CrawlWave.Common.CWMalformedUrlException"/> with a given Message.
-            </summary>
-            <param name="msg">The Exception message string</param>
-        </member>
-        <member name="T:CrawlWave.Common.CWZipException">
-            <summary>
-            CWZipException is a child of <see cref="T:CrawlWave.Common.CWException"/>, it is thrown when
-            a problem is encountered during a compression or decompression process.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.Common.CWZipException.#ctor">
-            <summary>
-            Constructs an instance of <see cref="T:CrawlWave.Common.CWZipException"/> class.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.Common.CWZipException.#ctor(System.String)">
-            <summary>
-            Constructs an instance of <see cref="T:CrawlWave.Common.CWZipException"/> with a given Message.
-            </summary>
-            <param name="msg">The Exception message string</param>
-        </member>
-        <member name="T:CrawlWave.Common.CWDBConnectionFailedException">
-            <summary>
-            CWDBConnectionFailedException is a child of <see cref="T:CrawlWave.Common.CWException"/>, it is thrown
-            when a problem is encountered connecting to the system's database.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.Common.CWDBConnectionFailedException.#ctor">
-            <summary>
-            Constructs an instance of <see cref="T:CrawlWave.Common.CWDBConnectionFailedException"/> class.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.Common.CWDBConnectionFailedException.#ctor(System.String)">
-            <summary>
-            Constructs an instance of <see cref="T:CrawlWave.Common.CWDBConnectionFailedException"/> with a given Message.
-            </summary>
-            <param name="msg">The Exception message string</param>
-        </member>
-        <member name="T:CrawlWave.Common.CWUnsupportedPluginException">
-            <summary>
-            CWUnsupportedPluginException is a child of <see cref="T:CrawlWave.Common.CWException"/>, it is thrown 
-            when an application tries to load a plugin that does not implement the interfaces
-            it is required to.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.Common.CWUnsupportedPluginException.#ctor">
-            <summary>
-            Constructs an instance of <see cref="T:CrawlWave.Common.CWUnsupportedPluginException"/> class.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.Common.CWUnsupportedPluginException.#ctor(System.String)">
-            <summary>
-            Constructs an instance of <see cref="T:CrawlWave.Common.CWUnsupportedPluginException"/> with a given Message.
-            </summary>
-            <param name="msg">The Exception message string</param>
-        </member>
-        <member name="T:CrawlWave.Common.CWUserExistsException">
-            <summary>
-            CWUserExistsException is a child of <see cref="T:CrawlWave.Common.CWException"/>, it is thrown when
-            a problem is encountered during the registration of a new user.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.Common.CWUserExistsException.#ctor">
-            <summary>
-            Constructs an instance of <see cref="T:CrawlWave.Common.CWUserExistsException"/> class.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.Common.CWUserExistsException.#ctor(System.String)">
-            <summary>
-            Constructs an instance of <see cref="T:CrawlWave.Common.CWUserExistsException"/> with a given Message.
-            </summary>
-            <param name="msg">The Exception message string</param>
-        </member>
-        <member name="T:CrawlWave.Common.SerializedException">
-            <summary>
-            SerializedException is a class that is used to pass information about an exception
-            that has occured in an application over a Web Service. It can throw a new exception
-            of the appropriate type if necessary or an application can use its fields to check
-            what type of an exception has occured and all the related information.
-            </summary>
-        </member>
-        <member name="F:CrawlWave.Common.SerializedException.Type">
-            <summary>
-            The string containing the type of the exception
-            </summary>
-        </member>
-        <member name="F:CrawlWave.Common.SerializedException.Message">
-            <summary>
-            The message string related to the exception
-            </summary>
-        </member>
-        <member name="F:CrawlWave.Common.SerializedException.StackTrace">
-            <summary>
-            The exception's stack trace
-            </summary>
-        </member>
-        <member name="M:CrawlWave.Common.SerializedException.#ctor">
-            <summary>
-            Constructs a new instance of the <see cref="T:CrawlWave.Common.SerializedException"/> class, and by
-            default it supposes an <see cref="T:System.ApplicationException"/> has occured.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.Common.SerializedException.#ctor(System.String,System.String,System.String)">
-            <summary>
-            Constructs a new instance of the <see cref="T:CrawlWave.Common.SerializedException"/> class with the
-            supplied arguments.
-            </summary>
-            <param name="type">A string containing the type of the exception.</param>
-            <param name="msg">The message related to the exception.</param>
-            <param name="trace">The exception's stack trace.</param>
-        </member>
-        <member name="M:CrawlWave.Common.SerializedException.ThrowException">
-            <summary>
-            Causes the <see cref="T:CrawlWave.Common.SerializedException"/> to throw an <see cref="T:System.Exception"/>
-            of the type of the exception it encapsulates.
-            </summary>
-        </member>
-        <member name="T:CrawlWave.Common.AlarmTriggerEventArgs">
-            <summary>
-            AlarmTriggerEventArgs is a class derived from EventArgs and is used for
-            passing aguments to the OnAlarmTrigger events of the AlarmTimer class.
-            </summary>
-        </member>
-        <member name="F:CrawlWave.Common.AlarmTriggerEventArgs.dtAlarm">
-            <summary>
-            The <see cref="T:System.DateTime">DateTime</see> when the Alarm is set.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.Common.AlarmTriggerEventArgs.#ctor(System.DateTime)">
-            <summary>
-            The constructor for the AlarmTriggerEventArgs
-            </summary>
-            <param name="dt">The <see cref="T:System.DateTime">DateTime</see> when the AlarmTimer has been set</param>
-        </member>
-        <member name="T:CrawlWave.Common.AlarmTimer">
-            <summary>
-            AlarmTimer is a timer that raises an event at a specified time. The alarm
-            stops after raising the first OnAlarmTrigger/OnAlarmBell Event. It is used
-            as a simple Time Scheduler in applications that need to be 'waken up' at a
-            given time . The AlarmTimer supports simultaneous notification of multiple
-            clients (observers), by implementing the Observer Design Pattern for the 2
-            public events it publishes (OnAlarmBell + OnAlarmTrigger). The OnAlarmBell
-            event is a simple event that doesn't require the use of any any delegates.
-            OnAlarmTrigger on the other hand uses  the AlarmTriggerEventArgs delegate,
-            so that the clients can find out the exact time the AlarmTimer was set to.
-            It has a (configurable) accuracy of 1 minute which is more than enough for
-            the scope of this project.
-            Author:	Kostas Stroggylos [mod], kostas@circular.gr
-            Written:10/05/2003
-            Updated:24/08/2004 -> Added the OnAlarmBell event.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.Common.AlarmTimer.#ctor">
-            <summary>
-            The default constructor
-            </summary>
-        </member>
-        <member name="M:CrawlWave.Common.AlarmTimer.Start">
-            <summary>
-            Sets the AlarmTimer in motion
-            </summary>
-        </member>
-        <member name="M:CrawlWave.Common.AlarmTimer.tmrAlarm_Elapsed(System.Object,System.Timers.ElapsedEventArgs)">
-            <summary>
-            If the AlarmTimer is enabled this method is called every minute. If the current
-            time is equal to the Alarm Time (with an accuracy of 1 minute) then the events
-            are fired and the Alarm is disabled.
-            </summary>
-            <param name="alarm">The AlarmTimer used</param>
-            <param name="e">The internal timer's EventArgs</param>
-        </member>
-        <member name="E:CrawlWave.Common.AlarmTimer.OnAlarmBell">
-            <summary>
-            The OnAlarmBell event the clients will subscribe to
-            </summary>
-        </member>
-        <member name="E:CrawlWave.Common.AlarmTimer.OnAlarmTrigger">
-            <summary>
-            The OnAlarmTrigger event the clients will subscribe to
-            </summary>
-        </member>
-        <member name="P:CrawlWave.Common.AlarmTimer.AlarmTime">
-            <summary>
-            The DateTime when the events will be fired
-            </summary>
-        </member>
-        <member name="P:CrawlWave.Common.AlarmTimer.Enabled">
-            <summary>
-            Gets/sets a value indicating if the Alarm is enabled
-            </summary>
-        </member>
-        <member name="T:CrawlWave.Common.AlarmTimer.AlarmTrigger">
-            <summary>
-            The delegate for the observer of the AlarmTimer's Events
-            </summary>
-        </member>
         <member name="T:CrawlWave.Common.InternetUtils">
             <summary>
             InternetUtils is a class providing generic static Internet-related functions.
@@ -2479,429 +2902,6 @@
             </summary>
             <param name="data">The data to be converted from Base64 format.</param>
             <returns>The decoded string.</returns>
-        </member>
-        <member name="T:CrawlWave.Common.BinaryTrie">
-            <summary>
-            Represents a trie with keys that are binary values of length up to 32.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.Common.BinaryTrie.#ctor">
-            <summary>
-            Constructs a <see cref="T:CrawlWave.Common.BinaryTrie"/> with an index length of 1.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.Common.BinaryTrie.#ctor(System.Int32)">
-            <summary>
-            Constructs a <see cref="T:CrawlWave.Common.BinaryTrie"/> with a given index length.
-            </summary>
-            <param name="indexLength">The index length.</param>
-        </member>
-        <member name="M:CrawlWave.Common.BinaryTrie.AddInternal(System.Int32,System.Int32,System.Int32)">
-            <summary>
-            Adds a key with the given index to the trie.
-            </summary>
-            <param name="index">
-            The index of the root <see cref="T:CrawlWave.Common.BinaryTrieNode"/> for the given key value.
-            </param>
-            <param name="key">An <see cref="T:System.Int32"/> key value.</param>
-            <param name="keyLength">
-            The length in bits of the significant portion of the key.
-            </param>
-            <returns>The <see cref="T:CrawlWave.Common.BinaryTrieNode"/> that was added to the trie.</returns>
-        </member>
-        <member name="M:CrawlWave.Common.BinaryTrie.FindBestMatchInternal(System.Int32,System.Int32)">
-            <summary>
-            Finds the best internal match for a key.
-            </summary>
-            <param name="index">
-            The index of the root <see cref="T:CrawlWave.Common.BinaryTrieNode"/> for the given key value.
-            </param>
-            <param name="key">An <see cref="T:System.Int32"/> key value.</param>
-            <returns>A reference to the <see cref="T:System.Object"/> containing the key.</returns>
-        </member>
-        <member name="M:CrawlWave.Common.BinaryTrie.FindExactMatchInternal(System.Int32,System.Int32)">
-            <summary>
-            Finds the exact internal match for a key.
-            </summary>
-            <param name="index">
-            The index of the root <see cref="T:CrawlWave.Common.BinaryTrieNode"/> for the given key value.
-            </param>
-            <param name="key">An <see cref="T:System.Int32"/> key value.</param>
-            <returns>A reference to the <see cref="T:System.Object"/> containing the key.</returns>
-        </member>
-        <member name="M:CrawlWave.Common.BinaryTrie.Add(System.Int32,System.Int32)">
-            <summary>
-            Adds a node to the trie.
-            </summary>
-            <param name="key">An <see cref="T:System.Int32"/> key value.</param>
-            <param name="keyLength">
-            The length in bits of the significant portion of the key.
-            </param>
-            <returns>The <see cref="T:CrawlWave.Common.BinaryTrieNode"/> that was added to the trie.</returns>
-        </member>
-        <member name="M:CrawlWave.Common.BinaryTrie.FindBestMatch(System.Int32)">
-            <summary>
-            Finds the best match for a given key.
-            </summary>
-            <param name="key">An <see cref="T:System.Int32"/> key.</param>
-            <returns>The best match.</returns>
-        </member>
-        <member name="P:CrawlWave.Common.BinaryTrie.Roots">
-            <summary>
-            Gets the collection of root <see cref="T:CrawlWave.Common.BinaryTrieNode"/> objects in this 
-            <see cref="T:CrawlWave.Common.BinaryTrie"/>.
-            </summary>
-        </member>
-        <member name="P:CrawlWave.Common.BinaryTrie.CountInternal">
-            <summary>
-            Gets or sets the number of keys in the trie.
-            </summary>
-        </member>
-        <member name="P:CrawlWave.Common.BinaryTrie.IndexLength">
-            <summary>
-            Gets the index length of this <see cref="T:CrawlWave.Common.BinaryTrie"/>.
-            </summary>
-            <remarks>
-            The index length indicates the number of bits that is to be used to preselect
-            the root nodes.
-            </remarks>
-        </member>
-        <member name="P:CrawlWave.Common.BinaryTrie.Count">
-            <summary>
-            Gets the number of keys in the trie.
-            </summary>
-        </member>
-        <member name="T:CrawlWave.Common.BinaryTrieNode">
-            <summary>
-            Represents an entry in an <see cref="T:CrawlWave.Common.IPCountryTable"/> table.
-            </summary>
-        </member>
-        <member name="F:CrawlWave.Common.BinaryTrieNode.EmptyData">
-            <summary>
-            Used to match nodes
-            </summary>
-        </member>
-        <member name="M:CrawlWave.Common.BinaryTrieNode.#ctor(System.Int32,System.Int32)">
-            <summary>
-            Constructs a <see cref="T:CrawlWave.Common.BinaryTrieNode"/> object.
-            </summary>
-            <param name="key">The key for the new object.</param>
-            <param name="keyLength">the length of the key</param>
-        </member>
-        <member name="M:CrawlWave.Common.BinaryTrieNode.AddInternal(System.Int32,System.Int32)">
-            <summary>
-            Adds a record to the trie using the internal representation of an IP address.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.Common.BinaryTrieNode.FindExactMatch(System.Int32)">
-            <summary>
-            Looks up a key value in the trie.
-            </summary>
-            <param name="key">The key to look up.</param>
-            <returns>The exact matching <see cref="T:CrawlWave.Common.BinaryTrieNode"/> in the trie.</returns>
-        </member>
-        <member name="M:CrawlWave.Common.BinaryTrieNode.FindBestMatch(System.Int32)">
-            <summary>
-            Looks up a key value in the trie.
-            </summary>
-            <param name="key">The key to look up.</param>
-            <returns>The best matching <see cref="T:CrawlWave.Common.BinaryTrieNode"/> in the trie.</returns>
-        </member>
-        <member name="P:CrawlWave.Common.BinaryTrieNode.UserData">
-            <summary>
-            Gets or sets the country code for this entry.
-            </summary>
-        </member>
-        <member name="P:CrawlWave.Common.BinaryTrieNode.Key">
-            <summary>
-            Gets the key for this entry.
-            </summary>
-        </member>
-        <member name="P:CrawlWave.Common.BinaryTrieNode.IsKey">
-            <summary>
-            Gets a <see cref="T:System.Boolean"/> value indicating whether the entry is a key.
-            </summary>
-        </member>
-        <member name="T:CrawlWave.Common.IPCountryTable">
-            <summary>
-            Represents a trie that can be used to look up the country
-            corresponding to an IP address.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.Common.IPCountryTable.GetKeyLength(System.Int32)">
-            <summary>
-            Calculates the length of the key in bits.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.Common.IPCountryTable.#ctor(System.Int32)">
-            <summary>
-            Constructs an <see cref="T:CrawlWave.Common.IPCountryTable"/> object.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.Common.IPCountryTable.LoadStatisticsFile(System.String,System.Boolean)">
-            <summary>
-            Loads an IP-country database file into the trie.
-            </summary>
-            <param name="filename">
-            The path and filename of the file that holds the database.
-            </param>
-            <param name="calculateKeyLength">
-            A boolean value that indicates whether the <em>size</em> field in the database
-            contains the total length (<strong>true</strong>) or the exponent of the length
-            (<strong>false</strong> of the allocated segment.
-            </param>
-        </member>
-        <member name="M:CrawlWave.Common.IPCountryTable.GetCountry(System.String)">
-            <summary>
-            Attempts to find the country code corresponding to a given IP address.
-            </summary>
-            <param name="address">A <see cref="T:System.String"/> value representing the IP Address</param>
-            <returns>The two letter country code corresponding to the IP address, or 
-            <strong>"??"</strong> if it was not found.
-            </returns>
-        </member>
-        <member name="P:CrawlWave.Common.IPCountryTable.NetworkCodeCount">
-            <summary>
-            Gets the total number of entries in the trie.
-            </summary>
-        </member>
-        <member name="T:CrawlWave.Common.UrlCrawlData">
-            <summary>
-            This class represents the results of the crawling process on a Url. It contains
-            the URL's location, CRC, HTTP Status Code, the timestamp of the retrieval, the
-            last modification time and, finally, the data as a simple string form. It is a
-            big class (an instance could consume >100K) but we'll have to live with that.
-            </summary>
-        </member>
-        <member name="F:CrawlWave.Common.UrlCrawlData.url">
-            <summary>
-            the url entity, perhaps we could change it with System.Uri
-            </summary>
-        </member>
-        <member name="F:CrawlWave.Common.UrlCrawlData.updated">
-            <summary>
-            A boolean flag indicating whether the Url has been updated since the last visit
-            </summary>
-        </member>
-        <member name="F:CrawlWave.Common.UrlCrawlData.redirected">
-            <summary>
-            A boolean flag indicating whether the Url has redirected the crawler to another
-            </summary>
-        </member>
-        <member name="F:CrawlWave.Common.UrlCrawlData.redirectedFlagRobots">
-            <summary>
-            A boolean flag indicating whether the url where the crawler has been redirected
-            is allowed to be crawled according to the Robots Exclusion Standard
-            </summary>
-        </member>
-        <member name="F:CrawlWave.Common.UrlCrawlData.redirectedFlagDomain">
-            <summary>
-            A flag indicating whether the url where the crawler has been redirected belongs
-            to the part of the web we wish to crawl
-            </summary>
-        </member>
-        <member name="F:CrawlWave.Common.UrlCrawlData.redirectedPriority">
-            <summary>
-            A flag indicating the priority of the url where the crawler has been redirected
-            </summary>
-        </member>
-        <member name="F:CrawlWave.Common.UrlCrawlData.httpStatusCode">
-            <summary>
-            The <see cref="P:CrawlWave.Common.UrlCrawlData.HttpStatusCode"/> that the server returned during the crawling
-            </summary>
-        </member>
-        <member name="F:CrawlWave.Common.UrlCrawlData.data">
-            <summary>
-            The contents of the Url in string format
-            </summary>
-        </member>
-        <member name="F:CrawlWave.Common.UrlCrawlData.timeStamp">
-            <summary>
-            The <see cref="T:System.DateTime"/> when the Url was last visited
-            </summary>
-        </member>
-        <member name="F:CrawlWave.Common.UrlCrawlData.retrievalTime">
-            <summary>
-            The time it took (in msec) to download the contents of the url.
-            </summary>
-        </member>
-        <member name="F:CrawlWave.Common.UrlCrawlData.outLinks">
-            <summary>
-            An array of <see cref="T:CrawlWave.Common.InternetUrlToIndex"/> with the out links contained in a
-            Url's contents.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.Common.UrlCrawlData.#ctor">
-            <summary>
-            Constructs an instance of the <see cref="T:CrawlWave.Common.UrlCrawlData"/> class and initializes
-            it with the default values.
-            </summary>
-        </member>
-        <member name="P:CrawlWave.Common.UrlCrawlData.Url">
-            <summary>
-            Gets or sets the Url of the <see cref="T:CrawlWave.Common.InternetUrlToCrawl"/> encapsulated by a 
-            <see cref="T:CrawlWave.Common.UrlCrawlData"/> object.
-            </summary>
-        </member>
-        <member name="P:CrawlWave.Common.UrlCrawlData.UrlToCrawl">
-            <summary>
-            Gets or sets the <see cref="T:CrawlWave.Common.InternetUrlToCrawl"/> encapsulated by this object.
-            </summary>
-        </member>
-        <member name="P:CrawlWave.Common.UrlCrawlData.ID">
-            <summary>
-            Gets or sets a unique number that corresponds to the ID associated with an
-            instance of the <see cref="T:CrawlWave.Common.UrlCrawlData"/> class.
-            </summary>
-        </member>
-        <member name="P:CrawlWave.Common.UrlCrawlData.MD5">
-            <summary>
-            Gets or sets the MD5 Hash Code for the Url that the object points to.
-            </summary>
-        </member>
-        <member name="P:CrawlWave.Common.UrlCrawlData.Updated">
-            <summary>
-            Gets or sets a boolean value indicating whether the Url has been updated
-            since the last visit.
-            </summary>
-        </member>
-        <member name="P:CrawlWave.Common.UrlCrawlData.Redirected">
-            <summary>
-            Gets or sets a boolean flag indicating whether the Url has redirected the
-            crawler to another Url.
-            </summary>
-        </member>
-        <member name="P:CrawlWave.Common.UrlCrawlData.RedirectedFlagRobots">
-            <summary>
-            Gets or sets a boolean flag indicating whether the url where the crawler has 
-            been redirected is allowed to be crawled by the Robots Exclusion Standard
-            </summary>
-        </member>
-        <member name="P:CrawlWave.Common.UrlCrawlData.RedirectedFlagDomain">
-            <summary>
-            Gets or sets a flag indicating whether the url where the crawler has been 
-            redirected belongs to the part of the web we wish to crawl
-            </summary>
-        </member>
-        <member name="P:CrawlWave.Common.UrlCrawlData.RedirectedPriority">
-            <summary>
-            Gets or sets a flag indicating the priority of the url where the crawler has
-            been redirected
-            </summary>
-        </member>
-        <member name="P:CrawlWave.Common.UrlCrawlData.CRC">
-            <summary>
-            Gets or sets the Cyclic Reduncancy Check value that is calculated from the
-            contents of this Url.
-            </summary>
-        </member>
-        <member name="P:CrawlWave.Common.UrlCrawlData.FlagFetchRobots">
-            <summary>
-            Gets or sets a flag indicating whether the server has asked the client to fetch
-            the robots.txt file from the host.
-            </summary>
-            <remarks>
-            For more information see also <see cref="P:CrawlWave.Common.InternetUrlToCrawl.FlagFetchRobots"/>.
-            <seealso cref="P:CrawlWave.Common.InternetUrlToCrawl.FlagFetchRobots">InternetUrl.FlagFetchRobots</seealso>
-            </remarks>
-        </member>
-        <member name="P:CrawlWave.Common.UrlCrawlData.RobotsDisallowedPaths">
-            <summary>
-            Gets or sets a string containing the paths disallowed by the robots.txt file on
-            the host, separated by a space.
-            </summary>
-        </member>
-        <member name="P:CrawlWave.Common.UrlCrawlData.HttpStatusCode">
-            <summary>
-            Gets or sets the <see cref="P:CrawlWave.Common.UrlCrawlData.HttpStatusCode"/> that the server returned during
-            the last visit to the Url encapsulated by this object.
-            </summary>
-        </member>
-        <member name="P:CrawlWave.Common.UrlCrawlData.Data">
-            <summary>
-            Gets or sets a string that contains the Url's data.
-            </summary>
-        </member>
-        <member name="P:CrawlWave.Common.UrlCrawlData.TimeStamp">
-            <summary>
-            Gets or sets the <see cref="T:System.DateTime"/> when the Url was last visited.
-            </summary>
-        </member>
-        <member name="P:CrawlWave.Common.UrlCrawlData.RetrievalTime">
-            <summary>
-            Gets or sets the time it took (in msec) to download the contents of the Url.
-            </summary>
-        </member>
-        <member name="P:CrawlWave.Common.UrlCrawlData.OutLinks">
-            <summary>
-            Gets or sets an array of <see cref="T:CrawlWave.Common.InternetUrlToIndex"/> with the out links
-            contained in a Url's contents.
-            </summary>
-        </member>
-        <member name="T:CrawlWave.Common.MD5Hash">
-            <summary>
-            MD5Hash provides a static method returning the MD5 Hash of a string, either as a 16 
-            byte array or formatted as a hexadecimal string. Its constructor is private, thus 
-            not allowing the creation of instances of the class.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.Common.MD5Hash.#ctor">
-            <summary>
-            Default constructor. Not necessaty, since all members are static.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.Common.MD5Hash.md5(System.String)">
-            <summary>
-            Returns a Hash of a given string using RSA's MD5 Message Digest Algorithm. 
-            </summary>
-            <param name="text">The string to digest</param>
-            <returns>An array of 16 bytes containing the MD5 hash of the input</returns>
-        </member>
-        <member name="M:CrawlWave.Common.MD5Hash.md5string(System.String)">
-            <summary>
-            Returns a Hash of a given string using RSA's MD5 Messasge Digest Algorithm
-            after converting it in a string in hexadecimal format.
-            </summary>
-            <param name="text">The string to digest</param>
-            <returns>A string containing the input's hash value in hexadecimal form</returns>
-        </member>
-        <member name="T:CrawlWave.Common.SHA1Hash">
-            <summary>
-            SHA-1 Hash Algorithm implementation
-            </summary>
-        </member>
-        <member name="M:CrawlWave.Common.SHA1Hash.SHA1(System.Byte[])">
-            <summary>
-            This method take a byte array, pads it according to the 
-            specifications in FIPS 180-2 and passes to the SHA-1
-            hash function. It returns a byte array containing 
-            the hash of the given message.
-            </summary>
-            <param name="message">Message to be hashed as byte array</param>
-            <returns>Message hash value as byte array</returns>
-        </member>
-        <member name="M:CrawlWave.Common.SHA1Hash.HashCore(System.Int32,System.Byte[])">
-            <summary>
-            SHA-1 Hash function - This method should only be used
-            with properly padded messages.  To hash an unpadded 
-            message use one of the other methods.  This method is
-            called by other methods once the message is padded
-            and loaded as a byte array.  For internal use only!
-            </summary>
-            <param name="n">Number of 512-bit message segments</param>
-            <param name="m">Message to be hashed as byte array</param>
-            <returns>Hash value as byte array</returns>
-        </member>
-        <member name="M:CrawlWave.Common.SHA1Hash.Func(System.Int32,System.UInt32,System.UInt32,System.UInt32)">
-            <summary>
-            Performs SHA-1 logical functions.  See FIPS 180-2 for
-            complete description.  For internal use only!
-            </summary>
-            <param name="t">function number</param>
-            <param name="x">first arguement</param>
-            <param name="y">second arguement</param>
-            <param name="z">third arguement</param>
-            <returns>Function results</returns>
         </member>
     </members>
 </doc>

@@ -186,6 +186,27 @@
             </summary>
             <returns>The application's path, including the trailing slashes</returns>
         </member>
+        <member name="T:CrawlWave.Client.Common.CrawlerState">
+            <summary>
+            CrawlerStatus is an enumeration that defines all the different states in which the
+            CrawlWave.Client.Crawler can be at a given time.
+            </summary>
+        </member>
+        <member name="F:CrawlWave.Client.Common.CrawlerState.Stopped">
+            <summary>
+            Indicates that the crawler is inactive
+            </summary>
+        </member>
+        <member name="F:CrawlWave.Client.Common.CrawlerState.Paused">
+            <summary>
+            Indicates that the crawler is active but currently not visiting pages
+            </summary>
+        </member>
+        <member name="F:CrawlWave.Client.Common.CrawlerState.Running">
+            <summary>
+            Indicated that the crawler is active and visiting pages
+            </summary>
+        </member>
         <member name="T:CrawlWave.Client.Common.ICrawlerController">
             <summary>
             ICrawlerController defines the interface for a Remotable object that will be used
@@ -274,27 +295,6 @@
             </summary>
             <param name="sx">Returns Null if the operation succeeds, or a <see cref="T:CrawlWave.Common.SerializedException"/> 
             encapsulating the error that occured if the operation fails.</param>
-        </member>
-        <member name="T:CrawlWave.Client.Common.CrawlerState">
-            <summary>
-            CrawlerStatus is an enumeration that defines all the different states in which the
-            CrawlWave.Client.Crawler can be at a given time.
-            </summary>
-        </member>
-        <member name="F:CrawlWave.Client.Common.CrawlerState.Stopped">
-            <summary>
-            Indicates that the crawler is inactive
-            </summary>
-        </member>
-        <member name="F:CrawlWave.Client.Common.CrawlerState.Paused">
-            <summary>
-            Indicates that the crawler is active but currently not visiting pages
-            </summary>
-        </member>
-        <member name="F:CrawlWave.Client.Common.CrawlerState.Running">
-            <summary>
-            Indicated that the crawler is active and visiting pages
-            </summary>
         </member>
     </members>
 </doc>

@@ -4,6 +4,116 @@
         <name>CrawlWave.ServerPlugins.WordCleanup</name>
     </assembly>
     <members>
+        <member name="T:CrawlWave.ServerPlugins.WordCleanup.WordCleanupPlugin">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerPlugins.WordCleanup.WordCleanupPlugin.#ctor">
+            <summary>
+            Constructs a new instance of the <see cref="!:CrawlWave.ServerPlugins.UrlSelection.UrlSelectorPlugin"/> class.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerPlugins.WordCleanup.WordCleanupPlugin.Start">
+            <summary>
+            Starts the process of the selection of urls to crawl from the database. If the 
+            plugin is  already in the <see cref="F:CrawlWave.Common.PluginState.Running"/> state then it has
+            no effect.
+            </summary>
+            <exception cref="T:System.InvalidOperationException">
+            Thrown if the plugin is in the <see cref="F:CrawlWave.Common.PluginState.Paused"/> state.
+            </exception>
+        </member>
+        <member name="M:CrawlWave.ServerPlugins.WordCleanup.WordCleanupPlugin.Pause">
+            <summary>
+            Pauses the url selection process by calling <see cref="M:System.Threading.Thread.Suspend"/> on the 
+            running threads. If the plugin is already in the <see cref="F:CrawlWave.Common.PluginState.Paused"/>
+            state it has no effect.
+            </summary>
+            <exception cref="T:System.InvalidOperationException">
+            Thrown if the plugin is in the <see cref="F:CrawlWave.Common.PluginState.Stopped"/> state.
+            </exception>
+        </member>
+        <member name="M:CrawlWave.ServerPlugins.WordCleanup.WordCleanupPlugin.Resume">
+            <summary>
+            Resumes the url selection process if it has been paused.
+            </summary>
+            <exception cref="T:System.InvalidOperationException">
+            Thrown if the plugin is in the <see cref="F:CrawlWave.Common.PluginState.Stopped"/> or 
+            <see cref="F:CrawlWave.Common.PluginState.Running"/> state.
+            </exception>
+        </member>
+        <member name="M:CrawlWave.ServerPlugins.WordCleanup.WordCleanupPlugin.Stop">
+            <summary>
+            Stops the url selection process. If the plugin is already in the <see cref="F:CrawlWave.Common.PluginState.Stopped"/>
+            state it has no effect. If the url selection is in progress it is not stopped
+            abruptly but the method waits until the selection of urls is complete.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerPlugins.WordCleanup.WordCleanupPlugin.ShowSettings">
+            <summary>
+            Displays a form with the plugin's settings.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerPlugins.WordCleanup.WordCleanupPlugin.PerformCleanup">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerPlugins.WordCleanup.WordCleanupPlugin.SelectWords(System.Data.SqlClient.SqlTransaction)">
+            <summary>
+            Selects a set of Urls to be crawled and performs all the necessary processing on them.
+            </summary>
+            <param name="transaction">The <see cref="T:System.Data.SqlClient.SqlTransaction"/> currently active.</param>
+            <returns>A <see cref="T:System.Data.DataSet"/> containing the selected Urls</returns>
+        </member>
+        <member name="M:CrawlWave.ServerPlugins.WordCleanup.WordCleanupPlugin.MarkUrlAsAssigned(System.Int32,System.Data.SqlClient.SqlTransaction)">
+            <summary>
+            Delete Word
+            </summary>
+            <param name="transaction">The <see cref="T:System.Data.SqlClient.SqlTransaction"/> currently active.</param>
+            <param name="UrlID">The ID of the Word</param>
+            <remarks>This method has been inlined in PerformSelection now (10/12/04) </remarks>
+        </member>
+        <member name="M:CrawlWave.ServerPlugins.WordCleanup.WordCleanupPlugin.IsWordOK(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="word"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CrawlWave.ServerPlugins.WordCleanup.WordCleanupPlugin.PauseInSeconds">
+            <summary>
+            Returns the number of seconds the thread must wait before continuing to the next loop
+            </summary>
+            <returns>The delay amount in seconds</returns>
+        </member>
+        <member name="M:CrawlWave.ServerPlugins.WordCleanup.WordCleanupPlugin.StopThreads">
+            <summary>
+            Stops the plugin's threads
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerPlugins.WordCleanup.WordCleanupPlugin.SuspendThreads">
+            <summary>
+            Suspends the plugin's threads
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerPlugins.WordCleanup.WordCleanupPlugin.ResumeThreads">
+            <summary>
+            Resumes the plugin's suspended threads
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerPlugins.WordCleanup.WordCleanupPlugin.OnStateChanged(System.EventArgs)">
+            <summary>
+            Raises the <see cref="E:CrawlWave.ServerPlugins.WordCleanup.WordCleanupPlugin.StateChanged"/> event.
+            </summary>
+            <param name="e">The <see cref="T:System.EventArgs"/> related to the event.</param>
+        </member>
+        <member name="E:CrawlWave.ServerPlugins.WordCleanup.WordCleanupPlugin.StateChanged">
+            <summary>
+            Occurs when the plugin's <see cref="T:CrawlWave.Common.PluginState"/> changes.
+            </summary>
+        </member>
         <member name="T:CrawlWave.ServerPlugins.WordCleanup.PluginSettings">
             <summary>
             PluginSettings is a Singleton class that holds all the plugin's settings and provides
@@ -163,116 +273,6 @@
             <summary>
             Required method for Designer support - do not modify
             the contents of this method with the code editor.
-            </summary>
-        </member>
-        <member name="T:CrawlWave.ServerPlugins.WordCleanup.WordCleanupPlugin">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="M:CrawlWave.ServerPlugins.WordCleanup.WordCleanupPlugin.#ctor">
-            <summary>
-            Constructs a new instance of the <see cref="!:CrawlWave.ServerPlugins.UrlSelection.UrlSelectorPlugin"/> class.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.ServerPlugins.WordCleanup.WordCleanupPlugin.Start">
-            <summary>
-            Starts the process of the selection of urls to crawl from the database. If the 
-            plugin is  already in the <see cref="F:CrawlWave.Common.PluginState.Running"/> state then it has
-            no effect.
-            </summary>
-            <exception cref="T:System.InvalidOperationException">
-            Thrown if the plugin is in the <see cref="F:CrawlWave.Common.PluginState.Paused"/> state.
-            </exception>
-        </member>
-        <member name="M:CrawlWave.ServerPlugins.WordCleanup.WordCleanupPlugin.Pause">
-            <summary>
-            Pauses the url selection process by calling <see cref="M:System.Threading.Thread.Suspend"/> on the 
-            running threads. If the plugin is already in the <see cref="F:CrawlWave.Common.PluginState.Paused"/>
-            state it has no effect.
-            </summary>
-            <exception cref="T:System.InvalidOperationException">
-            Thrown if the plugin is in the <see cref="F:CrawlWave.Common.PluginState.Stopped"/> state.
-            </exception>
-        </member>
-        <member name="M:CrawlWave.ServerPlugins.WordCleanup.WordCleanupPlugin.Resume">
-            <summary>
-            Resumes the url selection process if it has been paused.
-            </summary>
-            <exception cref="T:System.InvalidOperationException">
-            Thrown if the plugin is in the <see cref="F:CrawlWave.Common.PluginState.Stopped"/> or 
-            <see cref="F:CrawlWave.Common.PluginState.Running"/> state.
-            </exception>
-        </member>
-        <member name="M:CrawlWave.ServerPlugins.WordCleanup.WordCleanupPlugin.Stop">
-            <summary>
-            Stops the url selection process. If the plugin is already in the <see cref="F:CrawlWave.Common.PluginState.Stopped"/>
-            state it has no effect. If the url selection is in progress it is not stopped
-            abruptly but the method waits until the selection of urls is complete.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.ServerPlugins.WordCleanup.WordCleanupPlugin.ShowSettings">
-            <summary>
-            Displays a form with the plugin's settings.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.ServerPlugins.WordCleanup.WordCleanupPlugin.PerformCleanup">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="M:CrawlWave.ServerPlugins.WordCleanup.WordCleanupPlugin.SelectWords(System.Data.SqlClient.SqlTransaction)">
-            <summary>
-            Selects a set of Urls to be crawled and performs all the necessary processing on them.
-            </summary>
-            <param name="transaction">The <see cref="T:System.Data.SqlClient.SqlTransaction"/> currently active.</param>
-            <returns>A <see cref="T:System.Data.DataSet"/> containing the selected Urls</returns>
-        </member>
-        <member name="M:CrawlWave.ServerPlugins.WordCleanup.WordCleanupPlugin.MarkUrlAsAssigned(System.Int32,System.Data.SqlClient.SqlTransaction)">
-            <summary>
-            Delete Word
-            </summary>
-            <param name="transaction">The <see cref="T:System.Data.SqlClient.SqlTransaction"/> currently active.</param>
-            <param name="UrlID">The ID of the Word</param>
-            <remarks>This method has been inlined in PerformSelection now (10/12/04) </remarks>
-        </member>
-        <member name="M:CrawlWave.ServerPlugins.WordCleanup.WordCleanupPlugin.IsWordOK(System.String)">
-            <summary>
-            
-            </summary>
-            <param name="word"></param>
-            <returns></returns>
-        </member>
-        <member name="M:CrawlWave.ServerPlugins.WordCleanup.WordCleanupPlugin.PauseInSeconds">
-            <summary>
-            Returns the number of seconds the thread must wait before continuing to the next loop
-            </summary>
-            <returns>The delay amount in seconds</returns>
-        </member>
-        <member name="M:CrawlWave.ServerPlugins.WordCleanup.WordCleanupPlugin.StopThreads">
-            <summary>
-            Stops the plugin's threads
-            </summary>
-        </member>
-        <member name="M:CrawlWave.ServerPlugins.WordCleanup.WordCleanupPlugin.SuspendThreads">
-            <summary>
-            Suspends the plugin's threads
-            </summary>
-        </member>
-        <member name="M:CrawlWave.ServerPlugins.WordCleanup.WordCleanupPlugin.ResumeThreads">
-            <summary>
-            Resumes the plugin's suspended threads
-            </summary>
-        </member>
-        <member name="M:CrawlWave.ServerPlugins.WordCleanup.WordCleanupPlugin.OnStateChanged(System.EventArgs)">
-            <summary>
-            Raises the <see cref="E:CrawlWave.ServerPlugins.WordCleanup.WordCleanupPlugin.StateChanged"/> event.
-            </summary>
-            <param name="e">The <see cref="T:System.EventArgs"/> related to the event.</param>
-        </member>
-        <member name="E:CrawlWave.ServerPlugins.WordCleanup.WordCleanupPlugin.StateChanged">
-            <summary>
-            Occurs when the plugin's <see cref="T:CrawlWave.Common.PluginState"/> changes.
             </summary>
         </member>
     </members>

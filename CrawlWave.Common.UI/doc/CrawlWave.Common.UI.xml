@@ -4,325 +4,6 @@
         <name>CrawlWave.Common.UI</name>
     </assembly>
     <members>
-        <member name="T:CrawlWave.Common.UI.HealthLineGraph">
-            <summary>
-            HealthLineGraph is a subclass of <see cref="T:System.Windows.Forms.Panel"/> that can
-            display a usage history graph like the one in Windows Task Manager. It offers user-
-            selectable forecolor, grid color and background color and it can hold up to 800
-            values. Since each time it is redrawn it is shifted by 2 pixels this means that it
-            can hold enough values to fill a 1600x1200 pixel resolution screen.
-            </summary>
-        </member>
-        <member name="F:CrawlWave.Common.UI.HealthLineGraph.components">
-            <summary> 
-            Required designer variable.
-            </summary>
-        </member>
-        <member name="F:CrawlWave.Common.UI.HealthLineGraph.mustWrapValues">
-            <summary>
-            Private variables needed for the control
-            </summary>		
-        </member>
-        <member name="M:CrawlWave.Common.UI.HealthLineGraph.#ctor">
-            <summary>
-            Constructs an instance of the <see cref="T:CrawlWave.Common.UI.HealthLineGraph"/> class and sets all
-            the properties to their default values.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.Common.UI.HealthLineGraph.Dispose(System.Boolean)">
-            <summary> 
-            Clean up any resources being used.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.Common.UI.HealthLineGraph.InitializeComponent">
-            <summary> 
-            Required method for Designer support - do not modify 
-            the contents of this method with the code editor.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.Common.UI.HealthLineGraph.HealthLineGraph_Paint(System.Object,System.Windows.Forms.PaintEventArgs)">
-            <summary>
-            It is called whenever the control receives a Paint event, causing it to redraw.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.Common.UI.HealthLineGraph.HealthLineGraph_ForeColorChanged(System.Object,System.EventArgs)">
-            <summary>
-            It is called when the ForeColor of the control changes in order to set the color of
-            the graph Pen.
-            </summary>
-            <param name="sender"></param>
-            <param name="e"></param>
-        </member>
-        <member name="M:CrawlWave.Common.UI.HealthLineGraph.ClearGraph(System.Drawing.Graphics)">
-            <summary>
-            Clears the graph and draws the grid.
-            </summary>
-            <param name="g">The graphics object to be used for drawing the grid.</param>
-        </member>
-        <member name="M:CrawlWave.Common.UI.HealthLineGraph.DrawGraph(System.Drawing.Graphics)">
-            <summary>
-            Draws the graph based on the history of the previous values.
-            </summary>
-            <param name="g">The graphics object to be used for drawing the line.</param>
-        </member>
-        <member name="M:CrawlWave.Common.UI.HealthLineGraph.SetNextValue(System.Double)">
-            <summary>
-            Sets the new value to be displayed in the control, makes sure that the grid
-            is moved one step forward and calculates the current maximum value, so that
-            the height of the line can be adjusted dynamically.
-            </summary>
-            <param name="nextValue">The new value to be displayed in the control.</param>
-        </member>
-        <member name="M:CrawlWave.Common.UI.HealthLineGraph.OnMiminumChanged(System.EventArgs)">
-            <summary>
-            Raises the <see cref="E:CrawlWave.Common.UI.HealthLineGraph.MinimumChanged"/> event.
-            </summary>
-            <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
-        </member>
-        <member name="M:CrawlWave.Common.UI.HealthLineGraph.OnMaximumChanged(System.EventArgs)">
-            <summary>
-            Raises the <see cref="E:CrawlWave.Common.UI.HealthLineGraph.MaximumChanged"/> event.
-            </summary>
-            <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
-        </member>
-        <member name="M:CrawlWave.Common.UI.HealthLineGraph.OnGridColorChanged(System.EventArgs)">
-            <summary>
-            Raises the <see cref="E:CrawlWave.Common.UI.HealthLineGraph.GridColorChanged"/> event.
-            </summary>
-            <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
-        </member>
-        <member name="P:CrawlWave.Common.UI.HealthLineGraph.Value">
-            <summary>
-            Gets the value currently displayed by the control
-            </summary>
-        </member>
-        <member name="P:CrawlWave.Common.UI.HealthLineGraph.Minimum">
-            <summary>
-            Gets or sets the minimum value supported by the control
-            </summary>
-            <exception cref="T:System.ArgumentOutOfRangeException">Thrown if the value provided is negative.</exception>
-        </member>
-        <member name="P:CrawlWave.Common.UI.HealthLineGraph.Maximum">
-            <summary>
-            Gets or sets the control's maximum supported value
-            </summary>
-            <exception cref="T:System.ArgumentOutOfRangeException">Thrown if the value provided is 
-            negative or smaller than the value of the <see cref="P:CrawlWave.Common.UI.HealthLineGraph.Minimum"/> property.</exception>
-        </member>
-        <member name="P:CrawlWave.Common.UI.HealthLineGraph.NextValue">
-            <summary>
-            Sets the next value to be displayed and causes the control to redraw
-            </summary>
-            <remarks>
-            If the value supplied is greater than the value of the <see cref="P:CrawlWave.Common.UI.HealthLineGraph.Maximum"/>
-            property then the value of the Maximum property is set to the current value.
-            This causes the graph to redraw and dynamically adapt to the new range.
-            </remarks>
-            <exception cref="T:System.ArgumentOutOfRangeException">Thrown if the value provided is
-            smaller than the value of the <see cref="P:CrawlWave.Common.UI.HealthLineGraph.Minimum"/> property.</exception> 
-        </member>
-        <member name="P:CrawlWave.Common.UI.HealthLineGraph.GridColor">
-            <summary>
-            Gets/sets the Color to be used for the displayed grid
-            </summary>
-        </member>
-        <member name="E:CrawlWave.Common.UI.HealthLineGraph.MinimumChanged">
-            <summary>
-            Occurs when the <see cref="P:CrawlWave.Common.UI.HealthLineGraph.Minimum"/> property is set to a new value
-            </summary>
-        </member>
-        <member name="E:CrawlWave.Common.UI.HealthLineGraph.MaximumChanged">
-            <summary>
-            Occurs when the <see cref="P:CrawlWave.Common.UI.HealthLineGraph.Maximum"/> property is set to a new value
-            </summary>
-        </member>
-        <member name="E:CrawlWave.Common.UI.HealthLineGraph.GridColorChanged">
-            <summary>
-            Occurs when the <see cref="P:CrawlWave.Common.UI.HealthLineGraph.GridColor"/> property is set to a new value
-            </summary>
-        </member>
-        <member name="T:CrawlWave.Common.UI.HealthBarGraph">
-            <summary>
-            HealthBarGraph is a User Control that displays a Task-Manager like health bar. It
-            can be used to indicate percentage of usage of a certain resource, like CPU.
-            </summary>
-        </member>
-        <member name="F:CrawlWave.Common.UI.HealthBarGraph.components">
-            <summary> 
-            Required designer variable.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.Common.UI.HealthBarGraph.#ctor">
-            <summary>
-            Constructs a new instance of the <see cref="T:CrawlWave.Common.UI.HealthBarGraph"/> class and sets the
-            <see cref="P:CrawlWave.Common.UI.HealthBarGraph.Minimum"/>, <see cref="P:CrawlWave.Common.UI.HealthBarGraph.Maximum"/> and <see cref="P:CrawlWave.Common.UI.HealthBarGraph.Value"/> properties
-            to their default values.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.Common.UI.HealthBarGraph.Dispose(System.Boolean)">
-            <summary> 
-            Clean up any resources being used.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.Common.UI.HealthBarGraph.InitializeComponent">
-            <summary> 
-            Required method for Designer support - do not modify 
-            the contents of this method with the code editor.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.Common.UI.HealthBarGraph.SetValue(System.Int32)">
-            <summary>
-            Resizes the picture box appropriately for the value to be displayed and updates
-            the control's caption.
-            </summary>
-            <param name="val">The new value that must be displayed</param>
-        </member>
-        <member name="M:CrawlWave.Common.UI.HealthBarGraph.OnMiminumChanged(System.EventArgs)">
-            <summary>
-            Raises the <see cref="E:CrawlWave.Common.UI.HealthBarGraph.MinimumChanged"/> event.
-            </summary>
-            <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
-        </member>
-        <member name="M:CrawlWave.Common.UI.HealthBarGraph.OnMaximumChanged(System.EventArgs)">
-            <summary>
-            Raises the <see cref="E:CrawlWave.Common.UI.HealthBarGraph.MaximumChanged"/> event.
-            </summary>
-            <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
-        </member>
-        <member name="M:CrawlWave.Common.UI.HealthBarGraph.OnValueChanged(System.EventArgs)">
-            <summary>
-            Raises the <see cref="E:CrawlWave.Common.UI.HealthBarGraph.ValueChanged"/> event.
-            </summary>
-            <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
-        </member>
-        <member name="P:CrawlWave.Common.UI.HealthBarGraph.Label">
-            <summary>
-            Gets or sets the text displayed at the bottom of the control, next to the value.
-            </summary>
-        </member>
-        <member name="P:CrawlWave.Common.UI.HealthBarGraph.Minimum">
-            <summary>
-            Gets or sets the Minimum value the control can display
-            </summary>
-            <exception cref="T:System.ArgumentOutOfRangeException">Thrown when the value provided is negative.</exception>
-        </member>
-        <member name="P:CrawlWave.Common.UI.HealthBarGraph.Maximum">
-            <summary>
-            Gets or sets the Maximum value the control can display
-            </summary>
-            <exception cref="T:System.ArgumentOutOfRangeException">Thrown when the value provided is
-            smaller than the value of the <see cref="P:CrawlWave.Common.UI.HealthBarGraph.Minimum"/> property.</exception>
-        </member>
-        <member name="P:CrawlWave.Common.UI.HealthBarGraph.Value">
-            <summary>
-            Gets or sets the current value displayed in the control
-            </summary>
-            <exception cref="T:System.ArgumentOutOfRangeException">Thrown when the value provoded is
-            less than 0 or greater then the value of the <see cref="P:CrawlWave.Common.UI.HealthBarGraph.Maximum"/> property.</exception>
-        </member>
-        <member name="E:CrawlWave.Common.UI.HealthBarGraph.MinimumChanged">
-            <summary>
-            Occurs when the <see cref="P:CrawlWave.Common.UI.HealthBarGraph.Minimum"/> property is set to a new value
-            </summary>
-        </member>
-        <member name="E:CrawlWave.Common.UI.HealthBarGraph.MaximumChanged">
-            <summary>
-            Occurs when the <see cref="P:CrawlWave.Common.UI.HealthBarGraph.Maximum"/> property is set to a new value
-            </summary>
-        </member>
-        <member name="E:CrawlWave.Common.UI.HealthBarGraph.ValueChanged">
-            <summary>
-            Occurs when the <see cref="P:CrawlWave.Common.UI.HealthBarGraph.Value"/> property is set to a new value
-            </summary>
-        </member>
-        <member name="T:CrawlWave.Common.UI.ProgressStatusBarPanel">
-            <summary>
-            ProgressStatusBarPanel is a subclass of <see cref="T:System.Windows.Forms.StatusBarPanel"/>. It is a 
-            StatusBarPanel that contains a smooth progress bar with a specified color.
-            </summary>
-        </member>
-        <member name="F:CrawlWave.Common.UI.ProgressStatusBarPanel.value">
-            <summary>
-            the current value of the progress bar
-            </summary>
-        </member>
-        <member name="F:CrawlWave.Common.UI.ProgressStatusBarPanel.foreColor">
-            <summary>
-            the Progress Bar's Color
-            </summary>
-        </member>
-        <member name="M:CrawlWave.Common.UI.ProgressStatusBarPanel.#ctor(System.Windows.Forms.StatusBar)">
-            <summary>
-            Constructs a new instance of the <see cref="T:CrawlWave.Common.UI.ProgressStatusBarPanel"/> class
-            and initializes it with the default values.
-            </summary>
-            <param name="sb">The status bar that contains the progress bar</param>
-        </member>
-        <member name="M:CrawlWave.Common.UI.ProgressStatusBarPanel.sb_DrawItem(System.Object,System.Windows.Forms.StatusBarDrawItemEventArgs)">
-            <summary>
-            Draws the status bar
-            </summary>
-            <param name="sender">The control that caused it to draw again</param>
-            <param name="sbdevent">The draw event</param>
-        </member>
-        <member name="M:CrawlWave.Common.UI.ProgressStatusBarPanel.Dispose(System.Boolean)">
-            <summary>
-            Releases the managed resources used by the Control
-            </summary>
-            <param name="disposing">Disposing</param>
-        </member>
-        <member name="P:CrawlWave.Common.UI.ProgressStatusBarPanel.Minimum">
-            <summary>
-            Gets or sets the minimum value of the progress bar
-            </summary>
-        </member>
-        <member name="P:CrawlWave.Common.UI.ProgressStatusBarPanel.Maximum">
-            <summary>
-            Gets or sets the maximum value of the progress bar
-            </summary>
-        </member>
-        <member name="P:CrawlWave.Common.UI.ProgressStatusBarPanel.Value">
-            <summary>
-            Gets or sets the <see cref="P:System.Windows.Forms.ProgressBar.Value"/> property of the progress bar
-            </summary>
-            <exception cref="T:System.ArgumentOutOfRangeException">Thrown when the supplied value is
-            less than the value of the <see cref="P:CrawlWave.Common.UI.ProgressStatusBarPanel.Minimum"/> property or greater than the
-            value of the <see cref="P:CrawlWave.Common.UI.ProgressStatusBarPanel.Maximum"/> property.</exception>
-        </member>
-        <member name="P:CrawlWave.Common.UI.ProgressStatusBarPanel.ForeColor">
-            <summary>
-            Gets or sets the <see cref="T:System.Drawing.Color"/> of the progress bar
-            </summary>
-        </member>
-        <member name="T:CrawlWave.Common.UI.TextBoxWriter">
-            <summary>
-            A <see cref="T:System.IO.TextWriter"/> that writes to a text box.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.Common.UI.TextBoxWriter.#ctor(System.Windows.Forms.TextBoxBase)">
-            <summary>
-            Creates a new instance of the <see cref="T:CrawlWave.Common.UI.TextBoxWriter"/> class.
-            </summary>
-            <param name="b">The <see cref="T:System.Windows.Forms.TextBoxBase"/> that will be written to.</param>
-            <exception cref="T:System.NullReferenceException">Thrown if the supplied TextBoxBase is null.</exception>
-        </member>
-        <member name="M:CrawlWave.Common.UI.TextBoxWriter.Write(System.String)">
-            <summary>
-            Write a string to the trace window
-            </summary>
-            <param name="message">The string to write</param>
-        </member>
-        <member name="M:CrawlWave.Common.UI.TextBoxWriter.WriteLine(System.String)">
-            <summary>
-            Writes a string and a new line to the text box
-            </summary>
-            <param name="message">The string to write</param>
-        </member>
-        <member name="P:CrawlWave.Common.UI.TextBoxWriter.Encoding">
-            <summary>
-            Gets the encoding of the stream
-            </summary>
-        </member>
         <member name="T:CrawlWave.Common.UI.MultiLineGraph">
             <summary>
             MultiLineGraph is a subclass of <see cref="T:System.Windows.Forms.Panel"/> that can
@@ -649,6 +330,143 @@
             </summary>
             <param name="index">The index of the item to retrieve from the collection</param>
         </member>
+        <member name="T:CrawlWave.Common.UI.HealthLineGraph">
+            <summary>
+            HealthLineGraph is a subclass of <see cref="T:System.Windows.Forms.Panel"/> that can
+            display a usage history graph like the one in Windows Task Manager. It offers user-
+            selectable forecolor, grid color and background color and it can hold up to 800
+            values. Since each time it is redrawn it is shifted by 2 pixels this means that it
+            can hold enough values to fill a 1600x1200 pixel resolution screen.
+            </summary>
+        </member>
+        <member name="F:CrawlWave.Common.UI.HealthLineGraph.components">
+            <summary> 
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="F:CrawlWave.Common.UI.HealthLineGraph.mustWrapValues">
+            <summary>
+            Private variables needed for the control
+            </summary>		
+        </member>
+        <member name="M:CrawlWave.Common.UI.HealthLineGraph.#ctor">
+            <summary>
+            Constructs an instance of the <see cref="T:CrawlWave.Common.UI.HealthLineGraph"/> class and sets all
+            the properties to their default values.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.UI.HealthLineGraph.Dispose(System.Boolean)">
+            <summary> 
+            Clean up any resources being used.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.UI.HealthLineGraph.InitializeComponent">
+            <summary> 
+            Required method for Designer support - do not modify 
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.UI.HealthLineGraph.HealthLineGraph_Paint(System.Object,System.Windows.Forms.PaintEventArgs)">
+            <summary>
+            It is called whenever the control receives a Paint event, causing it to redraw.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.UI.HealthLineGraph.HealthLineGraph_ForeColorChanged(System.Object,System.EventArgs)">
+            <summary>
+            It is called when the ForeColor of the control changes in order to set the color of
+            the graph Pen.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:CrawlWave.Common.UI.HealthLineGraph.ClearGraph(System.Drawing.Graphics)">
+            <summary>
+            Clears the graph and draws the grid.
+            </summary>
+            <param name="g">The graphics object to be used for drawing the grid.</param>
+        </member>
+        <member name="M:CrawlWave.Common.UI.HealthLineGraph.DrawGraph(System.Drawing.Graphics)">
+            <summary>
+            Draws the graph based on the history of the previous values.
+            </summary>
+            <param name="g">The graphics object to be used for drawing the line.</param>
+        </member>
+        <member name="M:CrawlWave.Common.UI.HealthLineGraph.SetNextValue(System.Double)">
+            <summary>
+            Sets the new value to be displayed in the control, makes sure that the grid
+            is moved one step forward and calculates the current maximum value, so that
+            the height of the line can be adjusted dynamically.
+            </summary>
+            <param name="nextValue">The new value to be displayed in the control.</param>
+        </member>
+        <member name="M:CrawlWave.Common.UI.HealthLineGraph.OnMiminumChanged(System.EventArgs)">
+            <summary>
+            Raises the <see cref="E:CrawlWave.Common.UI.HealthLineGraph.MinimumChanged"/> event.
+            </summary>
+            <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
+        </member>
+        <member name="M:CrawlWave.Common.UI.HealthLineGraph.OnMaximumChanged(System.EventArgs)">
+            <summary>
+            Raises the <see cref="E:CrawlWave.Common.UI.HealthLineGraph.MaximumChanged"/> event.
+            </summary>
+            <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
+        </member>
+        <member name="M:CrawlWave.Common.UI.HealthLineGraph.OnGridColorChanged(System.EventArgs)">
+            <summary>
+            Raises the <see cref="E:CrawlWave.Common.UI.HealthLineGraph.GridColorChanged"/> event.
+            </summary>
+            <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
+        </member>
+        <member name="P:CrawlWave.Common.UI.HealthLineGraph.Value">
+            <summary>
+            Gets the value currently displayed by the control
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.UI.HealthLineGraph.Minimum">
+            <summary>
+            Gets or sets the minimum value supported by the control
+            </summary>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown if the value provided is negative.</exception>
+        </member>
+        <member name="P:CrawlWave.Common.UI.HealthLineGraph.Maximum">
+            <summary>
+            Gets or sets the control's maximum supported value
+            </summary>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown if the value provided is 
+            negative or smaller than the value of the <see cref="P:CrawlWave.Common.UI.HealthLineGraph.Minimum"/> property.</exception>
+        </member>
+        <member name="P:CrawlWave.Common.UI.HealthLineGraph.NextValue">
+            <summary>
+            Sets the next value to be displayed and causes the control to redraw
+            </summary>
+            <remarks>
+            If the value supplied is greater than the value of the <see cref="P:CrawlWave.Common.UI.HealthLineGraph.Maximum"/>
+            property then the value of the Maximum property is set to the current value.
+            This causes the graph to redraw and dynamically adapt to the new range.
+            </remarks>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown if the value provided is
+            smaller than the value of the <see cref="P:CrawlWave.Common.UI.HealthLineGraph.Minimum"/> property.</exception> 
+        </member>
+        <member name="P:CrawlWave.Common.UI.HealthLineGraph.GridColor">
+            <summary>
+            Gets/sets the Color to be used for the displayed grid
+            </summary>
+        </member>
+        <member name="E:CrawlWave.Common.UI.HealthLineGraph.MinimumChanged">
+            <summary>
+            Occurs when the <see cref="P:CrawlWave.Common.UI.HealthLineGraph.Minimum"/> property is set to a new value
+            </summary>
+        </member>
+        <member name="E:CrawlWave.Common.UI.HealthLineGraph.MaximumChanged">
+            <summary>
+            Occurs when the <see cref="P:CrawlWave.Common.UI.HealthLineGraph.Maximum"/> property is set to a new value
+            </summary>
+        </member>
+        <member name="E:CrawlWave.Common.UI.HealthLineGraph.GridColorChanged">
+            <summary>
+            Occurs when the <see cref="P:CrawlWave.Common.UI.HealthLineGraph.GridColor"/> property is set to a new value
+            </summary>
+        </member>
         <member name="T:CrawlWave.Common.UI.RichTextboxLogger">
             <summary>
             RichTextboxLogger implements an <see cref="T:CrawlWave.Common.ILogger"/> that logs messages in a Rich
@@ -736,6 +554,188 @@
         <member name="T:CrawlWave.Common.UI.RichTextboxLogger.LogDelegate">
             <summary>
             
+            </summary>
+        </member>
+        <member name="T:CrawlWave.Common.UI.TextBoxWriter">
+            <summary>
+            A <see cref="T:System.IO.TextWriter"/> that writes to a text box.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.UI.TextBoxWriter.#ctor(System.Windows.Forms.TextBoxBase)">
+            <summary>
+            Creates a new instance of the <see cref="T:CrawlWave.Common.UI.TextBoxWriter"/> class.
+            </summary>
+            <param name="b">The <see cref="T:System.Windows.Forms.TextBoxBase"/> that will be written to.</param>
+            <exception cref="T:System.NullReferenceException">Thrown if the supplied TextBoxBase is null.</exception>
+        </member>
+        <member name="M:CrawlWave.Common.UI.TextBoxWriter.Write(System.String)">
+            <summary>
+            Write a string to the trace window
+            </summary>
+            <param name="message">The string to write</param>
+        </member>
+        <member name="M:CrawlWave.Common.UI.TextBoxWriter.WriteLine(System.String)">
+            <summary>
+            Writes a string and a new line to the text box
+            </summary>
+            <param name="message">The string to write</param>
+        </member>
+        <member name="P:CrawlWave.Common.UI.TextBoxWriter.Encoding">
+            <summary>
+            Gets the encoding of the stream
+            </summary>
+        </member>
+        <member name="T:CrawlWave.Common.UI.HealthBarGraph">
+            <summary>
+            HealthBarGraph is a User Control that displays a Task-Manager like health bar. It
+            can be used to indicate percentage of usage of a certain resource, like CPU.
+            </summary>
+        </member>
+        <member name="F:CrawlWave.Common.UI.HealthBarGraph.components">
+            <summary> 
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.UI.HealthBarGraph.#ctor">
+            <summary>
+            Constructs a new instance of the <see cref="T:CrawlWave.Common.UI.HealthBarGraph"/> class and sets the
+            <see cref="P:CrawlWave.Common.UI.HealthBarGraph.Minimum"/>, <see cref="P:CrawlWave.Common.UI.HealthBarGraph.Maximum"/> and <see cref="P:CrawlWave.Common.UI.HealthBarGraph.Value"/> properties
+            to their default values.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.UI.HealthBarGraph.Dispose(System.Boolean)">
+            <summary> 
+            Clean up any resources being used.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.UI.HealthBarGraph.InitializeComponent">
+            <summary> 
+            Required method for Designer support - do not modify 
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.UI.HealthBarGraph.SetValue(System.Int32)">
+            <summary>
+            Resizes the picture box appropriately for the value to be displayed and updates
+            the control's caption.
+            </summary>
+            <param name="val">The new value that must be displayed</param>
+        </member>
+        <member name="M:CrawlWave.Common.UI.HealthBarGraph.OnMiminumChanged(System.EventArgs)">
+            <summary>
+            Raises the <see cref="E:CrawlWave.Common.UI.HealthBarGraph.MinimumChanged"/> event.
+            </summary>
+            <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
+        </member>
+        <member name="M:CrawlWave.Common.UI.HealthBarGraph.OnMaximumChanged(System.EventArgs)">
+            <summary>
+            Raises the <see cref="E:CrawlWave.Common.UI.HealthBarGraph.MaximumChanged"/> event.
+            </summary>
+            <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
+        </member>
+        <member name="M:CrawlWave.Common.UI.HealthBarGraph.OnValueChanged(System.EventArgs)">
+            <summary>
+            Raises the <see cref="E:CrawlWave.Common.UI.HealthBarGraph.ValueChanged"/> event.
+            </summary>
+            <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
+        </member>
+        <member name="P:CrawlWave.Common.UI.HealthBarGraph.Label">
+            <summary>
+            Gets or sets the text displayed at the bottom of the control, next to the value.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.UI.HealthBarGraph.Minimum">
+            <summary>
+            Gets or sets the Minimum value the control can display
+            </summary>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown when the value provided is negative.</exception>
+        </member>
+        <member name="P:CrawlWave.Common.UI.HealthBarGraph.Maximum">
+            <summary>
+            Gets or sets the Maximum value the control can display
+            </summary>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown when the value provided is
+            smaller than the value of the <see cref="P:CrawlWave.Common.UI.HealthBarGraph.Minimum"/> property.</exception>
+        </member>
+        <member name="P:CrawlWave.Common.UI.HealthBarGraph.Value">
+            <summary>
+            Gets or sets the current value displayed in the control
+            </summary>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown when the value provoded is
+            less than 0 or greater then the value of the <see cref="P:CrawlWave.Common.UI.HealthBarGraph.Maximum"/> property.</exception>
+        </member>
+        <member name="E:CrawlWave.Common.UI.HealthBarGraph.MinimumChanged">
+            <summary>
+            Occurs when the <see cref="P:CrawlWave.Common.UI.HealthBarGraph.Minimum"/> property is set to a new value
+            </summary>
+        </member>
+        <member name="E:CrawlWave.Common.UI.HealthBarGraph.MaximumChanged">
+            <summary>
+            Occurs when the <see cref="P:CrawlWave.Common.UI.HealthBarGraph.Maximum"/> property is set to a new value
+            </summary>
+        </member>
+        <member name="E:CrawlWave.Common.UI.HealthBarGraph.ValueChanged">
+            <summary>
+            Occurs when the <see cref="P:CrawlWave.Common.UI.HealthBarGraph.Value"/> property is set to a new value
+            </summary>
+        </member>
+        <member name="T:CrawlWave.Common.UI.ProgressStatusBarPanel">
+            <summary>
+            ProgressStatusBarPanel is a subclass of <see cref="T:System.Windows.Forms.StatusBarPanel"/>. It is a 
+            StatusBarPanel that contains a smooth progress bar with a specified color.
+            </summary>
+        </member>
+        <member name="F:CrawlWave.Common.UI.ProgressStatusBarPanel.value">
+            <summary>
+            the current value of the progress bar
+            </summary>
+        </member>
+        <member name="F:CrawlWave.Common.UI.ProgressStatusBarPanel.foreColor">
+            <summary>
+            the Progress Bar's Color
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.UI.ProgressStatusBarPanel.#ctor(System.Windows.Forms.StatusBar)">
+            <summary>
+            Constructs a new instance of the <see cref="T:CrawlWave.Common.UI.ProgressStatusBarPanel"/> class
+            and initializes it with the default values.
+            </summary>
+            <param name="sb">The status bar that contains the progress bar</param>
+        </member>
+        <member name="M:CrawlWave.Common.UI.ProgressStatusBarPanel.sb_DrawItem(System.Object,System.Windows.Forms.StatusBarDrawItemEventArgs)">
+            <summary>
+            Draws the status bar
+            </summary>
+            <param name="sender">The control that caused it to draw again</param>
+            <param name="sbdevent">The draw event</param>
+        </member>
+        <member name="M:CrawlWave.Common.UI.ProgressStatusBarPanel.Dispose(System.Boolean)">
+            <summary>
+            Releases the managed resources used by the Control
+            </summary>
+            <param name="disposing">Disposing</param>
+        </member>
+        <member name="P:CrawlWave.Common.UI.ProgressStatusBarPanel.Minimum">
+            <summary>
+            Gets or sets the minimum value of the progress bar
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.UI.ProgressStatusBarPanel.Maximum">
+            <summary>
+            Gets or sets the maximum value of the progress bar
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.UI.ProgressStatusBarPanel.Value">
+            <summary>
+            Gets or sets the <see cref="P:System.Windows.Forms.ProgressBar.Value"/> property of the progress bar
+            </summary>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown when the supplied value is
+            less than the value of the <see cref="P:CrawlWave.Common.UI.ProgressStatusBarPanel.Minimum"/> property or greater than the
+            value of the <see cref="P:CrawlWave.Common.UI.ProgressStatusBarPanel.Maximum"/> property.</exception>
+        </member>
+        <member name="P:CrawlWave.Common.UI.ProgressStatusBarPanel.ForeColor">
+            <summary>
+            Gets or sets the <see cref="T:System.Drawing.Color"/> of the progress bar
             </summary>
         </member>
     </members>

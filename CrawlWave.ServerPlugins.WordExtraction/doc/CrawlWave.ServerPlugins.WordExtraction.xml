@@ -4,79 +4,6 @@
         <name>CrawlWave.ServerPlugins.WordExtraction</name>
     </assembly>
     <members>
-        <member name="T:CrawlWave.ServerPlugins.WordExtraction.WordsCache">
-            <summary>
-            WordsCache is a Singleton class that holds a cache of all the words (actually their
-            stems) that have been extracted from all the pages stored in the database. This way
-            it allows easy lookup of word ids and decreases the number of queries that have to
-            be executed on the system's database drastically. It provides methods to add and 
-            remove entries to the cache, as well as events for easy client notification.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.ServerPlugins.WordExtraction.WordsCache.#ctor">
-            <summary>
-            The constructor is private so that only the class itself can create an instance.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.ServerPlugins.WordExtraction.WordsCache.Instance">
-            <summary>
-            Provides a global access point for the single instance of the <see cref="T:CrawlWave.ServerPlugins.WordExtraction.WordsCache"/>
-            class.
-            </summary>
-            <returns>A reference to the single instance of <see cref="T:CrawlWave.ServerPlugins.WordExtraction.WordsCache"/>.</returns>
-        </member>
-        <member name="M:CrawlWave.ServerPlugins.WordExtraction.WordsCache.AddWord(System.String)">
-            <summary>
-            Adds a new word to the cache
-            </summary>
-            <param name="word">A string containing the word to add to the cache.</param>
-        </member>
-        <member name="M:CrawlWave.ServerPlugins.WordExtraction.WordsCache.AddStemmedWord(System.String)">
-            <summary>
-            Adds a new word that has already been capitalized and stemmed to the cache
-            </summary>
-            <param name="word">A string containing the word to add to the cache.</param>
-        </member>
-        <member name="M:CrawlWave.ServerPlugins.WordExtraction.WordsCache.RemoveWord(System.String)">
-            <summary>
-            Removes a word from the cache.
-            </summary>
-            <param name="word">A string containing the word to remove from the cache.</param>
-        </member>
-        <member name="M:CrawlWave.ServerPlugins.WordExtraction.WordsCache.RemoveStemmedWord(System.String)">
-            <summary>
-            Removes a capitalized and stemmed word from the cache.
-            </summary>
-            <param name="word">The word to remove from the cache.</param>
-        </member>
-        <member name="M:CrawlWave.ServerPlugins.WordExtraction.WordsCache.LoadCache">
-            <summary>
-            Loads the cache with the banned host entries stored in the database.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.ServerPlugins.WordExtraction.WordsCache.CapitalizeString(System.String)">
-            <summary>
-            Converts a string to its capitalized form.
-            </summary>
-            <param name="strToCapitalize">The string to capitalize</param>
-            <returns>The capitalized string</returns>
-        </member>
-        <member name="M:CrawlWave.ServerPlugins.WordExtraction.WordsCache.OnCacheUpdated(System.EventArgs)">
-            <summary>
-            Raises the <see cref="E:CrawlWave.ServerPlugins.WordExtraction.WordsCache.CacheUpdated"/> event.
-            </summary>
-            <param name="e">The <see cref="T:System.EventArgs"/> related to the event.</param>
-        </member>
-        <member name="E:CrawlWave.ServerPlugins.WordExtraction.WordsCache.CacheUpdated">
-            <summary>
-            Occurs when an update is performed on  the cache (a word is added or removed).
-            </summary>
-        </member>
-        <member name="P:CrawlWave.ServerPlugins.WordExtraction.WordsCache.Item(System.String)">
-            <summary>
-            Indexer property, returns the id of a capitalized and stemmed word or -1 if not found
-            </summary>
-        </member>
         <member name="T:CrawlWave.ServerPlugins.WordExtraction.WordExtractor">
             <summary>
             WordExtractor is a Singleton class that will be used during the extraction of words
@@ -174,73 +101,215 @@
             <param name="strInput">The string from which to extract words</param>
             <returns>A sorted list containing the words and their frequency</returns>
         </member>
-        <member name="T:CrawlWave.ServerPlugins.WordExtraction.IStemming">
+        <member name="T:CrawlWave.ServerPlugins.WordExtraction.PluginSettings">
             <summary>
-            IStemming defines an interface for word stemmers for different languages.
+            
             </summary>
         </member>
-        <member name="M:CrawlWave.ServerPlugins.WordExtraction.IStemming.StemWord(System.String)">
-            <summary>
-            Returns the stemmed form of a word
-            </summary>
-            <param name="word">The word to stem. It must be capitalized</param>
-            <returns>The stemmed word</returns>
-        </member>
-        <member name="T:CrawlWave.ServerPlugins.WordExtraction.EnglishStemming">
-            <summary>
-            Performs stemming for English words using Porter's Algorithm.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.ServerPlugins.WordExtraction.EnglishStemming.#ctor">
-            <summary>
-            Construncts a new instance of the <see cref="T:CrawlWave.ServerPlugins.WordExtraction.EnglishStemming"/> class.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.ServerPlugins.WordExtraction.EnglishStemming.StemWord(System.String)">
-            <summary>
-            Returns the stem of an english word
-            </summary>
-            <param name="word">The word to stem. It must be capitalized.</param>
-            <returns>The stem of the word</returns>
-        </member>
-        <member name="T:CrawlWave.ServerPlugins.WordExtraction.GreekStemming">
-            <summary>
-            Implements a stemming algorithm for greek words
-            </summary>
-        </member>
-        <member name="M:CrawlWave.ServerPlugins.WordExtraction.GreekStemming.StemWord(System.String)">
-            <summary>
-            Performs stemming on a greek word
-            </summary>
-            <param name="word">The word to stem</param>
-            <returns>The stemmed word</returns>
-        </member>
-        <member name="T:CrawlWave.ServerPlugins.WordExtraction.Stemming">
-            <summary>
-            Stemming is a Singleton class that performs stemming on English and Greek words. The
-            English Stemmer has been adapted from the PHP Implementation by Jon Abernathy,
-            jon@chuggnutt.com (http://www.chuggnutt.com). 
-            Author: Kostas Stroggylos, kostas@circular.gr.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.ServerPlugins.WordExtraction.Stemming.#ctor">
+        <member name="M:CrawlWave.ServerPlugins.WordExtraction.PluginSettings.#ctor">
             <summary>
             The constructor is private so that only the class itself can create an instance.
             </summary>
         </member>
-        <member name="M:CrawlWave.ServerPlugins.WordExtraction.Stemming.Instance">
+        <member name="M:CrawlWave.ServerPlugins.WordExtraction.PluginSettings.Instance">
             <summary>
-            Provides a global access point for the single instance of the <see cref="T:CrawlWave.ServerPlugins.WordExtraction.Stemming"/>
+            Provides a global access point for the single instance of the <see cref="T:CrawlWave.ServerPlugins.WordExtraction.WEPluginSettings"/>
             class.
             </summary>
-            <returns>A reference to the single instance of <see cref="T:CrawlWave.ServerPlugins.WordExtraction.Stemming"/>.</returns>
+            <returns>A reference to the single instance of <see cref="T:CrawlWave.ServerPlugins.WordExtraction.WEPluginSettings"/>.</returns>
         </member>
-        <member name="M:CrawlWave.ServerPlugins.WordExtraction.Stemming.StemWord(System.String)">
+        <member name="M:CrawlWave.ServerPlugins.WordExtraction.PluginSettings.GetPluginPath">
             <summary>
-            Performs stemming on a word in all supported languages.
+            Determines the plugin's path.
             </summary>
-            <param name="word">The word to be stemmed.</param>
-            <returns>The stem of the word.</returns>
+            <returns>The plugin's path, including the trailing slashes</returns>
+        </member>
+        <member name="M:CrawlWave.ServerPlugins.WordExtraction.PluginSettings.LoadSettings">
+            <summary>
+            Loads the settings of the plugin from the configuration file.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerPlugins.WordExtraction.PluginSettings.SaveSettings">
+            <summary>
+            Saves the plugin's settings in a new xml file on disk
+            </summary>
+        </member>
+        <member name="P:CrawlWave.ServerPlugins.WordExtraction.PluginSettings.UseDatabase">
+            <summary>
+            Gets or sets a <see cref="T:System.Boolean"/> value indicating whether the plugin should
+            use the system's database in order to perform its task.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.ServerPlugins.WordExtraction.PluginSettings.PauseBetweenOperations">
+            <summary>
+            Gets or sets a <see cref="T:System.Boolean"/> value indicating whether the plugin should
+            pause its operation between consecutive loops or subtasks. This option allows
+            the adjustment of the load that the plugin puts on the system.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.ServerPlugins.WordExtraction.PluginSettings.ExtractTitleTag">
+            <summary>
+            Gets or sets a <see cref="T:System.Boolean"/> value indicating whether the plugin should
+            attempt to extract words from the title tag of an html document.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.ServerPlugins.WordExtraction.PluginSettings.ExtractMetaTags">
+            <summary>
+            Gets or sets a <see cref="T:System.Boolean"/> value indicating whether the plugin should
+            attempt to extract words from the keywords and description meta tags of an html
+            document.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.ServerPlugins.WordExtraction.PluginSettings.PerformSpellChecking">
+            <summary>
+            Gets ot sets a <see cref="T:System.Boolean"/> value indicating whether the plugin should
+            attempt to perfom spell checking on the extracted words.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.ServerPlugins.WordExtraction.PluginSettings.PauseDelay">
+            <summary>
+            Gets or sets an integer value indicating the amount of time that the plugin must
+            pause for between each loop or subtask.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.ServerPlugins.WordExtraction.PluginSettings.DBActionTimeout">
+            <summary>
+            Gets or sets an integer value indicating the amount of time that can be consumed
+            during each Database Action, before a Timeout error is thrown.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.ServerPlugins.WordExtraction.PluginSettings.DBConnectionString">
+            <summary>
+            Gets or sets the connection string that the plugin uses to create a connection
+            to the system's database if it is data dependent.
+            </summary>
+        </member>
+        <member name="T:CrawlWave.ServerPlugins.WordExtraction.WEPluginSettings">
+            <summary>
+            WEPluginSettings provides a collection of all the settings required for the plugin's
+            operation. They allow the settings defined by the user or system to be stored in
+            persistent form (in an XML file on disk) using serialization.
+            </summary>
+        </member>
+        <member name="F:CrawlWave.ServerPlugins.WordExtraction.WEPluginSettings.UseDatabase">
+            <summary>
+            A <see cref="T:System.Boolean"/> value indicating whether the plugin should use the 
+            system's database in order to perform its task.
+            </summary>
+        </member>
+        <member name="F:CrawlWave.ServerPlugins.WordExtraction.WEPluginSettings.ExtractTitleTag">
+            <summary>
+            A <see cref="T:System.Boolean"/> value indicating whether the plugin should attempt to
+            extract words from the title tag of an html document.
+            </summary>
+        </member>
+        <member name="F:CrawlWave.ServerPlugins.WordExtraction.WEPluginSettings.ExtractMetaTags">
+            <summary>
+            A <see cref="T:System.Boolean"/> value indicating whether the plugin should attempt to
+             extract words from the keywords and description meta tags of an html document.
+            </summary>
+        </member>
+        <member name="F:CrawlWave.ServerPlugins.WordExtraction.WEPluginSettings.PauseBetweenOperations">
+            <summary>
+            A <see cref="T:System.Boolean"/> value indicating whether the plugin should pause its 
+            operation between consecutive loops or subtasks.
+            </summary>
+        </member>
+        <member name="F:CrawlWave.ServerPlugins.WordExtraction.WEPluginSettings.PauseDelay">
+            <summary>
+            An integer value indicating the amount of time that the plugin must pause for
+            between each loop or subtask.
+            </summary>
+        </member>
+        <member name="F:CrawlWave.ServerPlugins.WordExtraction.WEPluginSettings.DBActionTimeout">
+            <summary>
+            An integer value indicating the amount of time that can be consumed during each
+            Database Action, before a Timeout error is thrown.
+            </summary>
+        </member>
+        <member name="F:CrawlWave.ServerPlugins.WordExtraction.WEPluginSettings.PerformSpellChecking">
+            <summary>
+            A <see cref="T:System.Boolean"/> value indicating whether the plugin should attempt to
+            perfom spell checking on the extracted words.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerPlugins.WordExtraction.WEPluginSettings.#ctor">
+            <summary>
+            Constructs a new instance of the <see cref="T:CrawlWave.ServerPlugins.WordExtraction.WEPluginSettings"/> class.
+            </summary>
+        </member>
+        <member name="T:CrawlWave.ServerPlugins.WordExtraction.WordsCache">
+            <summary>
+            WordsCache is a Singleton class that holds a cache of all the words (actually their
+            stems) that have been extracted from all the pages stored in the database. This way
+            it allows easy lookup of word ids and decreases the number of queries that have to
+            be executed on the system's database drastically. It provides methods to add and 
+            remove entries to the cache, as well as events for easy client notification.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerPlugins.WordExtraction.WordsCache.#ctor">
+            <summary>
+            The constructor is private so that only the class itself can create an instance.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerPlugins.WordExtraction.WordsCache.Instance">
+            <summary>
+            Provides a global access point for the single instance of the <see cref="T:CrawlWave.ServerPlugins.WordExtraction.WordsCache"/>
+            class.
+            </summary>
+            <returns>A reference to the single instance of <see cref="T:CrawlWave.ServerPlugins.WordExtraction.WordsCache"/>.</returns>
+        </member>
+        <member name="M:CrawlWave.ServerPlugins.WordExtraction.WordsCache.AddWord(System.String)">
+            <summary>
+            Adds a new word to the cache
+            </summary>
+            <param name="word">A string containing the word to add to the cache.</param>
+        </member>
+        <member name="M:CrawlWave.ServerPlugins.WordExtraction.WordsCache.AddStemmedWord(System.String)">
+            <summary>
+            Adds a new word that has already been capitalized and stemmed to the cache
+            </summary>
+            <param name="word">A string containing the word to add to the cache.</param>
+        </member>
+        <member name="M:CrawlWave.ServerPlugins.WordExtraction.WordsCache.RemoveWord(System.String)">
+            <summary>
+            Removes a word from the cache.
+            </summary>
+            <param name="word">A string containing the word to remove from the cache.</param>
+        </member>
+        <member name="M:CrawlWave.ServerPlugins.WordExtraction.WordsCache.RemoveStemmedWord(System.String)">
+            <summary>
+            Removes a capitalized and stemmed word from the cache.
+            </summary>
+            <param name="word">The word to remove from the cache.</param>
+        </member>
+        <member name="M:CrawlWave.ServerPlugins.WordExtraction.WordsCache.LoadCache">
+            <summary>
+            Loads the cache with the banned host entries stored in the database.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerPlugins.WordExtraction.WordsCache.CapitalizeString(System.String)">
+            <summary>
+            Converts a string to its capitalized form.
+            </summary>
+            <param name="strToCapitalize">The string to capitalize</param>
+            <returns>The capitalized string</returns>
+        </member>
+        <member name="M:CrawlWave.ServerPlugins.WordExtraction.WordsCache.OnCacheUpdated(System.EventArgs)">
+            <summary>
+            Raises the <see cref="E:CrawlWave.ServerPlugins.WordExtraction.WordsCache.CacheUpdated"/> event.
+            </summary>
+            <param name="e">The <see cref="T:System.EventArgs"/> related to the event.</param>
+        </member>
+        <member name="E:CrawlWave.ServerPlugins.WordExtraction.WordsCache.CacheUpdated">
+            <summary>
+            Occurs when an update is performed on  the cache (a word is added or removed).
+            </summary>
+        </member>
+        <member name="P:CrawlWave.ServerPlugins.WordExtraction.WordsCache.Item(System.String)">
+            <summary>
+            Indexer property, returns the id of a capitalized and stemmed word or -1 if not found
+            </summary>
         </member>
         <member name="T:CrawlWave.ServerPlugins.WordExtraction.WordExtractorPlugin">
             <summary>
@@ -405,142 +474,73 @@
             the contents of this method with the code editor.
             </summary>
         </member>
-        <member name="T:CrawlWave.ServerPlugins.WordExtraction.PluginSettings">
+        <member name="T:CrawlWave.ServerPlugins.WordExtraction.IStemming">
             <summary>
-            
+            IStemming defines an interface for word stemmers for different languages.
             </summary>
         </member>
-        <member name="M:CrawlWave.ServerPlugins.WordExtraction.PluginSettings.#ctor">
+        <member name="M:CrawlWave.ServerPlugins.WordExtraction.IStemming.StemWord(System.String)">
+            <summary>
+            Returns the stemmed form of a word
+            </summary>
+            <param name="word">The word to stem. It must be capitalized</param>
+            <returns>The stemmed word</returns>
+        </member>
+        <member name="T:CrawlWave.ServerPlugins.WordExtraction.EnglishStemming">
+            <summary>
+            Performs stemming for English words using Porter's Algorithm.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerPlugins.WordExtraction.EnglishStemming.#ctor">
+            <summary>
+            Construncts a new instance of the <see cref="T:CrawlWave.ServerPlugins.WordExtraction.EnglishStemming"/> class.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerPlugins.WordExtraction.EnglishStemming.StemWord(System.String)">
+            <summary>
+            Returns the stem of an english word
+            </summary>
+            <param name="word">The word to stem. It must be capitalized.</param>
+            <returns>The stem of the word</returns>
+        </member>
+        <member name="T:CrawlWave.ServerPlugins.WordExtraction.GreekStemming">
+            <summary>
+            Implements a stemming algorithm for greek words
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerPlugins.WordExtraction.GreekStemming.StemWord(System.String)">
+            <summary>
+            Performs stemming on a greek word
+            </summary>
+            <param name="word">The word to stem</param>
+            <returns>The stemmed word</returns>
+        </member>
+        <member name="T:CrawlWave.ServerPlugins.WordExtraction.Stemming">
+            <summary>
+            Stemming is a Singleton class that performs stemming on English and Greek words. The
+            English Stemmer has been adapted from the PHP Implementation by Jon Abernathy,
+            jon@chuggnutt.com (http://www.chuggnutt.com). 
+            Author: Kostas Stroggylos, kostas@circular.gr.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerPlugins.WordExtraction.Stemming.#ctor">
             <summary>
             The constructor is private so that only the class itself can create an instance.
             </summary>
         </member>
-        <member name="M:CrawlWave.ServerPlugins.WordExtraction.PluginSettings.Instance">
+        <member name="M:CrawlWave.ServerPlugins.WordExtraction.Stemming.Instance">
             <summary>
-            Provides a global access point for the single instance of the <see cref="T:CrawlWave.ServerPlugins.WordExtraction.WEPluginSettings"/>
+            Provides a global access point for the single instance of the <see cref="T:CrawlWave.ServerPlugins.WordExtraction.Stemming"/>
             class.
             </summary>
-            <returns>A reference to the single instance of <see cref="T:CrawlWave.ServerPlugins.WordExtraction.WEPluginSettings"/>.</returns>
+            <returns>A reference to the single instance of <see cref="T:CrawlWave.ServerPlugins.WordExtraction.Stemming"/>.</returns>
         </member>
-        <member name="M:CrawlWave.ServerPlugins.WordExtraction.PluginSettings.GetPluginPath">
+        <member name="M:CrawlWave.ServerPlugins.WordExtraction.Stemming.StemWord(System.String)">
             <summary>
-            Determines the plugin's path.
+            Performs stemming on a word in all supported languages.
             </summary>
-            <returns>The plugin's path, including the trailing slashes</returns>
-        </member>
-        <member name="M:CrawlWave.ServerPlugins.WordExtraction.PluginSettings.LoadSettings">
-            <summary>
-            Loads the settings of the plugin from the configuration file.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.ServerPlugins.WordExtraction.PluginSettings.SaveSettings">
-            <summary>
-            Saves the plugin's settings in a new xml file on disk
-            </summary>
-        </member>
-        <member name="P:CrawlWave.ServerPlugins.WordExtraction.PluginSettings.UseDatabase">
-            <summary>
-            Gets or sets a <see cref="T:System.Boolean"/> value indicating whether the plugin should
-            use the system's database in order to perform its task.
-            </summary>
-        </member>
-        <member name="P:CrawlWave.ServerPlugins.WordExtraction.PluginSettings.PauseBetweenOperations">
-            <summary>
-            Gets or sets a <see cref="T:System.Boolean"/> value indicating whether the plugin should
-            pause its operation between consecutive loops or subtasks. This option allows
-            the adjustment of the load that the plugin puts on the system.
-            </summary>
-        </member>
-        <member name="P:CrawlWave.ServerPlugins.WordExtraction.PluginSettings.ExtractTitleTag">
-            <summary>
-            Gets or sets a <see cref="T:System.Boolean"/> value indicating whether the plugin should
-            attempt to extract words from the title tag of an html document.
-            </summary>
-        </member>
-        <member name="P:CrawlWave.ServerPlugins.WordExtraction.PluginSettings.ExtractMetaTags">
-            <summary>
-            Gets or sets a <see cref="T:System.Boolean"/> value indicating whether the plugin should
-            attempt to extract words from the keywords and description meta tags of an html
-            document.
-            </summary>
-        </member>
-        <member name="P:CrawlWave.ServerPlugins.WordExtraction.PluginSettings.PerformSpellChecking">
-            <summary>
-            Gets ot sets a <see cref="T:System.Boolean"/> value indicating whether the plugin should
-            attempt to perfom spell checking on the extracted words.
-            </summary>
-        </member>
-        <member name="P:CrawlWave.ServerPlugins.WordExtraction.PluginSettings.PauseDelay">
-            <summary>
-            Gets or sets an integer value indicating the amount of time that the plugin must
-            pause for between each loop or subtask.
-            </summary>
-        </member>
-        <member name="P:CrawlWave.ServerPlugins.WordExtraction.PluginSettings.DBActionTimeout">
-            <summary>
-            Gets or sets an integer value indicating the amount of time that can be consumed
-            during each Database Action, before a Timeout error is thrown.
-            </summary>
-        </member>
-        <member name="P:CrawlWave.ServerPlugins.WordExtraction.PluginSettings.DBConnectionString">
-            <summary>
-            Gets or sets the connection string that the plugin uses to create a connection
-            to the system's database if it is data dependent.
-            </summary>
-        </member>
-        <member name="T:CrawlWave.ServerPlugins.WordExtraction.WEPluginSettings">
-            <summary>
-            WEPluginSettings provides a collection of all the settings required for the plugin's
-            operation. They allow the settings defined by the user or system to be stored in
-            persistent form (in an XML file on disk) using serialization.
-            </summary>
-        </member>
-        <member name="F:CrawlWave.ServerPlugins.WordExtraction.WEPluginSettings.UseDatabase">
-            <summary>
-            A <see cref="T:System.Boolean"/> value indicating whether the plugin should use the 
-            system's database in order to perform its task.
-            </summary>
-        </member>
-        <member name="F:CrawlWave.ServerPlugins.WordExtraction.WEPluginSettings.ExtractTitleTag">
-            <summary>
-            A <see cref="T:System.Boolean"/> value indicating whether the plugin should attempt to
-            extract words from the title tag of an html document.
-            </summary>
-        </member>
-        <member name="F:CrawlWave.ServerPlugins.WordExtraction.WEPluginSettings.ExtractMetaTags">
-            <summary>
-            A <see cref="T:System.Boolean"/> value indicating whether the plugin should attempt to
-             extract words from the keywords and description meta tags of an html document.
-            </summary>
-        </member>
-        <member name="F:CrawlWave.ServerPlugins.WordExtraction.WEPluginSettings.PauseBetweenOperations">
-            <summary>
-            A <see cref="T:System.Boolean"/> value indicating whether the plugin should pause its 
-            operation between consecutive loops or subtasks.
-            </summary>
-        </member>
-        <member name="F:CrawlWave.ServerPlugins.WordExtraction.WEPluginSettings.PauseDelay">
-            <summary>
-            An integer value indicating the amount of time that the plugin must pause for
-            between each loop or subtask.
-            </summary>
-        </member>
-        <member name="F:CrawlWave.ServerPlugins.WordExtraction.WEPluginSettings.DBActionTimeout">
-            <summary>
-            An integer value indicating the amount of time that can be consumed during each
-            Database Action, before a Timeout error is thrown.
-            </summary>
-        </member>
-        <member name="F:CrawlWave.ServerPlugins.WordExtraction.WEPluginSettings.PerformSpellChecking">
-            <summary>
-            A <see cref="T:System.Boolean"/> value indicating whether the plugin should attempt to
-            perfom spell checking on the extracted words.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.ServerPlugins.WordExtraction.WEPluginSettings.#ctor">
-            <summary>
-            Constructs a new instance of the <see cref="T:CrawlWave.ServerPlugins.WordExtraction.WEPluginSettings"/> class.
-            </summary>
+            <param name="word">The word to be stemmed.</param>
+            <returns>The stem of the word.</returns>
         </member>
     </members>
 </doc>

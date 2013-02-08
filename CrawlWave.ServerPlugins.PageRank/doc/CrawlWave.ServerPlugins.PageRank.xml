@@ -4,51 +4,40 @@
         <name>CrawlWave.ServerPlugins.PageRank</name>
     </assembly>
     <members>
-        <member name="T:EXCSStrUtl.TEXStrUtl">
+        <member name="T:SW_Main.TSWDB_Authenticator">
             <summary>
-            Summary description for EXCSStrUtl.
+            Summary description for SWDB_Authenticator.
             </summary>
         </member>
-        <member name="T:EXCSDecl.TEXCSDecl">
+        <member name="T:EXCSStrUtl.TextProcess.StopWords.TStopWords">
             <summary>
-            Summary description for EXCSDecl.
-            </summary>
-            
-        </member>
-        <member name="T:EXCSConvert.TEXCSConvert">
-            <summary>
-            Summary description for EXCSConvert.
+            Summary description for EXCSStrUtl_TextProcess_StopWords.
             </summary>
         </member>
-        <member name="T:EXCSCrypt.TEXCSCrypt">
+        <member name="T:EXCSCommon.Exceptions.EXExcLoginFailure">
             <summary>
-            Summary description for EXCSCrypt.
+            Summary description for EXCSExceptions.
             </summary>
-        </member>
-        <member name="T:EXCSDBUtil.TEXCSDBUtil">
-            <summary>
-            TEXCSDBUtil is a utility class that handles all the DataBase utility functions.
-            </summary>
-            	
         </member>
         <member name="T:EXCSCommon.EXException">
             <summary>
             Summary description for EXCSCommon.
             </summary>
         </member>
-        <member name="T:SW_Main.TSWDB_Search">
+        <member name="T:SpiderWaveJobs.Classes.SWPageRankVisitor">
             <summary>
-            Summary description for SWDB_Search.
+            
             </summary>
         </member>
-        <member name="T:SW_Main.TSWDB_Decl">
+        <member name="T:SpiderWaveJobs.Classes.SWUrlBaseVisitor">
             <summary>
-            Summary description for SWDB_Decl.
+            Summary description for SWUrlBaseVisitor.
             </summary>
         </member>
-        <member name="T:SpiderWaveJobs.Classes.SWUrlInfo">
+        <member name="T:SpiderWaveJobs.Classes.SWUrlBaseVisitor.ReportTriggerEventArgs">
             <summary>
-            Summary description for SWUrlInfo.
+            ReportTriggerEventArgs is a class derived from EventArgs and is
+            used for passing aguments to the events 
             </summary>
         </member>
         <member name="T:CrawlWave.ServerPlugins.PageRank.PageRankPlugin">
@@ -119,10 +108,14 @@
             
             </summary>
         </member>
-        <member name="T:EXCSCommon.Exceptions.EXExcLoginFailure">
+        <member name="T:EXCSITRAuthentication.ConnString">
+            Summary description for EXCSITRAuthentication.
+        </member>
+        <member name="T:EXCSDBUtil.TEXCSDBUtil">
             <summary>
-            Summary description for EXCSExceptions.
+            TEXCSDBUtil is a utility class that handles all the DataBase utility functions.
             </summary>
+            	
         </member>
         <member name="T:SW_Main.TSWDB_BaseQryResElement">
             <summary>
@@ -134,26 +127,41 @@
             Summary description for IProcessReport.
             </summary>
         </member>
-        <member name="T:SpiderWaveJobs.Classes.SWUrlBaseVisitor">
+        <member name="T:EXMath.TEXCSMath">
             <summary>
-            Summary description for SWUrlBaseVisitor.
+            Summary description for EXCSMath.
             </summary>
         </member>
-        <member name="T:SpiderWaveJobs.Classes.SWUrlBaseVisitor.ReportTriggerEventArgs">
+        <member name="T:SpiderWaveJobs.Classes.SWRankHandlerHash">
             <summary>
-            ReportTriggerEventArgs is a class derived from EventArgs and is
-            used for passing aguments to the events 
+            Summary description for SWRankHandlerHash.
             </summary>
         </member>
-        <member name="T:SpiderWaveJobs.Classes.SWPageRankVisitor">
+        <member name="T:SpiderWaveJobs.Classes.SWRankHandler">
             <summary>
+            Summary description for SWRankDBHandle.
+            </summary>
+        </member>
+        <member name="T:SpiderWaveJobs.Classes.SWHashIntLimit">
+            <summary>
+            Summary description for SWHashIntLimit.
+            </summary>
+        </member>
+        <member name="T:EXCSDecl.TEXCSDecl">
+            <summary>
+            Summary description for EXCSDecl.
+            </summary>
             
+        </member>
+        <member name="T:SpiderWaveJobs.Classes.SWUrlInfoCache">
+            <summary>
+            Summary description for SWUrlInfoCache.
             </summary>
         </member>
-        <member name="T:SW_Main.TSWDB_WordProcCommand">
+        <member name="T:SpiderWaveJobs.Classes.SWUrlInfo">
             <summary>
-            Summary description for SWDB_WordProcCommand.
-            </summary>	
+            Summary description for SWUrlInfo.
+            </summary>
         </member>
         <member name="T:CrawlWave.ServerPlugins.PageRank.frmPluginSettings">
             <summary>
@@ -176,39 +184,34 @@
             the contents of this method with the code editor.
             </summary>
         </member>
-        <member name="T:SpiderWaveJobs.Classes.SWHashIntLimit">
-            <summary>
-            Summary description for SWHashIntLimit.
-            </summary>
-        </member>
         <member name="T:SpiderWaveJobs.Classes.SWGreekPageRankVisitor">
             <summary>
             
             </summary>
         </member>
-        <member name="T:EXCSStrUtl.TextProcess.StopWords.TStopWords">
+        <member name="T:SW_Main.TSWDB_Decl">
             <summary>
-            Summary description for EXCSStrUtl_TextProcess_StopWords.
+            Summary description for SWDB_Decl.
             </summary>
         </member>
-        <member name="T:SpiderWaveJobs.Classes.SWUrlInfoCache">
+        <member name="T:EXCSCrypt.TEXCSCrypt">
             <summary>
-            Summary description for SWUrlInfoCache.
+            Summary description for EXCSCrypt.
             </summary>
         </member>
-        <member name="T:SpiderWaveJobs.Classes.SWRankHandlerHash">
+        <member name="T:SW_Main.TSWDB_WordProcCommand">
             <summary>
-            Summary description for SWRankHandlerHash.
+            Summary description for SWDB_WordProcCommand.
+            </summary>	
+        </member>
+        <member name="T:EXCSConvert.TEXCSConvert">
+            <summary>
+            Summary description for EXCSConvert.
             </summary>
         </member>
-        <member name="T:SpiderWaveJobs.Classes.SWRankHandler">
+        <member name="T:SW_Main.TSWDB_Search">
             <summary>
-            Summary description for SWRankDBHandle.
-            </summary>
-        </member>
-        <member name="T:SW_Main.TSWDB_Authenticator">
-            <summary>
-            Summary description for SWDB_Authenticator.
+            Summary description for SWDB_Search.
             </summary>
         </member>
         <member name="T:EXCSStrUtl.TextProcess.TTextProcess">
@@ -216,13 +219,10 @@
             Summary description for EXCSStrUtl_TextProcess.
             </summary>
         </member>
-        <member name="T:EXMath.TEXCSMath">
+        <member name="T:EXCSStrUtl.TEXStrUtl">
             <summary>
-            Summary description for EXCSMath.
+            Summary description for EXCSStrUtl.
             </summary>
-        </member>
-        <member name="T:EXCSITRAuthentication.ConnString">
-            Summary description for EXCSITRAuthentication.
         </member>
     </members>
 </doc>

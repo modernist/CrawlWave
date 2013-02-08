@@ -33,6 +33,126 @@
             True if the settings are OK, false if there is an error or something is missing.
             </returns>
         </member>
+        <member name="T:CrawlWave.ServerPlugins.Initializer.PluginSettings">
+            <summary>
+            PluginSettings is a Singleton class that holds all the plugin's settings and provides
+            a global point of access to them.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerPlugins.Initializer.PluginSettings.#ctor">
+            <summary>
+            The constructor is private so that only the class itself can create an instance.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerPlugins.Initializer.PluginSettings.Instance">
+            <summary>
+            Provides a global access point for the single instance of the <see cref="T:CrawlWave.ServerPlugins.Initializer.PluginSettings"/>
+            class.
+            </summary>
+            <returns>A reference to the single instance of <see cref="T:CrawlWave.ServerPlugins.Initializer.PluginSettings"/>.</returns>
+        </member>
+        <member name="M:CrawlWave.ServerPlugins.Initializer.PluginSettings.GetPluginPath">
+            <summary>
+            Determines the plugin's path.
+            </summary>
+            <returns>The plugin's path, including the trailing slashes</returns>
+        </member>
+        <member name="M:CrawlWave.ServerPlugins.Initializer.PluginSettings.LoadSettings">
+            <summary>
+            Loads the settings of the plugin from the configuration file.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerPlugins.Initializer.PluginSettings.SaveSettings">
+            <summary>
+            Saves the plugin's settings in a new xml file on disk
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerPlugins.Initializer.PluginSettings.ProvideDBConnectionString">
+            <summary>
+            Provides a connection string to any method that needs to access the database
+            </summary>
+            <returns>A connection string.</returns>
+        </member>
+        <member name="P:CrawlWave.ServerPlugins.Initializer.PluginSettings.Threads">
+            <summary>
+            Gets or sets an integer value indicating the number of threads that the plugin
+            must use to visit the hosts contained in the input file.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.ServerPlugins.Initializer.PluginSettings.CleanUrls">
+            <summary>
+            Gets or sets a <see cref="T:System.Boolean"/> value indicating whether the plugin should attempt to
+            trim out malformed or otherwise inappropriate urls given as input and save the
+            results to a new text file.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.ServerPlugins.Initializer.PluginSettings.CheckUrls">
+            <summary>
+            Gets or sets a <see cref="T:System.Boolean"/> value indicating whether the plugin should attempt to
+            visit the urls contained in the Input file in order to initialize the system's
+            database.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.ServerPlugins.Initializer.PluginSettings.PauseBetweenOperations">
+            <summary>
+            Gets or sets a <see cref="T:System.Boolean"/> value indicating whether the plugin should
+            pause its operation between consecutive loops or subtasks. This option allows
+            the adjustment of the load that the plugin puts on the system.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.ServerPlugins.Initializer.PluginSettings.PauseDelay">
+            <summary>
+            Gets or sets an integer value indicating the amount of time that the plugin must
+            pause for between each loop or subtask.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.ServerPlugins.Initializer.PluginSettings.InputFile">
+            <summary>
+            Gets or sets the path of the file containing the list of urls to check or visit.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.ServerPlugins.Initializer.PluginSettings.OutpufFile">
+            <summary>
+            Gets or sets the path of the file where the cleaned list of urls will be stored.
+            </summary>
+        </member>
+        <member name="T:CrawlWave.ServerPlugins.Initializer.INPluginSettings">
+            <summary>
+            INPluginSettings provides a collection of all the settings required for the plugin's
+            operation. They allow the settings defined by the user or system to be stored in
+            persistent form (in an XML file on disk) using serialization.
+            </summary>
+        </member>
+        <member name="F:CrawlWave.ServerPlugins.Initializer.INPluginSettings.Threads">
+            <summary>
+            The number of to use for visiting the hosts.
+            </summary>
+        </member>
+        <member name="F:CrawlWave.ServerPlugins.Initializer.INPluginSettings.CleanUrls">
+            <summary>
+            A <see cref="T:System.Boolean"/> value indicating whether the plugin should attempt to
+            trim out malformed or otherwise inappropriate urls given as input and save the
+            results to a new text file.
+            </summary>
+        </member>
+        <member name="F:CrawlWave.ServerPlugins.Initializer.INPluginSettings.CheckUrls">
+            <summary>
+            A <see cref="T:System.Boolean"/> value indicating whether the plugin should visit the
+            urls contained in the Input file in order to initialize the system's database.
+            </summary>
+        </member>
+        <member name="F:CrawlWave.ServerPlugins.Initializer.INPluginSettings.PauseBetweenOperations">
+            <summary>
+            A <see cref="T:System.Boolean"/> value indicating whether the plugin should pause its 
+            operation between consecutive loops or subtasks.
+            </summary>
+        </member>
+        <member name="F:CrawlWave.ServerPlugins.Initializer.INPluginSettings.PauseDelay">
+            <summary>
+            An integer value indicating the amount of time that the plugin must pause for
+            between each loop or subtask.
+            </summary>
+        </member>
         <member name="T:CrawlWave.ServerPlugins.Initializer.InitializerPlugin">
             <summary>
             InitializerPlugin is a Plugin that allows the administrator of the system to start
@@ -178,126 +298,6 @@
         <member name="E:CrawlWave.ServerPlugins.Initializer.InitializerPlugin.StateChanged">
             <summary>
             Occurs when the plugin's <see cref="T:CrawlWave.Common.PluginState"/> changes.
-            </summary>
-        </member>
-        <member name="T:CrawlWave.ServerPlugins.Initializer.PluginSettings">
-            <summary>
-            PluginSettings is a Singleton class that holds all the plugin's settings and provides
-            a global point of access to them.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.ServerPlugins.Initializer.PluginSettings.#ctor">
-            <summary>
-            The constructor is private so that only the class itself can create an instance.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.ServerPlugins.Initializer.PluginSettings.Instance">
-            <summary>
-            Provides a global access point for the single instance of the <see cref="T:CrawlWave.ServerPlugins.Initializer.PluginSettings"/>
-            class.
-            </summary>
-            <returns>A reference to the single instance of <see cref="T:CrawlWave.ServerPlugins.Initializer.PluginSettings"/>.</returns>
-        </member>
-        <member name="M:CrawlWave.ServerPlugins.Initializer.PluginSettings.GetPluginPath">
-            <summary>
-            Determines the plugin's path.
-            </summary>
-            <returns>The plugin's path, including the trailing slashes</returns>
-        </member>
-        <member name="M:CrawlWave.ServerPlugins.Initializer.PluginSettings.LoadSettings">
-            <summary>
-            Loads the settings of the plugin from the configuration file.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.ServerPlugins.Initializer.PluginSettings.SaveSettings">
-            <summary>
-            Saves the plugin's settings in a new xml file on disk
-            </summary>
-        </member>
-        <member name="M:CrawlWave.ServerPlugins.Initializer.PluginSettings.ProvideDBConnectionString">
-            <summary>
-            Provides a connection string to any method that needs to access the database
-            </summary>
-            <returns>A connection string.</returns>
-        </member>
-        <member name="P:CrawlWave.ServerPlugins.Initializer.PluginSettings.Threads">
-            <summary>
-            Gets or sets an integer value indicating the number of threads that the plugin
-            must use to visit the hosts contained in the input file.
-            </summary>
-        </member>
-        <member name="P:CrawlWave.ServerPlugins.Initializer.PluginSettings.CleanUrls">
-            <summary>
-            Gets or sets a <see cref="T:System.Boolean"/> value indicating whether the plugin should attempt to
-            trim out malformed or otherwise inappropriate urls given as input and save the
-            results to a new text file.
-            </summary>
-        </member>
-        <member name="P:CrawlWave.ServerPlugins.Initializer.PluginSettings.CheckUrls">
-            <summary>
-            Gets or sets a <see cref="T:System.Boolean"/> value indicating whether the plugin should attempt to
-            visit the urls contained in the Input file in order to initialize the system's
-            database.
-            </summary>
-        </member>
-        <member name="P:CrawlWave.ServerPlugins.Initializer.PluginSettings.PauseBetweenOperations">
-            <summary>
-            Gets or sets a <see cref="T:System.Boolean"/> value indicating whether the plugin should
-            pause its operation between consecutive loops or subtasks. This option allows
-            the adjustment of the load that the plugin puts on the system.
-            </summary>
-        </member>
-        <member name="P:CrawlWave.ServerPlugins.Initializer.PluginSettings.PauseDelay">
-            <summary>
-            Gets or sets an integer value indicating the amount of time that the plugin must
-            pause for between each loop or subtask.
-            </summary>
-        </member>
-        <member name="P:CrawlWave.ServerPlugins.Initializer.PluginSettings.InputFile">
-            <summary>
-            Gets or sets the path of the file containing the list of urls to check or visit.
-            </summary>
-        </member>
-        <member name="P:CrawlWave.ServerPlugins.Initializer.PluginSettings.OutpufFile">
-            <summary>
-            Gets or sets the path of the file where the cleaned list of urls will be stored.
-            </summary>
-        </member>
-        <member name="T:CrawlWave.ServerPlugins.Initializer.INPluginSettings">
-            <summary>
-            INPluginSettings provides a collection of all the settings required for the plugin's
-            operation. They allow the settings defined by the user or system to be stored in
-            persistent form (in an XML file on disk) using serialization.
-            </summary>
-        </member>
-        <member name="F:CrawlWave.ServerPlugins.Initializer.INPluginSettings.Threads">
-            <summary>
-            The number of to use for visiting the hosts.
-            </summary>
-        </member>
-        <member name="F:CrawlWave.ServerPlugins.Initializer.INPluginSettings.CleanUrls">
-            <summary>
-            A <see cref="T:System.Boolean"/> value indicating whether the plugin should attempt to
-            trim out malformed or otherwise inappropriate urls given as input and save the
-            results to a new text file.
-            </summary>
-        </member>
-        <member name="F:CrawlWave.ServerPlugins.Initializer.INPluginSettings.CheckUrls">
-            <summary>
-            A <see cref="T:System.Boolean"/> value indicating whether the plugin should visit the
-            urls contained in the Input file in order to initialize the system's database.
-            </summary>
-        </member>
-        <member name="F:CrawlWave.ServerPlugins.Initializer.INPluginSettings.PauseBetweenOperations">
-            <summary>
-            A <see cref="T:System.Boolean"/> value indicating whether the plugin should pause its 
-            operation between consecutive loops or subtasks.
-            </summary>
-        </member>
-        <member name="F:CrawlWave.ServerPlugins.Initializer.INPluginSettings.PauseDelay">
-            <summary>
-            An integer value indicating the amount of time that the plugin must pause for
-            between each loop or subtask.
             </summary>
         </member>
     </members>

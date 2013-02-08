@@ -4,28 +4,6 @@
         <name>CrawlWave.ServerPlugins.UrlSelection</name>
     </assembly>
     <members>
-        <member name="T:CrawlWave.ServerPlugins.UrlSelection.frmPluginSettings">
-            <summary>
-            frmPluginSettings is the form that displays the Plugin's settings and allows the
-            user to change and save them.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.ServerPlugins.UrlSelection.frmPluginSettings.#ctor">
-            <summary>
-            Constructs a new instance of the Plugin's settings form.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.ServerPlugins.UrlSelection.frmPluginSettings.Dispose(System.Boolean)">
-            <summary>
-            Clean up any resources being used.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.ServerPlugins.UrlSelection.frmPluginSettings.InitializeComponent">
-            <summary>
-            Required method for Designer support - do not modify
-            the contents of this method with the code editor.
-            </summary>
-        </member>
         <member name="T:CrawlWave.ServerPlugins.UrlSelection.UrlSelectorPlugin">
             <summary>
             UrlSelectorPlugin is a plugin that selects the most appropriate urls to be crawled
@@ -303,6 +281,28 @@
             An integer value indicating the Database Command Timeout in seconds to be used
             during the selection of ready urls from the database. Typical values range from
             600 to 3600 seconds, depending on the size and speed of the database.
+            </summary>
+        </member>
+        <member name="T:CrawlWave.ServerPlugins.UrlSelection.frmPluginSettings">
+            <summary>
+            frmPluginSettings is the form that displays the Plugin's settings and allows the
+            user to change and save them.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerPlugins.UrlSelection.frmPluginSettings.#ctor">
+            <summary>
+            Constructs a new instance of the Plugin's settings form.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerPlugins.UrlSelection.frmPluginSettings.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerPlugins.UrlSelection.frmPluginSettings.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
             </summary>
         </member>
     </members>
