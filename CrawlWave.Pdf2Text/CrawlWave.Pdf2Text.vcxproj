@@ -1,0 +1,292 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{FF9351E8-F71F-47B5-8699-F5804C1417F3}</ProjectGuid>
+    <Keyword>AtlProj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseOfAtl>Static</UseOfAtl>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseOfAtl>Static</UseOfAtl>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Debug\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Debug\</IntDir>
+    <IgnoreImportLibrary Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</IgnoreImportLibrary>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Release\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Release\</IntDir>
+    <IgnoreImportLibrary Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</IgnoreImportLibrary>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Midl>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+      <TargetEnvironment>Win32</TargetEnvironment>
+      <GenerateStublessProxies>true</GenerateStublessProxies>
+      <TypeLibraryName>$(IntDir)CrawlWave.Pdf2Text.tlb</TypeLibraryName>
+      <HeaderFileName>CrawlWave.Pdf2Text.h</HeaderFileName>
+      <DllDataFileName>
+      </DllDataFileName>
+      <InterfaceIdentifierFileName>CrawlWave.Pdf2Text_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>CrawlWave.Pdf2Text_p.c</ProxyFileName>
+    </Midl>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>fofi/;goo/;inc/;xpdf/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;_USRDLL;_ATL_ATTRIBUTES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <CompileAs>CompileAsCpp</CompileAs>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0408</Culture>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <OutputFile>$(OutDir)CrawlWave.Pdf2Text.dll</OutputFile>
+      <MergedIDLBaseFileName>_CrawlWave.Pdf2Text.idl</MergedIDLBaseFileName>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <ImportLibrary>$(OutDir)CrawlWave.Pdf2Text.lib</ImportLibrary>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+    <PostBuildEvent>
+      <Message>Performing registration</Message>
+      <Command>regsvr32 /s /c "$(TargetPath)"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Midl>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+      <TargetEnvironment>Win32</TargetEnvironment>
+      <GenerateStublessProxies>true</GenerateStublessProxies>
+      <TypeLibraryName>$(IntDir)CrawlWave.Pdf2Text.tlb</TypeLibraryName>
+      <HeaderFileName>CrawlWave.Pdf2Text.h</HeaderFileName>
+      <DllDataFileName>
+      </DllDataFileName>
+      <InterfaceIdentifierFileName>CrawlWave.Pdf2Text_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>CrawlWave.Pdf2Text_p.c</ProxyFileName>
+    </Midl>
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <AdditionalIncludeDirectories>fofi/;goo/;inc/;xpdf/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;_USRDLL;_ATL_ATTRIBUTES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0408</Culture>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <OutputFile>$(OutDir)CrawlWave.Pdf2Text.dll</OutputFile>
+      <MergedIDLBaseFileName>_CrawlWave.Pdf2Text.idl</MergedIDLBaseFileName>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <ImportLibrary>$(OutDir)CrawlWave.Pdf2Text.lib</ImportLibrary>
+      <TargetMachine>MachineX86</TargetMachine>
+      <RegisterOutput>true</RegisterOutput>
+    </Link>
+    <PostBuildEvent>
+      <Message>Performing registration</Message>
+      <Command>regsvr32 /s /c "$(TargetPath)"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="fofi\FoFiIdentifier.cc" />
+    <ClCompile Include="goo\FixedPoint.cc" />
+    <ClCompile Include="goo\gmem.cc" />
+    <ClCompile Include="goo\parseargs.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="xpdf\Annot.cc" />
+    <ClCompile Include="xpdf\Array.cc" />
+    <ClCompile Include="xpdf\BuiltinFont.cc" />
+    <ClCompile Include="xpdf\BuiltinFontTables.cc" />
+    <ClCompile Include="xpdf\Catalog.cc" />
+    <ClCompile Include="xpdf\CharCodeToUnicode.cc" />
+    <ClCompile Include="xpdf\CMap.cc" />
+    <ClCompile Include="CrawlWave.Pdf2Text.cpp" />
+    <ClCompile Include="xpdf\Decrypt.cc" />
+    <ClCompile Include="xpdf\Dict.cc" />
+    <ClCompile Include="xpdf\Error.cc" />
+    <ClCompile Include="fofi\FoFiBase.cc" />
+    <ClCompile Include="fofi\FoFiEncodings.cc" />
+    <ClCompile Include="fofi\FoFiTrueType.cc" />
+    <ClCompile Include="fofi\FoFiType1.cc" />
+    <ClCompile Include="fofi\FoFiType1C.cc" />
+    <ClCompile Include="xpdf\FontEncodingTables.cc" />
+    <ClCompile Include="xpdf\Function.cc" />
+    <ClCompile Include="goo\gfile.cc" />
+    <ClCompile Include="xpdf\Gfx.cc" />
+    <ClCompile Include="xpdf\GfxFont.cc" />
+    <ClCompile Include="xpdf\GfxState.cc" />
+    <ClCompile Include="goo\GHash.cc" />
+    <ClCompile Include="goo\GList.cc" />
+    <ClCompile Include="xpdf\GlobalParams.cc" />
+    <ClCompile Include="goo\gmempp.cc" />
+    <ClCompile Include="goo\GString.cc" />
+    <ClCompile Include="xpdf\JArithmeticDecoder.cc" />
+    <ClCompile Include="xpdf\JBIG2Stream.cc" />
+    <ClCompile Include="xpdf\JPXStream.cc" />
+    <ClCompile Include="xpdf\Lexer.cc" />
+    <ClCompile Include="xpdf\Link.cc" />
+    <ClCompile Include="xpdf\NameToCharCode.cc" />
+    <ClCompile Include="xpdf\Object.cc" />
+    <ClCompile Include="xpdf\OptionalContent.cc" />
+    <ClCompile Include="xpdf\Outline.cc" />
+    <ClCompile Include="xpdf\OutputDev.cc" />
+    <ClCompile Include="xpdf\Page.cc" />
+    <ClCompile Include="xpdf\Parser.cc" />
+    <ClCompile Include="Pdf2TextConverter.cpp" />
+    <ClCompile Include="xpdf\PDFDoc.cc" />
+    <ClCompile Include="xpdf\PDFDocEncoding.cc" />
+    <ClCompile Include="xpdf\pdftotext.cc" />
+    <ClCompile Include="xpdf\PSTokenizer.cc" />
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="xpdf\SecurityHandler.cc" />
+    <ClCompile Include="xpdf\Stream.cc" />
+    <ClCompile Include="xpdf\TextOutputDev.cc" />
+    <ClCompile Include="xpdf\UnicodeMap.cc" />
+    <ClCompile Include="xpdf\UnicodeTypeTable.cc" />
+    <ClCompile Include="xpdf\XRef.cc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="fofi\FoFiBase.h" />
+    <ClInclude Include="fofi\FoFiEncodings.h" />
+    <ClInclude Include="fofi\FoFiIdentifier.h" />
+    <ClInclude Include="fofi\FoFiTrueType.h" />
+    <ClInclude Include="fofi\FoFiType1.h" />
+    <ClInclude Include="fofi\FoFiType1C.h" />
+    <ClInclude Include="goo\FixedPoint.h" />
+    <ClInclude Include="goo\gfile.h" />
+    <ClInclude Include="goo\GHash.h" />
+    <ClInclude Include="goo\GList.h" />
+    <ClInclude Include="goo\gmem.h" />
+    <ClInclude Include="goo\GMutex.h" />
+    <ClInclude Include="goo\GString.h" />
+    <ClInclude Include="goo\gtypes.h" />
+    <ClInclude Include="goo\parseargs.h" />
+    <ClInclude Include="inc\aconf.h" />
+    <ClInclude Include="inc\aconf2.h" />
+    <ClInclude Include="Pdf2TextConverter.h" />
+    <ClInclude Include="xpdf\about-text.h" />
+    <ClInclude Include="xpdf\Annot.h" />
+    <ClInclude Include="xpdf\Array.h" />
+    <ClInclude Include="xpdf\BuiltinFont.h" />
+    <ClInclude Include="xpdf\BuiltinFontTables.h" />
+    <ClInclude Include="xpdf\Catalog.h" />
+    <ClInclude Include="xpdf\CharCodeToUnicode.h" />
+    <ClInclude Include="xpdf\CharTypes.h" />
+    <ClInclude Include="xpdf\CMap.h" />
+    <ClInclude Include="xpdf\CompactFontTables.h" />
+    <ClInclude Include="xpdf\config.h" />
+    <ClInclude Include="xpdf\Decrypt.h" />
+    <ClInclude Include="xpdf\Dict.h" />
+    <ClInclude Include="xpdf\Error.h" />
+    <ClInclude Include="xpdf\ErrorCodes.h" />
+    <ClInclude Include="xpdf\FontEncodingTables.h" />
+    <ClInclude Include="xpdf\Function.h" />
+    <ClInclude Include="xpdf\Gfx.h" />
+    <ClInclude Include="xpdf\GfxFont.h" />
+    <ClInclude Include="xpdf\GfxState.h" />
+    <ClInclude Include="xpdf\GlobalParams.h" />
+    <ClInclude Include="xpdf\JArithmeticDecoder.h" />
+    <ClInclude Include="xpdf\JBIG2Stream.h" />
+    <ClInclude Include="xpdf\JPXStream.h" />
+    <ClInclude Include="xpdf\Lexer.h" />
+    <ClInclude Include="xpdf\Link.h" />
+    <ClInclude Include="xpdf\NameToCharCode.h" />
+    <ClInclude Include="xpdf\NameToUnicodeTable.h" />
+    <ClInclude Include="xpdf\Object.h" />
+    <ClInclude Include="xpdf\OptionalContent.h" />
+    <ClInclude Include="xpdf\Outline.h" />
+    <ClInclude Include="xpdf\OutputDev.h" />
+    <ClInclude Include="xpdf\Page.h" />
+    <ClInclude Include="xpdf\Parser.h" />
+    <ClInclude Include="xpdf\PDFDoc.h" />
+    <ClInclude Include="xpdf\PDFDocEncoding.h" />
+    <ClInclude Include="xpdf\PSTokenizer.h" />
+    <ClInclude Include="xpdf\SecurityHandler.h" />
+    <ClInclude Include="xpdf\Stream-CCITT.h" />
+    <ClInclude Include="xpdf\Stream.h" />
+    <ClInclude Include="xpdf\TextOutputDev.h" />
+    <ClInclude Include="xpdf\UnicodeMap.h" />
+    <ClInclude Include="xpdf\UnicodeMapTables.h" />
+    <ClInclude Include="xpdf\UnicodeTypeTable.h" />
+    <ClInclude Include="xpdf\UTF8.h" />
+    <ClInclude Include="xpdf\XRef.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="CrawlWave.Pdf2Text.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CrawlWave.Pdf2Text.rgs" />
+    <None Include="Greek.nameToUnicode">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="ISO-8859-7.unicodeMap">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="ReadMe.txt" />
+    <None Include="xpdfrc">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

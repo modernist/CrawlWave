@@ -1,0 +1,11 @@
+HKCR
+{
+	NoRemove AppID
+	{
+		'%APPID%' = s 'CrawlWaveSwf2Html'
+		'CrawlWaveSwf2Html.DLL'
+		{
+			val AppID = s '%APPID%'
+		}
+	}
+}

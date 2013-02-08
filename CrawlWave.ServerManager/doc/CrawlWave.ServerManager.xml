@@ -1,0 +1,439 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>CrawlWave.ServerManager</name>
+    </assembly>
+    <members>
+        <member name="T:CrawlWave.ServerManager.Forms.frmInsertUrl">
+            <summary>
+            frmInsertUrl allows the insertion of new Urls to be crawled in the system's database.
+            </summary>
+        </member>
+        <member name="F:CrawlWave.ServerManager.Forms.frmInsertUrl.components">
+            <summary>
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerManager.Forms.frmInsertUrl.#ctor">
+            <summary>
+            Creates a new instance of the <see cref="T:CrawlWave.ServerManager.Forms.frmInsertUrl"/> form.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerManager.Forms.frmInsertUrl.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerManager.Forms.frmInsertUrl.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerManager.Forms.frmInsertUrl.ProcessUrl(System.String@)">
+            <summary>
+            Performs a processing of the GET parameters of dynamic urls. It removes any
+            session IDs and limits the number of parameters to 3, so as to avoid urls that
+            act as "black holes". It also removes named anchors from the end of the urls
+            for the same reason and performs a calculation of the url's 'importance', taking
+            into account the length of the absolute path and the number of its parameters.
+            </summary>
+            <param name="url">The url to be processed and whose priority is wanted.</param>
+            <returns>An unsigned 8 bit integer indicating the Url's priority.</returns>
+        </member>
+        <member name="M:CrawlWave.ServerManager.Forms.frmInsertUrl.ValidateForm">
+            <summary>
+            Validates the user's input
+            </summary>
+            <returns>True if the user input is OK, otherwise false.</returns>
+        </member>
+        <member name="M:CrawlWave.ServerManager.Forms.frmInsertUrl.InsertUrl">
+            <summary>
+            Inserts a new Url in the system's database.
+            </summary>
+            <returns>True if the operation succeeds, false otherwise.</returns>
+        </member>
+        <member name="T:CrawlWave.ServerManager.Forms.frmClientUpdate">
+            <summary>
+            frmClientUpdate allows the creation of CrawlWave Client updates.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerManager.Forms.frmClientUpdate.#ctor">
+            <summary>
+            Creates a new instance of the <see cref="T:CrawlWave.ServerManager.Forms.frmClientUpdate"/> form. 
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerManager.Forms.frmClientUpdate.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerManager.Forms.frmClientUpdate.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerManager.Forms.frmClientUpdate.LoadValues">
+            <summary>
+            Retrieves the version of the latest available update.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerManager.Forms.frmClientUpdate.ClearForm">
+            <summary>
+            Clears the list of files and the other fields.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerManager.Forms.frmClientUpdate.ValidateForm">
+            <summary>
+            Validates the user's input before creating an updated version.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CrawlWave.ServerManager.Forms.frmClientUpdate.AddFile(System.String)">
+            <summary>
+            Adds a file to the list of files that will be deployed with the update.
+            </summary>
+            <param name="file"></param>
+        </member>
+        <member name="M:CrawlWave.ServerManager.Forms.frmClientUpdate.AddInstaller(System.String)">
+            <summary>
+            Checks if the supplied file contains a valid CrawlWave Client Updater and if so
+            it adds it to the list of files to be deployed with the update.
+            </summary>
+            <param name="file"></param>
+        </member>
+        <member name="M:CrawlWave.ServerManager.Forms.frmClientUpdate.AddUpdate">
+            <summary>
+            Builds the update and stores it in the system's database.
+            </summary>
+            <returns>True if the operation succeeds, false otherwise.</returns>
+        </member>
+        <member name="T:CrawlWave.ServerManager.Forms.frmServerStatistics">
+            <summary>
+            frmServerStatistics allows monitoring of the Crawling process by presenting status graphs..
+            </summary>
+        </member>
+        <member name="F:CrawlWave.ServerManager.Forms.frmServerStatistics.components">
+            <summary>
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerManager.Forms.frmServerStatistics.#ctor">
+            <summary>
+            Constructs a new instance of the <see cref="T:CrawlWave.ServerManager.Forms.frmServerStatistics"/> form.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerManager.Forms.frmServerStatistics.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerManager.Forms.frmServerStatistics.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerManager.Forms.frmServerStatistics.LoadValues">
+            <summary>
+            Loads the statistics from the database.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerManager.Forms.frmServerStatistics.BuildGraph">
+            <summary>
+            Builds the appropriate graph, according to the user's selection.
+            </summary>
+        </member>
+        <member name="T:CrawlWave.ServerManager.Forms.frmUserStatistics">
+            <summary>
+            frmUserStatistics displays statistics about users participating in the crawling process.
+            </summary>
+        </member>
+        <member name="F:CrawlWave.ServerManager.Forms.frmUserStatistics.components">
+            <summary>
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerManager.Forms.frmUserStatistics.#ctor">
+            <summary>
+            Constructs a new instance of the <see cref="T:CrawlWave.ServerManager.Forms.frmUserStatistics"/> form.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerManager.Forms.frmUserStatistics.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerManager.Forms.frmUserStatistics.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerManager.Forms.frmUserStatistics.LoadValues">
+            <summary>
+            Loads the statistics from the database.
+            </summary>
+        </member>
+        <member name="T:CrawlWave.ServerManager.Forms.frmServerList">
+            <summary>
+            frmServerList allows the management of the list of available CrawlWave Servers.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerManager.Forms.frmServerList.#ctor">
+            <summary>
+            Constructs a new instance of the <see cref="T:CrawlWave.ServerManager.Forms.frmServerList"/> form.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerManager.Forms.frmServerList.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerManager.Forms.frmServerList.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerManager.Forms.frmServerList.LoadValues">
+            <summary>
+            Loads the list of available servers.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerManager.Forms.frmServerList.ClearForm">
+            <summary>
+            Clears the form's input fields.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerManager.Forms.frmServerList.ValidateForm">
+            <summary>
+            Performs validation of the user's input before inserting a new server to the list.
+            </summary>
+            <returns>True if the input is OK, false otherwise.</returns>
+        </member>
+        <member name="M:CrawlWave.ServerManager.Forms.frmServerList.AddServer">
+            <summary>
+            Inserts a new server in the database list of servers.
+            </summary>
+            <returns>True if the operation succeeds, false otherwise.</returns>
+        </member>
+        <member name="M:CrawlWave.ServerManager.Forms.frmServerList.RemoveServer">
+            <summary>
+            Removes a list from the list.
+            </summary>
+            <returns>True if the operation succeeds, false otherwise.</returns>
+        </member>
+        <member name="T:CrawlWave.ServerManager.Forms.frmMain">
+            <summary>
+            frmMain is the main form of the CrawlWave Server Manager.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerManager.Forms.frmMain.#ctor">
+            <summary>
+            Constructs a new instance of the <see cref="T:CrawlWave.ServerManager.Forms.frmMain"/> form.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerManager.Forms.frmMain.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerManager.Forms.frmMain.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerManager.Forms.frmMain.Main">
+            <summary>
+            The main entry point for the application.
+            </summary>
+        </member>
+        <member name="T:CrawlWave.ServerManager.Forms.frmUserStatisticsDetails">
+            <summary>
+            frmUserStatisticsDetails displays detailed statistics about users participating in
+            the project and the clients they are running.
+            </summary>
+        </member>
+        <member name="F:CrawlWave.ServerManager.Forms.frmUserStatisticsDetails.components">
+            <summary>
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerManager.Forms.frmUserStatisticsDetails.#ctor">
+            <summary>
+            Constructs a new instance of the <see cref="T:CrawlWave.ServerManager.Forms.frmUserStatisticsDetails"/> form.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerManager.Forms.frmUserStatisticsDetails.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerManager.Forms.frmUserStatisticsDetails.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerManager.Forms.frmUserStatisticsDetails.LoadValues">
+            <summary>
+            Loads the detailed statistics of a user.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.ServerManager.Forms.frmUserStatisticsDetails.UserID">
+            <summary>
+            Sets the User ID of the user whose details must be displayed and causes the
+            details to be loaded.
+            </summary>
+        </member>
+        <member name="T:CrawlWave.ServerManager.Forms.frmBannedHosts">
+            <summary>
+            frmBannedHosts allows the Management of Banned Hosts.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerManager.Forms.frmBannedHosts.#ctor">
+            <summary>
+            Constructs a new instance of the <see cref="T:CrawlWave.ServerManager.Forms.frmBannedHosts"/> form.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerManager.Forms.frmBannedHosts.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerManager.Forms.frmBannedHosts.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerManager.Forms.frmBannedHosts.LoadValues">
+            <summary>
+            Loads and displays the list of Banned Hosts from the database.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerManager.Forms.frmBannedHosts.ValidateForm">
+            <summary>
+            Performs validation of the user's input
+            </summary>
+            <returns>True if the input values are OK, otherwise false.</returns>
+        </member>
+        <member name="M:CrawlWave.ServerManager.Forms.frmBannedHosts.InsertHost">
+            <summary>
+            Inserts a new entry in the list of banned hosts.
+            </summary>
+            <returns>True if the operation succeeds, false if a failure occurs.</returns>
+            <remarks>
+            If the provided host already exists in the database then a record is added in
+            the list of banned hosts, otherwise a host record is first inserted and then
+            a record is added in the list of banned hosts.
+            </remarks>
+        </member>
+        <member name="M:CrawlWave.ServerManager.Forms.frmBannedHosts.DeleteHost(System.String)">
+            <summary>
+            Removes a host from the 'black list' of banned hosts by deleting a row from the
+            Banned Hosts table.
+            </summary>
+            <param name="hostID">The ID of the host to be removed from the 'black list'.</param>
+        </member>
+        <member name="T:CrawlWave.ServerManager.Globals">
+            <summary>
+            Globals is a Singleton class holding all the common data for the ServerManager.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerManager.Globals.#ctor">
+            <summary>
+            The constructor is private so that only the class itself can create an instance.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerManager.Globals.Instance">
+            <summary>
+            Provides a global access point for the single instance of the <see cref="T:CrawlWave.ServerManager.Globals"/>
+            class.
+            </summary>
+            <returns>A reference to the single instance of <see cref="T:CrawlWave.ServerManager.Globals"/>.</returns>
+        </member>
+        <member name="M:CrawlWave.ServerManager.Globals.ProvideConnectionString">
+            <summary>
+            Provides a Database Connection String that allows the Server Manager to use the
+            system's database.
+            </summary>
+            <returns>A Database Connection String</returns>
+        </member>
+        <member name="M:CrawlWave.ServerManager.Globals.IsFormLoaded(System.String)">
+            <summary>
+            Checks if a form is loaded and visible.
+            </summary>
+            <param name="formName">The name of the form to check for.</param>
+            <returns>True if the form is loaded and visible, false otherwise.</returns>
+        </member>
+        <member name="M:CrawlWave.ServerManager.Globals.GetAppPath">
+            <summary>
+            Determines the application's path.
+            </summary>
+            <returns>The application's path, including the trailing slashes</returns>
+        </member>
+        <member name="P:CrawlWave.ServerManager.Globals.Log">
+            <summary>
+            Gets a reference to an <see cref="T:CrawlWave.Common.ILogger"/> object that can be used for logging
+            the application's events.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.ServerManager.Globals.LoadedForms">
+            <summary>
+            Gets a reference to a <see cref="T:System.Collections.Hashtable"/> containing references to all the
+            application's forms.
+            </summary>
+        </member>
+        <member name="T:CrawlWave.ServerManager.Forms.frmSplash">
+            <summary>
+            frmSplash is displayed when the CrawlWave ServerManager starts up.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerManager.Forms.frmSplash.#ctor">
+            <summary>
+            Creates a new instance of the <see cref="T:CrawlWave.ServerManager.Forms.frmSplash"/> form.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerManager.Forms.frmSplash.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerManager.Forms.frmSplash.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="T:CrawlWave.ServerManager.Forms.frmAbout">
+            <summary>
+            frmAbout displays various information about CrawlWave Server Manager.
+            </summary>
+        </member>
+        <member name="F:CrawlWave.ServerManager.Forms.frmAbout.components">
+            <summary>
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerManager.Forms.frmAbout.#ctor">
+            <summary>
+            Constructs a new instance of the <see cref="T:CrawlWave.ServerManager.Forms.frmAbout"/> form.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerManager.Forms.frmAbout.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerManager.Forms.frmAbout.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+    </members>
+</doc>
