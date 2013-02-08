@@ -1,0 +1,300 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>CrawlWave.Client.Common</name>
+    </assembly>
+    <members>
+        <member name="T:CrawlWave.Client.Common.ComputerInfo">
+            <summary>
+            Provides static methods for retrieving hardware information about the computer
+            running the Client. It uses Windows Management Instrumentation (WMI) in order
+            to obtain info about the system's CPU, RAM, HDD and Internet connection.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Client.Common.ComputerInfo.#ctor">
+            <summary>
+            The constructor is private since no instances of this class need to be created.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Client.Common.ComputerInfo.CPUType">
+            <summary>
+            Retrieve the CPU Type (Vendor + Model + Speed)
+            </summary>
+            <returns>A string containing the CPU Type</returns>
+        </member>
+        <member name="M:CrawlWave.Client.Common.ComputerInfo.FreeDiskSpace">
+            <summary>
+            Retrieve the free disk space on disk c: (in MB)
+            </summary>
+            <returns>An integer indicating the free HDD space in MB</returns>
+        </member>
+        <member name="M:CrawlWave.Client.Common.ComputerInfo.MemorySize">
+            <summary>
+            Retrieves the total RAM size in MB
+            </summary>
+            <returns>An integer indicating the total RAM size in MB</returns>
+        </member>
+        <member name="M:CrawlWave.Client.Common.ComputerInfo.NetSpeed">
+            <summary>
+            Retrieves the Internet Connection Speed as a <see cref="T:CrawlWave.Common.CWConnectionSpeed"/>
+            enumeration member.
+            </summary>
+            <returns>A <see cref="T:CrawlWave.Common.CWConnectionSpeed"/> enumeration member indicating the
+            system's internet connection speed.</returns>
+        </member>
+        <member name="M:CrawlWave.Client.Common.ComputerInfo.GetComputerInfo">
+            <summary>
+            Gets hardware and internet connection information about a computer.
+            </summary>
+            <returns>A <see cref="T:CrawlWave.Common.CWComputerInfo"/> struct.</returns>
+        </member>
+        <member name="M:CrawlWave.Client.Common.ComputerInfo.GetSHA1HashCode(CrawlWave.Common.CWComputerInfo)">
+            <summary>
+            Produces a hash code for a <see cref="T:CrawlWave.Common.CWComputerInfo"/> object not including
+            the HDDSize value in order to make the detection of hardware changes easy.
+            </summary>
+            <param name="info">
+            The <see cref="T:CrawlWave.Common.CWComputerInfo"/> whose hash code is to be calculated.
+            </param>
+            <returns>
+            The lower part of the input's SHA1 Hash Code as a 64 bit unsigned long.
+            </returns>
+        </member>
+        <member name="T:CrawlWave.Client.Common.ClientSettings">
+            <summary>
+            ClientSettings provides a collection of all the settings that are required for the 
+            CrawlWave Client's operation. They allow the settings defined by the user or system 
+            to be stored in persistent form (in an XML file on disk) using serialization.
+            </summary>
+        </member>
+        <member name="F:CrawlWave.Client.Common.ClientSettings.LoadAtStartup">
+            <summary>
+            Gets or sets a <see cref="T:System.Boolean"/> value that determines if the application
+            will start automatically with Windows.
+            </summary>
+        </member>
+        <member name="F:CrawlWave.Client.Common.ClientSettings.MinimizeToTray">
+            <summary>
+            Gets or sets a <see cref="T:System.Boolean"/> value that determines if the application
+            will become a system tray icon when minimized.
+            </summary>
+        </member>
+        <member name="F:CrawlWave.Client.Common.ClientSettings.MinimizeOnExit">
+            <summary>
+            Gets or sets a <see cref="T:System.Boolean"/> value that determines if the application
+            will minimize instead of exit if the user presses the x button on the ControlBox
+            </summary>
+        </member>
+        <member name="F:CrawlWave.Client.Common.ClientSettings.EnableScheduler">
+            <summary>
+            Gets or sets a <see cref="T:System.Boolean"/> value that determines if the application
+            scheduler will be enabled (Crawling will start / stop at a user-defined time).
+            </summary>
+        </member>
+        <member name="F:CrawlWave.Client.Common.ClientSettings.StartTime">
+            <summary>
+            Gets or sets a <see cref="T:System.DateTime"/> value indicating the time at which the
+            application must start the crawling process.
+            </summary>
+        </member>
+        <member name="F:CrawlWave.Client.Common.ClientSettings.StopTime">
+            <summary>
+            Gets or sets a <see cref="T:System.DateTime"/> value indicating the time at which the
+            application must stop the crawling process.
+            </summary>
+        </member>
+        <member name="F:CrawlWave.Client.Common.ClientSettings.UserID">
+            <summary>
+            Gets or sets an integer containing the ID of the user running the client.
+            </summary>
+        </member>
+        <member name="F:CrawlWave.Client.Common.ClientSettings.UserName">
+            <summary>
+            Gets or sets a <see cref="T:System.String"/> value containing the username of the user
+            who is running the client.
+            </summary>
+        </member>
+        <member name="F:CrawlWave.Client.Common.ClientSettings.Email">
+            <summary>
+            Gets or sets a <see cref="T:System.String"/> value containing the email address of the 
+            user running the client.
+            </summary>
+        </member>
+        <member name="F:CrawlWave.Client.Common.ClientSettings.Password">
+            <summary>
+            Gets or sets an array of bytes containing the hash value of the password of the
+            user running the client.
+            </summary>
+        </member>
+        <member name="F:CrawlWave.Client.Common.ClientSettings.ClientID">
+            <summary>
+            Gets or sets a <see cref="T:System.Guid"/> containing the unique ID of the client.
+            </summary>
+        </member>
+        <member name="F:CrawlWave.Client.Common.ClientSettings.HardwareInfo">
+            <summary>
+            Gets or sets an unsigned long integer containing the lower 64 bits of the hash
+            code that occurs from the user's computer's hardware information.
+            </summary>
+        </member>
+        <member name="F:CrawlWave.Client.Common.ClientSettings.LogLevel">
+            <summary>
+            Gets or sets a <see cref="T:CrawlWave.Common.CWLogLevel"/> value indicating how extensive logging
+            will be used.
+            </summary>
+        </member>
+        <member name="F:CrawlWave.Client.Common.ClientSettings.ConnectionSpeed">
+            <summary>
+            Gets or sets a <see cref="T:CrawlWave.Common.CWConnectionSpeed"/> value indicating the speed of the
+            user's internet connection in order to determine the crawling speed.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Client.Common.ClientSettings.#ctor">
+            <summary>
+            Constructs an instance of the <see cref="T:CrawlWave.Client.Common.ClientSettings"/> class with the default values.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Client.Common.ClientSettings.#ctor(System.String)">
+            <summary>
+            Constructs a new instance of the <see cref="T:CrawlWave.Client.Common.ClientSettings"/> class and attempts
+            to load the settings from the provided file.
+            </summary>
+            <param name="fileName">The path of the configuration file.</param>
+        </member>
+        <member name="M:CrawlWave.Client.Common.ClientSettings.LoadSettings(System.String)">
+            <summary>
+            Loads the settings of the application from the configuration file.
+            </summary>
+            <param name="fileName">The path of the configuration file.</param>
+        </member>
+        <member name="M:CrawlWave.Client.Common.ClientSettings.LoadSettings">
+            <summary>
+            Loads the settings of the application from the configuration file.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Client.Common.ClientSettings.SaveSettings">
+            <summary>
+            Saves the application's settings in a new xml file on disk
+            </summary>
+            <remarks>
+            The class attempts to detect the assembly's codebase path using Reflection.
+            </remarks>
+        </member>
+        <member name="M:CrawlWave.Client.Common.ClientSettings.GetAppPath">
+            <summary>
+            Determines the application's path.
+            </summary>
+            <returns>The application's path, including the trailing slashes</returns>
+        </member>
+        <member name="T:CrawlWave.Client.Common.ICrawlerController">
+            <summary>
+            ICrawlerController defines the interface for a Remotable object that will be used
+            to control the CrawlWave Client's Crawler through Remoting.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Client.Common.ICrawlerController.GetState">
+            <summary>
+            Gets the Crawler's <see cref="T:CrawlWave.Client.Common.CrawlerState"/>.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Client.Common.ICrawlerController.GetSettings">
+            <summary>
+            Gets a <see cref="T:CrawlWave.Client.Common.ClientSettings"/> object with the CrawLWave Client's settings.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Client.Common.ICrawlerController.GetEventQueue">
+            <summary>
+            Gets a queue of the last <see cref="T:CrawlWave.Common.EventLoggerEntry"/> objects logged by the Crawler.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Client.Common.ICrawlerController.GetMemoryUsage">
+            <summary>
+            Gets the amount of memory consumed by the Crawler in KB.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Client.Common.ICrawlerController.GetStatistics">
+            <summary>
+            Gets the crawler's statistics (Urls Visited, Total Bytes etc.).
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Client.Common.ICrawlerController.GetUserStatistics(CrawlWave.Common.UserStatistics@)">
+            <summary>
+            Attempts to retrieve the user's statistics from the server.
+            </summary>
+            <param name="stats">The statistics of the user.</param>
+            <returns>Null if the operation succeeds, or a <see cref="T:CrawlWave.Common.SerializedException"/> 
+            encapsulating the error that occured if the operation fails.</returns>
+        </member>
+        <member name="M:CrawlWave.Client.Common.ICrawlerController.SetSettings(CrawlWave.Client.Common.ClientSettings)">
+            <summary>
+            Sets the CrawlWave Client's <see cref="T:CrawlWave.Client.Common.ClientSettings"/>.
+            </summary>
+            <param name="settings"></param>
+        </member>
+        <member name="M:CrawlWave.Client.Common.ICrawlerController.RegisterUser(System.String,System.String,System.String)">
+            <summary>
+            Attempts to perform the registration of a new user.
+            </summary>
+            <param name="UserName">The user's username.</param>
+            <param name="Password">The user's password.</param>
+            <param name="Email">The user's email address.</param>
+            <returns></returns>
+        </member>
+        <member name="M:CrawlWave.Client.Common.ICrawlerController.Start">
+            <summary>
+            Attempts to Start the crawling process.
+            </summary>
+            <returns>Null if the operation succeeds, or a <see cref="T:CrawlWave.Common.SerializedException"/> 
+            encapsulating the error that occured if the operation fails.</returns>
+        </member>
+        <member name="M:CrawlWave.Client.Common.ICrawlerController.Stop">
+            <summary>
+            Attempts to Stop the crawling process.
+            </summary>
+            <returns>Null if the operation succeeds, or a <see cref="T:CrawlWave.Common.SerializedException"/> 
+            encapsulating the error that occured if the operation fails.</returns>
+        </member>
+        <member name="M:CrawlWave.Client.Common.ICrawlerController.Pause">
+            <summary>
+            Attempts to Pause the crawling process.
+            </summary>
+            <returns>Null if the operation succeeds, or a <see cref="T:CrawlWave.Common.SerializedException"/> 
+            encapsulating the error that occured if the operation fails.</returns>
+        </member>
+        <member name="M:CrawlWave.Client.Common.ICrawlerController.Resume">
+            <summary>
+            Attempts to Resume the crawling process.
+            </summary>
+            <returns>Null if the operation succeeds, or a <see cref="T:CrawlWave.Common.SerializedException"/> 
+            encapsulating the error that occured if the operation fails.</returns>
+        </member>
+        <member name="M:CrawlWave.Client.Common.ICrawlerController.Terminate(CrawlWave.Common.SerializedException@)">
+            <summary>
+            Attempts to terminate the crawler process.
+            </summary>
+            <param name="sx">Returns Null if the operation succeeds, or a <see cref="T:CrawlWave.Common.SerializedException"/> 
+            encapsulating the error that occured if the operation fails.</param>
+        </member>
+        <member name="T:CrawlWave.Client.Common.CrawlerState">
+            <summary>
+            CrawlerStatus is an enumeration that defines all the different states in which the
+            CrawlWave.Client.Crawler can be at a given time.
+            </summary>
+        </member>
+        <member name="F:CrawlWave.Client.Common.CrawlerState.Stopped">
+            <summary>
+            Indicates that the crawler is inactive
+            </summary>
+        </member>
+        <member name="F:CrawlWave.Client.Common.CrawlerState.Paused">
+            <summary>
+            Indicates that the crawler is active but currently not visiting pages
+            </summary>
+        </member>
+        <member name="F:CrawlWave.Client.Common.CrawlerState.Running">
+            <summary>
+            Indicated that the crawler is active and visiting pages
+            </summary>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,742 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>CrawlWave.Common.UI</name>
+    </assembly>
+    <members>
+        <member name="T:CrawlWave.Common.UI.HealthLineGraph">
+            <summary>
+            HealthLineGraph is a subclass of <see cref="T:System.Windows.Forms.Panel"/> that can
+            display a usage history graph like the one in Windows Task Manager. It offers user-
+            selectable forecolor, grid color and background color and it can hold up to 800
+            values. Since each time it is redrawn it is shifted by 2 pixels this means that it
+            can hold enough values to fill a 1600x1200 pixel resolution screen.
+            </summary>
+        </member>
+        <member name="F:CrawlWave.Common.UI.HealthLineGraph.components">
+            <summary> 
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="F:CrawlWave.Common.UI.HealthLineGraph.mustWrapValues">
+            <summary>
+            Private variables needed for the control
+            </summary>		
+        </member>
+        <member name="M:CrawlWave.Common.UI.HealthLineGraph.#ctor">
+            <summary>
+            Constructs an instance of the <see cref="T:CrawlWave.Common.UI.HealthLineGraph"/> class and sets all
+            the properties to their default values.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.UI.HealthLineGraph.Dispose(System.Boolean)">
+            <summary> 
+            Clean up any resources being used.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.UI.HealthLineGraph.InitializeComponent">
+            <summary> 
+            Required method for Designer support - do not modify 
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.UI.HealthLineGraph.HealthLineGraph_Paint(System.Object,System.Windows.Forms.PaintEventArgs)">
+            <summary>
+            It is called whenever the control receives a Paint event, causing it to redraw.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.UI.HealthLineGraph.HealthLineGraph_ForeColorChanged(System.Object,System.EventArgs)">
+            <summary>
+            It is called when the ForeColor of the control changes in order to set the color of
+            the graph Pen.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:CrawlWave.Common.UI.HealthLineGraph.ClearGraph(System.Drawing.Graphics)">
+            <summary>
+            Clears the graph and draws the grid.
+            </summary>
+            <param name="g">The graphics object to be used for drawing the grid.</param>
+        </member>
+        <member name="M:CrawlWave.Common.UI.HealthLineGraph.DrawGraph(System.Drawing.Graphics)">
+            <summary>
+            Draws the graph based on the history of the previous values.
+            </summary>
+            <param name="g">The graphics object to be used for drawing the line.</param>
+        </member>
+        <member name="M:CrawlWave.Common.UI.HealthLineGraph.SetNextValue(System.Double)">
+            <summary>
+            Sets the new value to be displayed in the control, makes sure that the grid
+            is moved one step forward and calculates the current maximum value, so that
+            the height of the line can be adjusted dynamically.
+            </summary>
+            <param name="nextValue">The new value to be displayed in the control.</param>
+        </member>
+        <member name="M:CrawlWave.Common.UI.HealthLineGraph.OnMiminumChanged(System.EventArgs)">
+            <summary>
+            Raises the <see cref="E:CrawlWave.Common.UI.HealthLineGraph.MinimumChanged"/> event.
+            </summary>
+            <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
+        </member>
+        <member name="M:CrawlWave.Common.UI.HealthLineGraph.OnMaximumChanged(System.EventArgs)">
+            <summary>
+            Raises the <see cref="E:CrawlWave.Common.UI.HealthLineGraph.MaximumChanged"/> event.
+            </summary>
+            <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
+        </member>
+        <member name="M:CrawlWave.Common.UI.HealthLineGraph.OnGridColorChanged(System.EventArgs)">
+            <summary>
+            Raises the <see cref="E:CrawlWave.Common.UI.HealthLineGraph.GridColorChanged"/> event.
+            </summary>
+            <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
+        </member>
+        <member name="P:CrawlWave.Common.UI.HealthLineGraph.Value">
+            <summary>
+            Gets the value currently displayed by the control
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.UI.HealthLineGraph.Minimum">
+            <summary>
+            Gets or sets the minimum value supported by the control
+            </summary>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown if the value provided is negative.</exception>
+        </member>
+        <member name="P:CrawlWave.Common.UI.HealthLineGraph.Maximum">
+            <summary>
+            Gets or sets the control's maximum supported value
+            </summary>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown if the value provided is 
+            negative or smaller than the value of the <see cref="P:CrawlWave.Common.UI.HealthLineGraph.Minimum"/> property.</exception>
+        </member>
+        <member name="P:CrawlWave.Common.UI.HealthLineGraph.NextValue">
+            <summary>
+            Sets the next value to be displayed and causes the control to redraw
+            </summary>
+            <remarks>
+            If the value supplied is greater than the value of the <see cref="P:CrawlWave.Common.UI.HealthLineGraph.Maximum"/>
+            property then the value of the Maximum property is set to the current value.
+            This causes the graph to redraw and dynamically adapt to the new range.
+            </remarks>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown if the value provided is
+            smaller than the value of the <see cref="P:CrawlWave.Common.UI.HealthLineGraph.Minimum"/> property.</exception> 
+        </member>
+        <member name="P:CrawlWave.Common.UI.HealthLineGraph.GridColor">
+            <summary>
+            Gets/sets the Color to be used for the displayed grid
+            </summary>
+        </member>
+        <member name="E:CrawlWave.Common.UI.HealthLineGraph.MinimumChanged">
+            <summary>
+            Occurs when the <see cref="P:CrawlWave.Common.UI.HealthLineGraph.Minimum"/> property is set to a new value
+            </summary>
+        </member>
+        <member name="E:CrawlWave.Common.UI.HealthLineGraph.MaximumChanged">
+            <summary>
+            Occurs when the <see cref="P:CrawlWave.Common.UI.HealthLineGraph.Maximum"/> property is set to a new value
+            </summary>
+        </member>
+        <member name="E:CrawlWave.Common.UI.HealthLineGraph.GridColorChanged">
+            <summary>
+            Occurs when the <see cref="P:CrawlWave.Common.UI.HealthLineGraph.GridColor"/> property is set to a new value
+            </summary>
+        </member>
+        <member name="T:CrawlWave.Common.UI.HealthBarGraph">
+            <summary>
+            HealthBarGraph is a User Control that displays a Task-Manager like health bar. It
+            can be used to indicate percentage of usage of a certain resource, like CPU.
+            </summary>
+        </member>
+        <member name="F:CrawlWave.Common.UI.HealthBarGraph.components">
+            <summary> 
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.UI.HealthBarGraph.#ctor">
+            <summary>
+            Constructs a new instance of the <see cref="T:CrawlWave.Common.UI.HealthBarGraph"/> class and sets the
+            <see cref="P:CrawlWave.Common.UI.HealthBarGraph.Minimum"/>, <see cref="P:CrawlWave.Common.UI.HealthBarGraph.Maximum"/> and <see cref="P:CrawlWave.Common.UI.HealthBarGraph.Value"/> properties
+            to their default values.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.UI.HealthBarGraph.Dispose(System.Boolean)">
+            <summary> 
+            Clean up any resources being used.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.UI.HealthBarGraph.InitializeComponent">
+            <summary> 
+            Required method for Designer support - do not modify 
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.UI.HealthBarGraph.SetValue(System.Int32)">
+            <summary>
+            Resizes the picture box appropriately for the value to be displayed and updates
+            the control's caption.
+            </summary>
+            <param name="val">The new value that must be displayed</param>
+        </member>
+        <member name="M:CrawlWave.Common.UI.HealthBarGraph.OnMiminumChanged(System.EventArgs)">
+            <summary>
+            Raises the <see cref="E:CrawlWave.Common.UI.HealthBarGraph.MinimumChanged"/> event.
+            </summary>
+            <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
+        </member>
+        <member name="M:CrawlWave.Common.UI.HealthBarGraph.OnMaximumChanged(System.EventArgs)">
+            <summary>
+            Raises the <see cref="E:CrawlWave.Common.UI.HealthBarGraph.MaximumChanged"/> event.
+            </summary>
+            <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
+        </member>
+        <member name="M:CrawlWave.Common.UI.HealthBarGraph.OnValueChanged(System.EventArgs)">
+            <summary>
+            Raises the <see cref="E:CrawlWave.Common.UI.HealthBarGraph.ValueChanged"/> event.
+            </summary>
+            <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
+        </member>
+        <member name="P:CrawlWave.Common.UI.HealthBarGraph.Label">
+            <summary>
+            Gets or sets the text displayed at the bottom of the control, next to the value.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.UI.HealthBarGraph.Minimum">
+            <summary>
+            Gets or sets the Minimum value the control can display
+            </summary>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown when the value provided is negative.</exception>
+        </member>
+        <member name="P:CrawlWave.Common.UI.HealthBarGraph.Maximum">
+            <summary>
+            Gets or sets the Maximum value the control can display
+            </summary>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown when the value provided is
+            smaller than the value of the <see cref="P:CrawlWave.Common.UI.HealthBarGraph.Minimum"/> property.</exception>
+        </member>
+        <member name="P:CrawlWave.Common.UI.HealthBarGraph.Value">
+            <summary>
+            Gets or sets the current value displayed in the control
+            </summary>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown when the value provoded is
+            less than 0 or greater then the value of the <see cref="P:CrawlWave.Common.UI.HealthBarGraph.Maximum"/> property.</exception>
+        </member>
+        <member name="E:CrawlWave.Common.UI.HealthBarGraph.MinimumChanged">
+            <summary>
+            Occurs when the <see cref="P:CrawlWave.Common.UI.HealthBarGraph.Minimum"/> property is set to a new value
+            </summary>
+        </member>
+        <member name="E:CrawlWave.Common.UI.HealthBarGraph.MaximumChanged">
+            <summary>
+            Occurs when the <see cref="P:CrawlWave.Common.UI.HealthBarGraph.Maximum"/> property is set to a new value
+            </summary>
+        </member>
+        <member name="E:CrawlWave.Common.UI.HealthBarGraph.ValueChanged">
+            <summary>
+            Occurs when the <see cref="P:CrawlWave.Common.UI.HealthBarGraph.Value"/> property is set to a new value
+            </summary>
+        </member>
+        <member name="T:CrawlWave.Common.UI.ProgressStatusBarPanel">
+            <summary>
+            ProgressStatusBarPanel is a subclass of <see cref="T:System.Windows.Forms.StatusBarPanel"/>. It is a 
+            StatusBarPanel that contains a smooth progress bar with a specified color.
+            </summary>
+        </member>
+        <member name="F:CrawlWave.Common.UI.ProgressStatusBarPanel.value">
+            <summary>
+            the current value of the progress bar
+            </summary>
+        </member>
+        <member name="F:CrawlWave.Common.UI.ProgressStatusBarPanel.foreColor">
+            <summary>
+            the Progress Bar's Color
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.UI.ProgressStatusBarPanel.#ctor(System.Windows.Forms.StatusBar)">
+            <summary>
+            Constructs a new instance of the <see cref="T:CrawlWave.Common.UI.ProgressStatusBarPanel"/> class
+            and initializes it with the default values.
+            </summary>
+            <param name="sb">The status bar that contains the progress bar</param>
+        </member>
+        <member name="M:CrawlWave.Common.UI.ProgressStatusBarPanel.sb_DrawItem(System.Object,System.Windows.Forms.StatusBarDrawItemEventArgs)">
+            <summary>
+            Draws the status bar
+            </summary>
+            <param name="sender">The control that caused it to draw again</param>
+            <param name="sbdevent">The draw event</param>
+        </member>
+        <member name="M:CrawlWave.Common.UI.ProgressStatusBarPanel.Dispose(System.Boolean)">
+            <summary>
+            Releases the managed resources used by the Control
+            </summary>
+            <param name="disposing">Disposing</param>
+        </member>
+        <member name="P:CrawlWave.Common.UI.ProgressStatusBarPanel.Minimum">
+            <summary>
+            Gets or sets the minimum value of the progress bar
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.UI.ProgressStatusBarPanel.Maximum">
+            <summary>
+            Gets or sets the maximum value of the progress bar
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.UI.ProgressStatusBarPanel.Value">
+            <summary>
+            Gets or sets the <see cref="P:System.Windows.Forms.ProgressBar.Value"/> property of the progress bar
+            </summary>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown when the supplied value is
+            less than the value of the <see cref="P:CrawlWave.Common.UI.ProgressStatusBarPanel.Minimum"/> property or greater than the
+            value of the <see cref="P:CrawlWave.Common.UI.ProgressStatusBarPanel.Maximum"/> property.</exception>
+        </member>
+        <member name="P:CrawlWave.Common.UI.ProgressStatusBarPanel.ForeColor">
+            <summary>
+            Gets or sets the <see cref="T:System.Drawing.Color"/> of the progress bar
+            </summary>
+        </member>
+        <member name="T:CrawlWave.Common.UI.TextBoxWriter">
+            <summary>
+            A <see cref="T:System.IO.TextWriter"/> that writes to a text box.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.UI.TextBoxWriter.#ctor(System.Windows.Forms.TextBoxBase)">
+            <summary>
+            Creates a new instance of the <see cref="T:CrawlWave.Common.UI.TextBoxWriter"/> class.
+            </summary>
+            <param name="b">The <see cref="T:System.Windows.Forms.TextBoxBase"/> that will be written to.</param>
+            <exception cref="T:System.NullReferenceException">Thrown if the supplied TextBoxBase is null.</exception>
+        </member>
+        <member name="M:CrawlWave.Common.UI.TextBoxWriter.Write(System.String)">
+            <summary>
+            Write a string to the trace window
+            </summary>
+            <param name="message">The string to write</param>
+        </member>
+        <member name="M:CrawlWave.Common.UI.TextBoxWriter.WriteLine(System.String)">
+            <summary>
+            Writes a string and a new line to the text box
+            </summary>
+            <param name="message">The string to write</param>
+        </member>
+        <member name="P:CrawlWave.Common.UI.TextBoxWriter.Encoding">
+            <summary>
+            Gets the encoding of the stream
+            </summary>
+        </member>
+        <member name="T:CrawlWave.Common.UI.MultiLineGraph">
+            <summary>
+            MultiLineGraph is a subclass of <see cref="T:System.Windows.Forms.Panel"/> that can
+            display a multiple line graph.
+            </summary>
+        </member>
+        <member name="F:CrawlWave.Common.UI.MultiLineGraph.components">
+            <summary> 
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="F:CrawlWave.Common.UI.MultiLineGraph.itemList">
+            <summary>
+            Private variables needed for the control
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.UI.MultiLineGraph.#ctor">
+            <summary>
+            Constructs an instance of the <see cref="T:CrawlWave.Common.UI.MultiLineGraph"/> class and sets all
+            the properties to their default values.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.UI.MultiLineGraph.Dispose(System.Boolean)">
+            <summary> 
+            Clean up any resources being used.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.UI.MultiLineGraph.InitializeComponent">
+            <summary> 
+            Required method for Designer support - do not modify 
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.UI.MultiLineGraph.MultiLineGraph_Paint(System.Object,System.Windows.Forms.PaintEventArgs)">
+            <summary>
+            It is called whenever the control receives a Paint event, causing it to redraw.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.UI.MultiLineGraph.MultiLineGraph_ForeColorChanged(System.Object,System.EventArgs)">
+            <summary>
+            It is called when the ForeColor property cahnge in order to set the color of
+            the axes Pen and the triangle brush to the new value.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:CrawlWave.Common.UI.MultiLineGraph.ClearGraph(System.Drawing.Graphics)">
+            <summary>
+            Clears the graph and draws the grid.
+            </summary>
+            <param name="g">The graphics object to be used for drawing the grid.</param>
+        </member>
+        <member name="M:CrawlWave.Common.UI.MultiLineGraph.DrawAxes(System.Drawing.Graphics)">
+            <summary>
+            Draws the vertical and horizontal axes of the graph.
+            </summary>
+            <param name="g">The graphics object to be used for drawing the axes.</param>
+        </member>
+        <member name="M:CrawlWave.Common.UI.MultiLineGraph.CalculateMaximum">
+            <summary>
+            Iterates through all the Items of the graph and their values and calculates
+            the maximum value
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.UI.MultiLineGraph.DrawGraph(System.Drawing.Graphics)">
+            <summary>
+            Draws the graph based on the history of the previous values.
+            </summary>
+            <param name="g">The graphics object to be used for drawing the lines.</param>
+        </member>
+        <member name="M:CrawlWave.Common.UI.MultiLineGraph.OnMiminumChanged(System.EventArgs)">
+            <summary>
+            Raises the <see cref="E:CrawlWave.Common.UI.MultiLineGraph.MinimumChanged"/> event.
+            </summary>
+            <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
+        </member>
+        <member name="M:CrawlWave.Common.UI.MultiLineGraph.OnMaximumChanged(System.EventArgs)">
+            <summary>
+            Raises the <see cref="E:CrawlWave.Common.UI.MultiLineGraph.MaximumChanged"/> event.
+            </summary>
+            <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
+        </member>
+        <member name="M:CrawlWave.Common.UI.MultiLineGraph.OnGridColorChanged(System.EventArgs)">
+            <summary>
+            Raises the <see cref="E:CrawlWave.Common.UI.MultiLineGraph.GridColorChanged"/> event.
+            </summary>
+            <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
+        </member>
+        <member name="M:CrawlWave.Common.UI.MultiLineGraph.OnShowLegendChanged(System.EventArgs)">
+            <summary>
+            Raises the <see cref="E:CrawlWave.Common.UI.MultiLineGraph.ShowLegendChanged"/> event.
+            </summary>
+            <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
+        </member>
+        <member name="M:CrawlWave.Common.UI.MultiLineGraph.OnXAxisTextChanged(System.EventArgs)">
+            <summary>
+            Raises the <see cref="E:CrawlWave.Common.UI.MultiLineGraph.XAxisTextChanged"/> event.
+            </summary>
+            <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
+        </member>
+        <member name="M:CrawlWave.Common.UI.MultiLineGraph.OnYAxisTextChanged(System.EventArgs)">
+            <summary>
+            Raises the <see cref="E:CrawlWave.Common.UI.MultiLineGraph.YAxisTextChanged"/> event.
+            </summary>
+            <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
+        </member>
+        <member name="P:CrawlWave.Common.UI.MultiLineGraph.Value">
+            <summary>
+            Gets the value currently displayed by the control
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.UI.MultiLineGraph.Minimum">
+            <summary>
+            Gets or sets the minimum value supported by the control
+            </summary>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown if the value provided is negative.</exception>
+        </member>
+        <member name="P:CrawlWave.Common.UI.MultiLineGraph.Maximum">
+            <summary>
+            Gets or sets the control's maximum supported value
+            </summary>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown if the value provided is 
+            negative or smaller than the value of the <see cref="P:CrawlWave.Common.UI.MultiLineGraph.Minimum"/> property.</exception>
+        </member>
+        <member name="P:CrawlWave.Common.UI.MultiLineGraph.GridColor">
+            <summary>
+            Gets/sets the Color to be used for the displayed grid
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.UI.MultiLineGraph.Items">
+            <summary>
+            Gets or sets the <see cref="T:CrawlWave.Common.UI.ItemCollection"/> containing the data for the lines
+            to be drawn on the graph.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.UI.MultiLineGraph.ShowLegend">
+            <summary>
+            Gets or sets a Boolean value indicating whether a color legend must be drawn on
+            the graph for each <see cref="T:CrawlWave.Common.UI.MultiLineGraphItem"/> contained in the <see cref="P:CrawlWave.Common.UI.MultiLineGraph.Items"/>
+            collection.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.UI.MultiLineGraph.XAxisText">
+            <summary>
+            Gets or sets the x-Axis Legend Text
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.UI.MultiLineGraph.YAxisText">
+            <summary>
+            Gets or sets the y-Axis Legend Text
+            </summary>
+        </member>
+        <member name="E:CrawlWave.Common.UI.MultiLineGraph.MinimumChanged">
+            <summary>
+            Occurs when the <see cref="P:CrawlWave.Common.UI.MultiLineGraph.Minimum"/> property is set to a new value.
+            </summary>
+        </member>
+        <member name="E:CrawlWave.Common.UI.MultiLineGraph.MaximumChanged">
+            <summary>
+            Occurs when the <see cref="P:CrawlWave.Common.UI.MultiLineGraph.Maximum"/> property is set to a new value.
+            </summary>
+        </member>
+        <member name="E:CrawlWave.Common.UI.MultiLineGraph.GridColorChanged">
+            <summary>
+            Occurs when the <see cref="P:CrawlWave.Common.UI.MultiLineGraph.GridColor"/> property is set to a new value.
+            </summary>
+        </member>
+        <member name="E:CrawlWave.Common.UI.MultiLineGraph.ShowLegendChanged">
+            <summary>
+            Occurs when the <see cref="P:CrawlWave.Common.UI.MultiLineGraph.ShowLegend"/> property is set to a new value.
+            </summary>
+        </member>
+        <member name="E:CrawlWave.Common.UI.MultiLineGraph.XAxisTextChanged">
+            <summary>
+            Occurs when the <see cref="P:CrawlWave.Common.UI.MultiLineGraph.XAxisText"/> property is set to a new value.
+            </summary>
+        </member>
+        <member name="E:CrawlWave.Common.UI.MultiLineGraph.YAxisTextChanged">
+            <summary>
+            Occurs when the <see cref="P:CrawlWave.Common.UI.MultiLineGraph.YAxisText"/> property is set to a new value.
+            </summary>
+        </member>
+        <member name="T:CrawlWave.Common.UI.MultiLineGraphItem">
+            <summary>
+            The information related to each line drawn in a MultiLineGraph.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.UI.MultiLineGraphItem.#ctor">
+            <summary>
+            Default Constructor
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.UI.MultiLineGraphItem.#ctor(System.Drawing.Color)">
+            <summary>
+            
+            </summary>
+            <param name="color"></param>
+        </member>
+        <member name="M:CrawlWave.Common.UI.MultiLineGraphItem.#ctor(System.Drawing.Color,System.Collections.ArrayList)">
+            <summary>
+            
+            </summary>
+            <param name="color"></param>
+            <param name="values"></param>
+        </member>
+        <member name="M:CrawlWave.Common.UI.MultiLineGraphItem.#ctor(System.Drawing.Color,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="color"></param>
+            <param name="text"></param>
+        </member>
+        <member name="M:CrawlWave.Common.UI.MultiLineGraphItem.#ctor(System.Drawing.Color,System.Collections.ArrayList,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="color"></param>
+            <param name="values"></param>
+            <param name="text"></param>
+        </member>
+        <member name="P:CrawlWave.Common.UI.MultiLineGraphItem.LineColor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.UI.MultiLineGraphItem.Text">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.UI.MultiLineGraphItem.Values">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:CrawlWave.Common.UI.MultiLineGraphItemDesigner">
+            <summary>
+            A custom designer used by Items to remove unwanted 
+            properties from the Property window in the designer
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.UI.MultiLineGraphItemDesigner.#ctor">
+            <summary>
+            Initializes a new instance of the TaskItemDesigner class
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.UI.MultiLineGraphItemDesigner.PreFilterProperties(System.Collections.IDictionary)">
+            <summary>
+            Adjusts the set of properties the component exposes through 
+            a TypeDescriptor
+            </summary>
+            <param name="properties">An IDictionary containing the properties 
+            for the class of the component</param>
+        </member>
+        <member name="T:CrawlWave.Common.UI.ItemCollection">
+            <summary>
+            ItemCollection is a custom <see cref="T:System.Collections.CollectionBase"/> derived class that holds a
+            collection of <see cref="T:CrawlWave.Common.UI.MultiLineGraphItem"/> objects. It is used by <see cref="T:CrawlWave.Common.UI.MultiLineGraph"/>
+            in order to hold a collection of information on the various lines that are displayed
+            in the graph.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.UI.ItemCollection.#ctor">
+            <summary>
+            Constructs a new instance of the <see cref="T:CrawlWave.Common.UI.ItemCollection"/> class.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.UI.ItemCollection.#ctor(CrawlWave.Common.UI.ItemCollection)">
+            <summary>
+            Constructs a new instance of the <see cref="T:CrawlWave.Common.UI.ItemCollection"/> class and initializes
+            it with the contents of another <see cref="T:CrawlWave.Common.UI.ItemCollection"/>.
+            </summary>
+            <param name="items"></param>
+        </member>
+        <member name="M:CrawlWave.Common.UI.ItemCollection.Add(CrawlWave.Common.UI.MultiLineGraphItem)">
+            <summary>
+            Adds a <see cref="T:CrawlWave.Common.UI.MultiLineGraphItem"/> to the collection.
+            </summary>
+            <param name="item">The <see cref="T:CrawlWave.Common.UI.MultiLineGraphItem"/> to add to the collection.</param>
+        </member>
+        <member name="M:CrawlWave.Common.UI.ItemCollection.Add(CrawlWave.Common.UI.ItemCollection)">
+            <summary>
+            Adds the <see cref="T:CrawlWave.Common.UI.MultiLineGraphItem"/> objects contained into an <see cref="T:CrawlWave.Common.UI.ItemCollection"/>
+            into this collection.
+            </summary>
+            <param name="items">The <see cref="T:CrawlWave.Common.UI.ItemCollection"/> containing the <see cref="T:CrawlWave.Common.UI.MultiLineGraphItem"/>
+            objects to be added in this collection.</param>
+        </member>
+        <member name="M:CrawlWave.Common.UI.ItemCollection.Clear">
+            <summary>
+            Removes all controls from the collection
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.UI.ItemCollection.Contains(CrawlWave.Common.UI.MultiLineGraphItem)">
+            <summary>
+            Determines whether the specified item is a member of the collection
+            </summary>
+            <param name="item">The item to locate in the collection</param>
+            <returns>true if the item is a member of the collection, otherwise false</returns>
+        </member>
+        <member name="M:CrawlWave.Common.UI.ItemCollection.IndexOf(CrawlWave.Common.UI.MultiLineGraphItem)">
+            <summary>
+            Retrieves the index of the specified item in the collection
+            </summary>
+            <param name="item">The item to locate in the collection.</param>
+            <returns>A zero-based index value that represents the position 
+            of the specified item in the ItemCollection.</returns>
+        </member>
+        <member name="M:CrawlWave.Common.UI.ItemCollection.Remove(CrawlWave.Common.UI.MultiLineGraphItem)">
+            <summary>
+            Removes the specified <see cref="T:CrawlWave.Common.UI.MultiLineGraphItem"/> from the collection.
+            </summary>
+            <param name="item">The item to remove from the ItemCollection.</param>
+        </member>
+        <member name="M:CrawlWave.Common.UI.ItemCollection.RemoveAt(System.Int32)">
+            <summary>
+            Removes an item from the collection at the specified indexed location
+            </summary>
+            <param name="index">The index value of the item to remove</param>
+        </member>
+        <member name="P:CrawlWave.Common.UI.ItemCollection.Item(System.Int32)">
+            <summary>
+            The MultiLineGraphItem located at the specified index location within the collection
+            </summary>
+            <param name="index">The index of the item to retrieve from the collection</param>
+        </member>
+        <member name="T:CrawlWave.Common.UI.RichTextboxLogger">
+            <summary>
+            RichTextboxLogger implements an <see cref="T:CrawlWave.Common.ILogger"/> that logs messages in a Rich
+            Textbox Control.
+            </summary>
+        </member>
+        <member name="F:CrawlWave.Common.UI.RichTextboxLogger.components">
+            <summary>
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.UI.RichTextboxLogger.#ctor">
+            <summary>
+            Constructs a new instance of the <see cref="T:CrawlWave.Common.UI.RichTextboxLogger"/> control.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.UI.RichTextboxLogger.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.UI.RichTextboxLogger.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify 
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.UI.RichTextboxLogger.OnPaint(System.Windows.Forms.PaintEventArgs)">
+            <summary>
+            Paints the control.
+            </summary>
+            <param name="pe">The <see cref="T:System.Windows.Forms.PaintEventArgs"/> related to the event.</param>
+        </member>
+        <member name="M:CrawlWave.Common.UI.RichTextboxLogger.LogError(System.String)">
+            <summary>
+            Creates a Log Entry of type Error in the log in a thread-safe manner.
+            </summary>
+            <param name="msg">
+            The log Message
+            </param>
+        </member>
+        <member name="M:CrawlWave.Common.UI.RichTextboxLogger.LogWarning(System.String)">
+            <summary>
+            Creates a Log Entry of type Warning in the log in a thread-safe manner.
+            </summary>
+            <param name="msg">
+            The log Message
+            </param>
+        </member>
+        <member name="M:CrawlWave.Common.UI.RichTextboxLogger.LogInfo(System.String)">
+            <summary>
+            Creates a Log Entry of type Info in the log in a thread-safe manner.
+            </summary>
+            <param name="msg">
+            The log Message
+            </param>
+        </member>
+        <member name="M:CrawlWave.Common.UI.RichTextboxLogger.LogEventEntry(CrawlWave.Common.EventLoggerEntry)">
+            <summary>
+            Creates a Log Entry in the log according to the type of the entry's event.
+            </summary>
+            <param name="entry">The <see cref="T:CrawlWave.Common.EventLoggerEntry"/> to log.</param>
+        </member>
+        <member name="P:CrawlWave.Common.UI.RichTextboxLogger.UseColors">
+            <summary>
+            Gets or sets a <see cref="T:System.Boolean"/> value indicating whether the text is colorized.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.UI.RichTextboxLogger.EventSourceName">
+            <summary>
+            Gets or sets the Event Source Name of the Logger.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.UI.RichTextboxLogger.LastEntry">
+            <summary>
+            Gets the message of the last Event Log entry.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.UI.RichTextboxLogger.RememberLastEntry">
+            <summary>
+            Gets or sets a Boolean value indicating whether the logger must remember the last
+            entry.
+            </summary>
+        </member>
+        <member name="T:CrawlWave.Common.UI.RichTextboxLogger.LogDelegate">
+            <summary>
+            
+            </summary>
+        </member>
+    </members>
+</doc>

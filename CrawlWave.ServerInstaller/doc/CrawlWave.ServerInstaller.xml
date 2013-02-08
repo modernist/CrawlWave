@@ -1,0 +1,415 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>CrawlWave.ServerInstaller</name>
+    </assembly>
+    <members>
+        <member name="T:CrawlWave.ServerInstaller.Forms.frmStep4">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:CrawlWave.ServerInstaller.Forms.frmStep">
+            <summary>
+            Summary description for frmStep.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerInstaller.Forms.frmStep.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerInstaller.Forms.frmStep.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerInstaller.Forms.frmStep4.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerInstaller.Forms.frmStep4.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerInstaller.Forms.frmStep4.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="T:CrawlWave.ServerInstaller.Forms.frmStep3">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerInstaller.Forms.frmStep3.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerInstaller.Forms.frmStep3.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerInstaller.Forms.frmStep3.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="T:CrawlWave.ServerInstaller.Forms.frmStep2">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerInstaller.Forms.frmStep2.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerInstaller.Forms.frmStep2.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerInstaller.Forms.frmStep2.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="T:CrawlWave.ServerInstaller.Forms.frmStep1">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerInstaller.Forms.frmStep1.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerInstaller.Forms.frmStep1.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerInstaller.Forms.frmStep1.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerInstaller.Forms.frmStep1.Main">
+            <summary>
+            The main entry point for the application.
+            </summary>
+        </member>
+        <member name="T:CrawlWave.ServerInstaller.Globals">
+            <summary>
+            Summary description for Globals.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerInstaller.Globals.#ctor">
+            <summary>
+            The constructor is private so that only the class itself can create an instance.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerInstaller.Globals.Instance">
+            <summary>
+            Provides a global access point for the single instance of the <see cref="T:CrawlWave.ServerInstaller.Globals"/>
+            class.
+            </summary>
+            <returns>A reference to the single instance of <see cref="T:CrawlWave.ServerInstaller.Globals"/>.</returns>
+        </member>
+        <member name="M:CrawlWave.ServerInstaller.Globals.IsFormLoaded(System.String)">
+            <summary>
+            Checks if a form is loaded and visible.
+            </summary>
+            <param name="formName">The name of the form to check for.</param>
+            <returns>True if the form is loaded and visible, false otherwise.</returns>
+        </member>
+        <member name="M:CrawlWave.ServerInstaller.Globals.GetAppPath">
+            <summary>
+            Determines the application's path.
+            </summary>
+            <returns>The application's path, including the trailing slashes</returns>
+        </member>
+        <member name="P:CrawlWave.ServerInstaller.Globals.LoadedForms">
+            <summary>
+            Gets a <see cref="T:System.Collections.Hashtable"/> that holds the names of the loaded forms.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.ServerInstaller.Globals.ConfigurationSettings">
+            <summary>
+            Gets the application's <see cref="T:CrawlWave.ServerInstaller.Settings"/>.
+            </summary>
+        </member>
+        <member name="T:CrawlWave.ServerInstaller.Forms.frmStep2b">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerInstaller.Forms.frmStep2b.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerInstaller.Forms.frmStep2b.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerInstaller.Forms.frmStep2b.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="T:CrawlWave.ServerInstaller.Forms.frmStep3b">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerInstaller.Forms.frmStep3b.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerInstaller.Forms.frmStep3b.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerInstaller.Forms.frmStep3b.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="T:CrawlWave.ServerInstaller.VirtualDirectoryHelper">
+            <summary>
+            VirtualDirectoryHelper creates or modifies a virtual directory of a web site hosted
+            on Internet Information Server.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerInstaller.VirtualDirectoryHelper.#ctor">
+            <summary>
+            Constructs a new instance of the <see cref="T:CrawlWave.ServerInstaller.VirtualDirectoryHelper"/> class.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerInstaller.VirtualDirectoryHelper.#ctor(System.String)">
+            <summary>
+            Constructs a new instance of the <see cref="T:CrawlWave.ServerInstaller.VirtualDirectoryHelper"/> class.
+            </summary>
+            <param name="serverName">The server to connect to.</param>
+        </member>
+        <member name="M:CrawlWave.ServerInstaller.VirtualDirectoryHelper.FindIISVersion">
+            <summary>
+            Gets the version of IIS corresponding with the current OS.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerInstaller.VirtualDirectoryHelper.Connect">
+            <summary>
+            Connects to IISServer
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerInstaller.VirtualDirectoryHelper.CreateVirtualDirectory(System.String,System.String,System.String)">
+            <summary>
+            Creates a new virtual directory on IIS Server.
+            </summary>
+            <param name="dirName">The name of the directory to create.</param>
+            <param name="appName">The name of the application to create.</param>
+            <param name="physicalPath">The physical path of the virtual directory.</param>
+        </member>
+        <member name="M:CrawlWave.ServerInstaller.VirtualDirectoryHelper.DeleteVirtualDirectory(System.String,System.String)">
+            <summary>
+            Deletes a virtual directory from IIS Server.
+            </summary>
+            <param name="dirName">The name of the directory to delete.</param>
+            <param name="physicalPath">The physical path of the virtual directory.</param>
+        </member>
+        <member name="P:CrawlWave.ServerInstaller.VirtualDirectoryHelper.ServerName">
+            <summary>
+            Gets or sets the Server Name
+            </summary>
+        </member>
+        <member name="T:CrawlWave.ServerInstaller.VirtualDirectoryHelper.IISVersion">
+            <summary>
+            Defines the IIS versions supported by the class.
+            </summary>
+        </member>
+        <member name="F:CrawlWave.ServerInstaller.VirtualDirectoryHelper.IISVersion.None">
+            <summary>
+            Unknown version or no IIS installed
+            </summary>
+        </member>
+        <member name="F:CrawlWave.ServerInstaller.VirtualDirectoryHelper.IISVersion.Four">
+            <summary>
+            NT 4.0
+            </summary>
+        </member>
+        <member name="F:CrawlWave.ServerInstaller.VirtualDirectoryHelper.IISVersion.Five">
+            <summary>
+            Win 2K/XP
+            </summary>
+        </member>
+        <member name="F:CrawlWave.ServerInstaller.VirtualDirectoryHelper.IISVersion.Six">
+            <summary>
+            Win 2003
+            </summary>
+        </member>
+        <member name="T:CrawlWave.ServerInstaller.TextBoxWriter">
+            <summary>
+            A <see cref="T:System.IO.TextWriter"/> that writes to a text box.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerInstaller.TextBoxWriter.#ctor(System.Windows.Forms.TextBoxBase)">
+            <summary>
+            Creates a new instance of the <see cref="T:CrawlWave.ServerInstaller.TextBoxWriter"/> class.
+            </summary>
+            <param name="b">The <see cref="T:System.Windows.Forms.TextBoxBase"/> that will be written to.</param>
+            <exception cref="T:System.NullReferenceException">Thrown if the supplied TextBoxBase is null.</exception>
+        </member>
+        <member name="M:CrawlWave.ServerInstaller.TextBoxWriter.Write(System.String)">
+            <summary>
+            Write a string to the trace window
+            </summary>
+            <param name="message">The string to write</param>
+        </member>
+        <member name="M:CrawlWave.ServerInstaller.TextBoxWriter.WriteLine(System.String)">
+            <summary>
+            Writes a string and a new line to the text box
+            </summary>
+            <param name="message">The string to write</param>
+        </member>
+        <member name="P:CrawlWave.ServerInstaller.TextBoxWriter.Encoding">
+            <summary>
+            Gets the encoding of the stream
+            </summary>
+        </member>
+        <member name="T:CrawlWave.ServerInstaller.Settings">
+            <summary>
+            Summary description for Settings.
+            </summary>
+        </member>
+        <member name="F:CrawlWave.ServerInstaller.Settings.SQLServer">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:CrawlWave.ServerInstaller.Settings.DBAUser">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:CrawlWave.ServerInstaller.Settings.DBAPass">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:CrawlWave.ServerInstaller.Settings.CWUser">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:CrawlWave.ServerInstaller.Settings.CWPass">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:CrawlWave.ServerInstaller.Settings.DBSize">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:CrawlWave.ServerInstaller.Settings.DBSizeMax">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:CrawlWave.ServerInstaller.Settings.DBIndexesPath">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:CrawlWave.ServerInstaller.Settings.DBDataPath">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:CrawlWave.ServerInstaller.Settings.DBLogPath">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:CrawlWave.ServerInstaller.Settings.DataFilesPath">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerInstaller.Settings.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:CrawlWave.ServerInstaller.Forms.frmStep6">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerInstaller.Forms.frmStep6.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerInstaller.Forms.frmStep6.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerInstaller.Forms.frmStep6.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="T:CrawlWave.ServerInstaller.Forms.frmStep5">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerInstaller.Forms.frmStep5.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerInstaller.Forms.frmStep5.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerInstaller.Forms.frmStep5.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerInstaller.Forms.frmStep5.SetRegistryStartupKey(System.String,System.String,System.Boolean)">
+            <summary>
+            Creates or deletes a value in the Run registry key so that
+            the application can start automatically when Windows boot.
+            </summary>
+            <param name="appName">The name of the application.</param>
+            <param name="appPath">The path of the application.</param>
+            <param name="loadAtStartup">
+            True makes the application load automatically at startup,
+            False removes it from the Run registry key.
+            </param>
+        </member>
+    </members>
+</doc>

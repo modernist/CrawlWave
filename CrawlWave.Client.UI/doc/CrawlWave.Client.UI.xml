@@ -1,0 +1,232 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>CrawlWave.Client.UI</name>
+    </assembly>
+    <members>
+        <member name="T:CrawlWave.Client.UI.Forms.frmMain">
+            <summary>
+            frmMain is the class that provides the User Interface to CrawlWave Client.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Client.UI.Forms.frmMain.#ctor">
+            <summary>
+            Constructs a new instance of the <see cref="T:CrawlWave.Client.UI.Forms.frmMain"/> class.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Client.UI.Forms.frmMain.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Client.UI.Forms.frmMain.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Client.UI.Forms.frmMain.Main(System.String[])">
+            <summary>
+            The application's entry point
+            </summary>
+            <param name="args">The arguments passed to the application.</param>
+        </member>
+        <member name="M:CrawlWave.Client.UI.Forms.frmMain.DisableControls">
+            <summary>
+            Disables all the controls of the Status Tab page
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Client.UI.Forms.frmMain.EnableControls(CrawlWave.Client.Common.CrawlerState)">
+            <summary>
+            Enables the appropriate buttons according to the crawler's state.
+            </summary>
+            <param name="state">The <see cref="T:CrawlWave.Client.Common.CrawlerState"/> of the Client.</param>
+        </member>
+        <member name="M:CrawlWave.Client.UI.Forms.frmMain.UpdateStatistics">
+            <summary>
+            Updates the statistics controls (labels).
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Client.UI.Forms.frmMain.LoadSettings">
+            <summary>
+            Loads the <see cref="T:CrawlWave.Client.Common.ClientSettings"/> of the Client and populates the fields.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Client.UI.Forms.frmMain.SelectConnectionSpeed(CrawlWave.Common.CWConnectionSpeed)">
+            <summary>
+            Selects the right item in the Connection Speed ComboBox
+            </summary>
+            <param name="speed">The Connection Speed to be selected.</param>
+        </member>
+        <member name="M:CrawlWave.Client.UI.Forms.frmMain.DetectNetworkSpeed">
+            <summary>
+            Attempts to detect network speed by performing a WMI lookup. If the WMI method
+            fails it uses <see cref="M:CrawlWave.Common.InternetUtils.DetectConnectionSpeed"/>.
+            </summary>
+            <returns>True if it succeeds, false otherwise.</returns>
+        </member>
+        <member name="M:CrawlWave.Client.UI.Forms.frmMain.tmrInit_Tick(System.Object,System.EventArgs)">
+            <summary>
+            Called right after the form is initialized in order to connect to the Remotable
+            object exposed by the Client Core.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:CrawlWave.Client.UI.Forms.frmMain.tmrTimer_Tick(System.Object,System.EventArgs)">
+            <summary>
+            Called at regular intervals in order to refresh the form status.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:CrawlWave.Client.UI.Forms.frmMain.chkEnableScheduler_CheckedChanged(System.Object,System.EventArgs)">
+             <summary>
+            
+             </summary>
+             <param name="sender"></param>
+             <param name="e"></param>
+        </member>
+        <member name="M:CrawlWave.Client.UI.Forms.frmMain.cmdStart_Click(System.Object,System.EventArgs)">
+            <summary>
+            
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:CrawlWave.Client.UI.Forms.frmMain.cmdPause_Click(System.Object,System.EventArgs)">
+            <summary>
+            
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:CrawlWave.Client.UI.Forms.frmMain.cmdResume_Click(System.Object,System.EventArgs)">
+            <summary>
+            
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:CrawlWave.Client.UI.Forms.frmMain.cmdStop_Click(System.Object,System.EventArgs)">
+            <summary>
+            
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:CrawlWave.Client.UI.Forms.frmMain.cmdTerminate_Click(System.Object,System.EventArgs)">
+            <summary>
+            
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:CrawlWave.Client.UI.Forms.frmMain.cmdRegister_Click(System.Object,System.EventArgs)">
+            <summary>
+            
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:CrawlWave.Client.UI.Forms.frmMain.cmdClear_Click(System.Object,System.EventArgs)">
+            <summary>
+            
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:CrawlWave.Client.UI.Forms.frmMain.cmdRefreshStatistics_Click(System.Object,System.EventArgs)">
+            <summary>
+            
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:CrawlWave.Client.UI.Forms.frmMain.cmdDetectNetSpeed_Click(System.Object,System.EventArgs)">
+            <summary>
+            
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:CrawlWave.Client.UI.Forms.frmMain.cmdSaveSettings_Click(System.Object,System.EventArgs)">
+            <summary>
+            
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:CrawlWave.Client.UI.Forms.frmMain.cmdUndoChanges_Click(System.Object,System.EventArgs)">
+            <summary>
+            
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:CrawlWave.Client.UI.Forms.frmMain.cmdClearLog_Click(System.Object,System.EventArgs)">
+            <summary>
+            
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:CrawlWave.Client.UI.Forms.frmMain.tabTabPages_SelectedIndexChanged(System.Object,System.EventArgs)">
+            <summary>
+            
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:CrawlWave.Client.UI.Forms.frmMain.frmMain_Load(System.Object,System.EventArgs)">
+            <summary>
+            
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:CrawlWave.Client.UI.Forms.frmMain.frmMain_Resize(System.Object,System.EventArgs)">
+            <summary>
+            
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:CrawlWave.Client.UI.Forms.frmMain.frmMain_Closing(System.Object,System.ComponentModel.CancelEventArgs)">
+            <summary>
+            
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:CrawlWave.Client.UI.Forms.frmMain.SystemEvents_SessionEnding(System.Object,Microsoft.Win32.SessionEndingEventArgs)">
+            <summary>
+            Handles the SessionEnding events, allowing the client to terminate if the system
+            is shutting down but not be affected if the user is simply logging off.
+            </summary>
+            <param name="sender">The object related to the event.</param>
+            <param name="e">The arguments related to the event.</param>
+        </member>
+        <member name="M:CrawlWave.Client.UI.Forms.frmMain.mnuTrayShow_Click(System.Object,System.EventArgs)">
+            <summary>
+            
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:CrawlWave.Client.UI.Forms.frmMain.mnuTrayExit_Click(System.Object,System.EventArgs)">
+            <summary>
+            
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:CrawlWave.Client.UI.Forms.frmMain.nfiTrayIcon_DoubleClick(System.Object,System.EventArgs)">
+            <summary>
+            
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+    </members>
+</doc>

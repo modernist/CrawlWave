@@ -1,0 +1,27 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="CrawlWave.Service.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="DataFilesPath" Type="System.String" Scope="Application">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="SQLServer" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">localhost</Value>
+    </Setting>
+    <Setting Name="SQLLogin" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">cwuser</Value>
+    </Setting>
+    <Setting Name="SQLPass" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">cwpass</Value>
+    </Setting>
+    <Setting Name="LogLevel" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="DBLogOptions" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">2047</Value>
+    </Setting>
+    <Setting Name="RemotingPort" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">15461</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

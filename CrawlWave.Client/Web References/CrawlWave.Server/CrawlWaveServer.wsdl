@@ -1,0 +1,731 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://tempuri.org/" xmlns:s1="http://microsoft.com/wsdl/types/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/">
+      <s:import namespace="http://microsoft.com/wsdl/types/" />
+      <s:element name="IsAlive">
+        <s:complexType />
+      </s:element>
+      <s:element name="IsAliveResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="IsAliveResult" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetClientComputerInfo">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="ci" type="tns:ClientInfo" />
+            <s:element minOccurs="1" maxOccurs="1" name="info" type="tns:CWComputerInfo" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ClientInfo">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="UserID" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="ClientID" type="s1:guid" />
+          <s:element minOccurs="0" maxOccurs="1" name="Version" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="CWComputerInfo">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="CPUType" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="RAMSize" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="HDDSpace" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="ConnectionSpeed" type="tns:CWConnectionSpeed" />
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="CWConnectionSpeed">
+        <s:restriction base="s:string">
+          <s:enumeration value="Unknown" />
+          <s:enumeration value="Modem56K" />
+          <s:enumeration value="ISDN64K" />
+          <s:enumeration value="ISDN128K" />
+          <s:enumeration value="DSL256K" />
+          <s:enumeration value="DSL384K" />
+          <s:enumeration value="DSL512K" />
+          <s:enumeration value="DSL1M" />
+          <s:enumeration value="T1" />
+          <s:enumeration value="T3" />
+          <s:enumeration value="Fiber" />
+          <s:enumeration value="ATM" />
+        </s:restriction>
+      </s:simpleType>
+      <s:element name="GetClientComputerInfoResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetClientComputerInfoResult" type="tns:SerializedException" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="SerializedException">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Type" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Message" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="StackTrace" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetCrawlResults">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="ci" type="tns:ClientInfo" />
+            <s:element minOccurs="0" maxOccurs="1" name="data" type="tns:ArrayOfUrlCrawlData" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfUrlCrawlData">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="UrlCrawlData" nillable="true" type="tns:UrlCrawlData" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="UrlCrawlData">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Url" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="UrlToCrawl" type="tns:InternetUrlToCrawl" />
+          <s:element minOccurs="1" maxOccurs="1" name="ID" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="MD5" type="s:base64Binary" />
+          <s:element minOccurs="1" maxOccurs="1" name="Updated" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="Redirected" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="RedirectedFlagRobots" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="RedirectedFlagDomain" type="tns:DomainFlagValue" />
+          <s:element minOccurs="1" maxOccurs="1" name="RedirectedPriority" type="s:unsignedByte" />
+          <s:element minOccurs="1" maxOccurs="1" name="CRC" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="FlagFetchRobots" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="RobotsDisallowedPaths" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="HttpStatusCode" type="tns:HttpStatusCode" />
+          <s:element minOccurs="0" maxOccurs="1" name="Data" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="TimeStamp" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="RetrievalTime" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="OutLinks" type="tns:ArrayOfInternetUrlToIndex" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="InternetUrlToCrawl">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:InternetUrl">
+            <s:sequence>
+              <s:element minOccurs="1" maxOccurs="1" name="CRC" type="s:long" />
+              <s:element minOccurs="1" maxOccurs="1" name="FlagDomain" type="tns:DomainFlagValue" />
+              <s:element minOccurs="1" maxOccurs="1" name="FlagFetchRobots" type="s:boolean" />
+              <s:element minOccurs="0" maxOccurs="1" name="RobotsDisallowedPaths" type="s:string" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="InternetUrl">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="ID" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="Url" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="MD5" type="s:base64Binary" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="InternetUrlToIndex">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:InternetUrl">
+            <s:sequence>
+              <s:element minOccurs="1" maxOccurs="1" name="FlagRobots" type="s:boolean" />
+              <s:element minOccurs="1" maxOccurs="1" name="FlagDomain" type="tns:DomainFlagValue" />
+              <s:element minOccurs="1" maxOccurs="1" name="Priority" type="s:unsignedByte" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:simpleType name="DomainFlagValue">
+        <s:restriction base="s:string">
+          <s:enumeration value="MustVisit" />
+          <s:enumeration value="MustNotVisit" />
+          <s:enumeration value="Unknown" />
+        </s:restriction>
+      </s:simpleType>
+      <s:simpleType name="HttpStatusCode">
+        <s:restriction base="s:string">
+          <s:enumeration value="Continue" />
+          <s:enumeration value="SwitchingProtocols" />
+          <s:enumeration value="OK" />
+          <s:enumeration value="Created" />
+          <s:enumeration value="Accepted" />
+          <s:enumeration value="NonAuthoritativeInformation" />
+          <s:enumeration value="NoContent" />
+          <s:enumeration value="ResetContent" />
+          <s:enumeration value="PartialContent" />
+          <s:enumeration value="MultipleChoices" />
+          <s:enumeration value="Ambiguous" />
+          <s:enumeration value="MovedPermanently" />
+          <s:enumeration value="Moved" />
+          <s:enumeration value="Found" />
+          <s:enumeration value="Redirect" />
+          <s:enumeration value="SeeOther" />
+          <s:enumeration value="RedirectMethod" />
+          <s:enumeration value="NotModified" />
+          <s:enumeration value="UseProxy" />
+          <s:enumeration value="Unused" />
+          <s:enumeration value="TemporaryRedirect" />
+          <s:enumeration value="RedirectKeepVerb" />
+          <s:enumeration value="BadRequest" />
+          <s:enumeration value="Unauthorized" />
+          <s:enumeration value="PaymentRequired" />
+          <s:enumeration value="Forbidden" />
+          <s:enumeration value="NotFound" />
+          <s:enumeration value="MethodNotAllowed" />
+          <s:enumeration value="NotAcceptable" />
+          <s:enumeration value="ProxyAuthenticationRequired" />
+          <s:enumeration value="RequestTimeout" />
+          <s:enumeration value="Conflict" />
+          <s:enumeration value="Gone" />
+          <s:enumeration value="LengthRequired" />
+          <s:enumeration value="PreconditionFailed" />
+          <s:enumeration value="RequestEntityTooLarge" />
+          <s:enumeration value="RequestUriTooLong" />
+          <s:enumeration value="UnsupportedMediaType" />
+          <s:enumeration value="RequestedRangeNotSatisfiable" />
+          <s:enumeration value="ExpectationFailed" />
+          <s:enumeration value="InternalServerError" />
+          <s:enumeration value="NotImplemented" />
+          <s:enumeration value="BadGateway" />
+          <s:enumeration value="ServiceUnavailable" />
+          <s:enumeration value="GatewayTimeout" />
+          <s:enumeration value="HttpVersionNotSupported" />
+        </s:restriction>
+      </s:simpleType>
+      <s:complexType name="ArrayOfInternetUrlToIndex">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="InternetUrlToIndex" nillable="true" type="tns:InternetUrlToIndex" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetCrawlResultsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetCrawlResultsResult" type="tns:SerializedException" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetCrawlResultsRaw">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="ci" type="tns:ClientInfo" />
+            <s:element minOccurs="0" maxOccurs="1" name="data" type="s:base64Binary" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetCrawlResultsRawResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetCrawlResultsRawResult" type="tns:SerializedException" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="RegisterClient">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="ci" type="tns:ClientInfo" />
+            <s:element minOccurs="1" maxOccurs="1" name="info" type="tns:CWComputerInfo" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="RegisterClientResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="RegisterClientResult" type="tns:SerializedException" />
+            <s:element minOccurs="1" maxOccurs="1" name="ci" type="tns:ClientInfo" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="RegisterUser">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="ID" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="username" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="password" type="s:base64Binary" />
+            <s:element minOccurs="0" maxOccurs="1" name="email" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="RegisterUserResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="RegisterUserResult" type="tns:SerializedException" />
+            <s:element minOccurs="1" maxOccurs="1" name="ID" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SendBannedHosts">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="ci" type="tns:ClientInfo" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SendBannedHostsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SendBannedHostsResult" type="tns:SerializedException" />
+            <s:element minOccurs="0" maxOccurs="1" name="data">
+              <s:complexType>
+                <s:sequence>
+                  <s:element ref="s:schema" />
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SendLatestVersion">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="ci" type="tns:ClientInfo" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SendLatestVersionResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SendLatestVersionResult" type="tns:SerializedException" />
+            <s:element minOccurs="0" maxOccurs="1" name="version" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SendServers">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="ci" type="tns:ClientInfo" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SendServersResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SendServersResult" type="tns:SerializedException" />
+            <s:element minOccurs="0" maxOccurs="1" name="data">
+              <s:complexType>
+                <s:sequence>
+                  <s:element ref="s:schema" />
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SendUpdatedVersion">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="ci" type="tns:ClientInfo" />
+            <s:element minOccurs="0" maxOccurs="1" name="version" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SendUpdatedVersionResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SendUpdatedVersionResult" type="tns:SerializedException" />
+            <s:element minOccurs="0" maxOccurs="1" name="data" type="s:base64Binary" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SendUrlsToCrawl">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="ci" type="tns:ClientInfo" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SendUrlsToCrawlResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SendUrlsToCrawlResult" type="tns:SerializedException" />
+            <s:element minOccurs="0" maxOccurs="1" name="data" type="tns:ArrayOfInternetUrlToCrawl" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfInternetUrlToCrawl">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="InternetUrlToCrawl" nillable="true" type="tns:InternetUrlToCrawl" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="SendUserStatistics">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="ci" type="tns:ClientInfo" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SendUserStatisticsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SendUserStatisticsResult" type="tns:SerializedException" />
+            <s:element minOccurs="0" maxOccurs="1" name="stats" type="tns:UserStatistics" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="UserStatistics">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="RegistrationDate" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="NumClients" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="UrlsAssigned" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="UrlsReturned" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="LastActive" type="s:dateTime" />
+        </s:sequence>
+      </s:complexType>
+    </s:schema>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://microsoft.com/wsdl/types/">
+      <s:simpleType name="guid">
+        <s:restriction base="s:string">
+          <s:pattern value="[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}" />
+        </s:restriction>
+      </s:simpleType>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="IsAliveSoapIn">
+    <wsdl:part name="parameters" element="tns:IsAlive" />
+  </wsdl:message>
+  <wsdl:message name="IsAliveSoapOut">
+    <wsdl:part name="parameters" element="tns:IsAliveResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetClientComputerInfoSoapIn">
+    <wsdl:part name="parameters" element="tns:GetClientComputerInfo" />
+  </wsdl:message>
+  <wsdl:message name="GetClientComputerInfoSoapOut">
+    <wsdl:part name="parameters" element="tns:GetClientComputerInfoResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetCrawlResultsSoapIn">
+    <wsdl:part name="parameters" element="tns:GetCrawlResults" />
+  </wsdl:message>
+  <wsdl:message name="GetCrawlResultsSoapOut">
+    <wsdl:part name="parameters" element="tns:GetCrawlResultsResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetCrawlResultsRawSoapIn">
+    <wsdl:part name="parameters" element="tns:GetCrawlResultsRaw" />
+  </wsdl:message>
+  <wsdl:message name="GetCrawlResultsRawSoapOut">
+    <wsdl:part name="parameters" element="tns:GetCrawlResultsRawResponse" />
+  </wsdl:message>
+  <wsdl:message name="RegisterClientSoapIn">
+    <wsdl:part name="parameters" element="tns:RegisterClient" />
+  </wsdl:message>
+  <wsdl:message name="RegisterClientSoapOut">
+    <wsdl:part name="parameters" element="tns:RegisterClientResponse" />
+  </wsdl:message>
+  <wsdl:message name="RegisterUserSoapIn">
+    <wsdl:part name="parameters" element="tns:RegisterUser" />
+  </wsdl:message>
+  <wsdl:message name="RegisterUserSoapOut">
+    <wsdl:part name="parameters" element="tns:RegisterUserResponse" />
+  </wsdl:message>
+  <wsdl:message name="SendBannedHostsSoapIn">
+    <wsdl:part name="parameters" element="tns:SendBannedHosts" />
+  </wsdl:message>
+  <wsdl:message name="SendBannedHostsSoapOut">
+    <wsdl:part name="parameters" element="tns:SendBannedHostsResponse" />
+  </wsdl:message>
+  <wsdl:message name="SendLatestVersionSoapIn">
+    <wsdl:part name="parameters" element="tns:SendLatestVersion" />
+  </wsdl:message>
+  <wsdl:message name="SendLatestVersionSoapOut">
+    <wsdl:part name="parameters" element="tns:SendLatestVersionResponse" />
+  </wsdl:message>
+  <wsdl:message name="SendServersSoapIn">
+    <wsdl:part name="parameters" element="tns:SendServers" />
+  </wsdl:message>
+  <wsdl:message name="SendServersSoapOut">
+    <wsdl:part name="parameters" element="tns:SendServersResponse" />
+  </wsdl:message>
+  <wsdl:message name="SendUpdatedVersionSoapIn">
+    <wsdl:part name="parameters" element="tns:SendUpdatedVersion" />
+  </wsdl:message>
+  <wsdl:message name="SendUpdatedVersionSoapOut">
+    <wsdl:part name="parameters" element="tns:SendUpdatedVersionResponse" />
+  </wsdl:message>
+  <wsdl:message name="SendUrlsToCrawlSoapIn">
+    <wsdl:part name="parameters" element="tns:SendUrlsToCrawl" />
+  </wsdl:message>
+  <wsdl:message name="SendUrlsToCrawlSoapOut">
+    <wsdl:part name="parameters" element="tns:SendUrlsToCrawlResponse" />
+  </wsdl:message>
+  <wsdl:message name="SendUserStatisticsSoapIn">
+    <wsdl:part name="parameters" element="tns:SendUserStatistics" />
+  </wsdl:message>
+  <wsdl:message name="SendUserStatisticsSoapOut">
+    <wsdl:part name="parameters" element="tns:SendUserStatisticsResponse" />
+  </wsdl:message>
+  <wsdl:portType name="CrawlWaveServerSoap">
+    <wsdl:operation name="IsAlive">
+      <wsdl:input message="tns:IsAliveSoapIn" />
+      <wsdl:output message="tns:IsAliveSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetClientComputerInfo">
+      <wsdl:input message="tns:GetClientComputerInfoSoapIn" />
+      <wsdl:output message="tns:GetClientComputerInfoSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetCrawlResults">
+      <wsdl:input message="tns:GetCrawlResultsSoapIn" />
+      <wsdl:output message="tns:GetCrawlResultsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetCrawlResultsRaw">
+      <wsdl:input message="tns:GetCrawlResultsRawSoapIn" />
+      <wsdl:output message="tns:GetCrawlResultsRawSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="RegisterClient">
+      <wsdl:input message="tns:RegisterClientSoapIn" />
+      <wsdl:output message="tns:RegisterClientSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="RegisterUser">
+      <wsdl:input message="tns:RegisterUserSoapIn" />
+      <wsdl:output message="tns:RegisterUserSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SendBannedHosts">
+      <wsdl:input message="tns:SendBannedHostsSoapIn" />
+      <wsdl:output message="tns:SendBannedHostsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SendLatestVersion">
+      <wsdl:input message="tns:SendLatestVersionSoapIn" />
+      <wsdl:output message="tns:SendLatestVersionSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SendServers">
+      <wsdl:input message="tns:SendServersSoapIn" />
+      <wsdl:output message="tns:SendServersSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SendUpdatedVersion">
+      <wsdl:input message="tns:SendUpdatedVersionSoapIn" />
+      <wsdl:output message="tns:SendUpdatedVersionSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SendUrlsToCrawl">
+      <wsdl:input message="tns:SendUrlsToCrawlSoapIn" />
+      <wsdl:output message="tns:SendUrlsToCrawlSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SendUserStatistics">
+      <wsdl:input message="tns:SendUserStatisticsSoapIn" />
+      <wsdl:output message="tns:SendUserStatisticsSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="CrawlWaveServerSoap" type="tns:CrawlWaveServerSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="IsAlive">
+      <soap:operation soapAction="http://tempuri.org/IsAlive" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetClientComputerInfo">
+      <soap:operation soapAction="http://tempuri.org/GetClientComputerInfo" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCrawlResults">
+      <soap:operation soapAction="http://tempuri.org/GetCrawlResults" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCrawlResultsRaw">
+      <soap:operation soapAction="http://tempuri.org/GetCrawlResultsRaw" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RegisterClient">
+      <soap:operation soapAction="http://tempuri.org/RegisterClient" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RegisterUser">
+      <soap:operation soapAction="http://tempuri.org/RegisterUser" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SendBannedHosts">
+      <soap:operation soapAction="http://tempuri.org/SendBannedHosts" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SendLatestVersion">
+      <soap:operation soapAction="http://tempuri.org/SendLatestVersion" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SendServers">
+      <soap:operation soapAction="http://tempuri.org/SendServers" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SendUpdatedVersion">
+      <soap:operation soapAction="http://tempuri.org/SendUpdatedVersion" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SendUrlsToCrawl">
+      <soap:operation soapAction="http://tempuri.org/SendUrlsToCrawl" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SendUserStatistics">
+      <soap:operation soapAction="http://tempuri.org/SendUserStatistics" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="CrawlWaveServerSoap12" type="tns:CrawlWaveServerSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="IsAlive">
+      <soap12:operation soapAction="http://tempuri.org/IsAlive" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetClientComputerInfo">
+      <soap12:operation soapAction="http://tempuri.org/GetClientComputerInfo" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCrawlResults">
+      <soap12:operation soapAction="http://tempuri.org/GetCrawlResults" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCrawlResultsRaw">
+      <soap12:operation soapAction="http://tempuri.org/GetCrawlResultsRaw" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RegisterClient">
+      <soap12:operation soapAction="http://tempuri.org/RegisterClient" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RegisterUser">
+      <soap12:operation soapAction="http://tempuri.org/RegisterUser" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SendBannedHosts">
+      <soap12:operation soapAction="http://tempuri.org/SendBannedHosts" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SendLatestVersion">
+      <soap12:operation soapAction="http://tempuri.org/SendLatestVersion" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SendServers">
+      <soap12:operation soapAction="http://tempuri.org/SendServers" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SendUpdatedVersion">
+      <soap12:operation soapAction="http://tempuri.org/SendUpdatedVersion" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SendUrlsToCrawl">
+      <soap12:operation soapAction="http://tempuri.org/SendUrlsToCrawl" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SendUserStatistics">
+      <soap12:operation soapAction="http://tempuri.org/SendUserStatistics" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="CrawlWaveServer">
+    <wsdl:port name="CrawlWaveServerSoap" binding="tns:CrawlWaveServerSoap">
+      <soap:address location="http://localhost/CrawlWave.Server/CrawlWaveServer.asmx" />
+    </wsdl:port>
+    <wsdl:port name="CrawlWaveServerSoap12" binding="tns:CrawlWaveServerSoap12">
+      <soap12:address location="http://localhost/CrawlWave.Server/CrawlWaveServer.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

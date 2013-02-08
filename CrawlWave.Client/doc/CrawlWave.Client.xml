@@ -1,0 +1,3257 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>CrawlWave.Client</name>
+    </assembly>
+    <members>
+        <member name="T:CrawlWave.Client.HostRequestFilter">
+            <summary>
+            HostRequestFilter is a Singleton class that performs synchronization of the crawler
+            threads by monitoring the requests that are targeted at the hosts and not allowing
+            the crawler to slammer a host.
+            </summary>
+            <remarks>
+            HostRequestFilter maintains a <see cref="T:System.Collections.Hashtable"/> of <see cref="T:CrawlWave.Common.HostRequestFilterEntry"/>
+            objects and each time a crawler thread attempts to visit a page it requests permission
+            from this class. Its mission is to avoid slammering a single host with multiple web
+            requests or very frequent requests. A single host must be visited at most once every
+            30 seconds (robots.txt requests are not taken into account, since they will be very
+            infrequent). This class monitors the requests to hosts and either asks the crawlers
+            to wait until 30 seconds have passed since the last visit to the host or gives them
+            permission to go ahead, and cleans up the internal Hashtable from expired entries.
+            </remarks>
+        </member>
+        <member name="M:CrawlWave.Client.HostRequestFilter.#ctor">
+            <summary>
+            The constructor is private so that only the class itself can create an instance.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Client.HostRequestFilter.Instance">
+            <summary>
+            Provides a global access point for the single instance of the <see cref="T:CrawlWave.Client.HostRequestFilter"/>
+            class.
+            </summary>
+            <returns>A reference to the single instance of <see cref="T:CrawlWave.Client.HostRequestFilter"/>.</returns>
+        </member>
+        <member name="M:CrawlWave.Client.HostRequestFilter.FilterHost(System.String@)">
+            <summary>
+            Checks if at least 30 seconds have passed since the last request to a given host
+            was made, in order not to slammer it with simultaneous or frequent requests.
+            </summary>
+            <param name="hostName">The host name from which a request will be made.</param>
+            <returns>
+            An integer containing the number of milliseconds a crawler thread must wait 
+            before visiting this host.
+            </returns>
+        </member>
+        <member name="M:CrawlWave.Client.HostRequestFilter.FilterUrl(CrawlWave.Common.InternetUrl@)">
+            <summary>
+            Checks if at least 30 seconds have passed since the last request to a given host
+            was made, in order not to slammer it with simultaneous or frequent requests.
+            </summary>
+            <param name="targetUrl">
+            A <see cref="T:CrawlWave.Common.InternetUrl"/> that is served by a host we wish to check.
+            </param>
+            <returns>
+            An integer containing the number of milliseconds a crawler thread must wait
+            before visiting this host.
+            </returns>
+        </member>
+        <member name="M:CrawlWave.Client.HostRequestFilter.FilterUrl(CrawlWave.Common.InternetUrlToCrawl@)">
+            <summary>
+            Checks if at least 30 seconds have passed since the last request to a given host
+            was made, in order not to slammer it with simultaneous or frequent requests.
+            </summary>
+            <param name="targetUrl">
+            A <see cref="T:CrawlWave.Common.InternetUrlToCrawl"/> that is served by a host we wish to check.
+            </param>
+            <returns>
+            An integer containing the number of milliseconds a crawler thread must wait
+            before visiting this host.
+            </returns>
+        </member>
+        <member name="M:CrawlWave.Client.HostRequestFilter.FilterUrl(CrawlWave.Common.InternetUrlToIndex@)">
+            <summary>
+            Checks if at least 30 seconds have passed since the last request to a given host
+            was made, in order not to slammer it with simultaneous or frequent requests.
+            </summary>
+            <param name="targetUrl">
+            A <see cref="T:CrawlWave.Common.InternetUrlToIndex"/> that is served by a host we wish to check.
+            </param>
+            <returns>
+            An integer containing the number of milliseconds a crawler thread must wait
+            before visiting this host.
+            </returns>
+        </member>
+        <member name="M:CrawlWave.Client.HostRequestFilter.FilterUrl(System.String@)">
+            <summary>
+            Checks if at least 30 seconds have passed since the last request to a given host
+            was made, in order not to slammer it with simultaneous or frequent requests.
+            </summary>
+            <param name="targetUrl">A url that is served by a host we wish to check</param>
+            <returns>An integer containing the number of milliseconds a crawler thread must wait
+            before visiting this host.</returns>
+        </member>
+        <member name="M:CrawlWave.Client.HostRequestFilter.Clear">
+            <summary>
+            Clears the <see cref="T:CrawlWave.Client.HostRequestFilter"/> from expired <see cref="T:CrawlWave.Common.HostRequestFilterEntry"/>
+            objects. It must not be used when new entries might be added to the filter.
+            </summary>
+        </member>
+        <member name="T:CrawlWave.Client.HtmlParser">
+            <summary>
+            HtmlParser is a Singleton class that performs the link extraction and parsing of
+            the contents of HTML pages and generally documents with content type "text/html".
+            </summary>
+            <remarks>
+            The HtmlParser uses <see cref="N:System.Text.RegularExpressions">Regular Expressions
+            </see> in order to perform the link extraction. The Regular Expression objects are
+            used with the <see cref="F:System.Text.RegularExpressions.RegexOptions.Compiled"/> option. This allows them to work
+            much faster, because they are compiled and loaded statically into main memory. The
+            disadvantage of using this option is that the memory allocated for these instances
+            is never released, not even when they are disposed, until the application that is
+            using them terminates. This is the main reason that lead to the implementation of
+            this class as a Singleton. This way it is easy to make sure that only one instance
+            of each of the required regular expression objects will ever be constructed.<br/>
+            <para>
+            Update History:
+            <list type="table">
+              <listheader>
+            	<term>Date</term>
+            	<description>Description</description>
+              </listheader>
+              <item>
+            	<term>31/08/04</term>
+            	<description>The class now implements the <see cref="T:CrawlWave.Client.IParser"/> interface and
+            	most string processing tasks are performed using <see cref="T:System.Text.StringBuilder"/>
+            	objects in order to reduce memory consumption. The thread safety mechanisms
+            	are now employed a lot more heavily so as to improve performance.</description>
+              </item>
+              <item>
+            	<term>17/10/04</term>
+            	<description>The class now attempts to extract charset information from the HTML
+            	document, thus allowing to check if a url's content is of interest to us. Added
+            	the ExtractDomainFlag method.</description>
+              </item>
+              <item>
+            	<term>26/11/04</term>
+            	<description>The class is now able to extract urls from refresh meta tags that
+            	cause redirections and are commonly found in gateway pages.</description>
+              </item>
+              <item>
+            	<term>20/01/05</term>
+            	<description>The class is now able to remove session IDs inlined in urls.</description>
+              </item>
+            </list>
+            </para>
+            <para>
+            <b>Remarks from previous version's implementation</b><br/>
+            Author:	Mod<br/>
+            Date:	11/05/03<br/>
+            Update History:
+            <list type="table">
+              <listheader>
+            	<term>Date</term>
+            	<description>Description</description>
+              </listheader>
+              <item>
+            	<term>24/08/03</term>
+            	<description>Added support for parameter number and anchor limitation, better
+            	exception handling during the extraction of links</description>
+              </item>
+              <item>
+            	<term>29/08/03</term>
+            	<description>The parser now removes any links pointing to the same url</description>
+              </item>
+              <item>
+            	<term>06/09/03</term>
+            	<description>Updated the code to reflect the changes in the InternetUrl class</description>
+              </item>
+              <item>
+            	<term>07/09/03</term>
+            	<description>Fixed a bug that caused the HtmlParser to create wrong urls if a
+            	redirection had occured when crawling a page. Updated the HtmlParser to handle
+            	absolute urls (/...) correctly.</description>
+              </item>
+              <item>
+            	<term>16/09/03</term>
+            	<description>Fixed a bug that caused the &lt;base href..&gt; meta not to be parsed,
+            	leading to the extraction of wrong Urls. The class is now more compliant to
+            	RFC1808.</description>
+              </item>
+            </list>		
+            </para>
+            </remarks>
+        </member>
+        <member name="T:CrawlWave.Client.Parser">
+            <summary>
+            The base class for all classes that parse documents of different content types.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Client.Parser.ExtractLinks(System.String@,CrawlWave.Common.InternetUrlToCrawl@)">
+            <summary>
+            Extracts the hypertext references (links) contained in a document.
+            </summary>
+            <param name="content">
+            The content of the document that will be parsed for links.
+            </param>
+            <param name="contentUrl">
+            An <see cref="T:CrawlWave.Common.InternetUrlToCrawl"/> object encapsulating the Uri address of the
+            document to be parsed for links and its associated robots.txt file.
+            </param>
+            <returns>
+            An <see cref="T:System.Collections.ArrayList"/> of <see cref="T:CrawlWave.Common.InternetUrlToIndex"/> objects encapsulating
+            the links contained in the parsed document.
+            </returns>
+        </member>
+        <member name="M:CrawlWave.Client.Parser.ExtractLinks(System.Byte[],CrawlWave.Common.InternetUrlToCrawl@)">
+            <summary>
+            Extracts the hypertext references (links) contained in a document.
+            </summary>
+            <param name="content">
+            An array of bytes holding the content of the document that will be parsed for links.
+            </param>
+            <param name="contentUrl">
+            An <see cref="T:CrawlWave.Common.InternetUrlToCrawl"/> object encapsulating the Uri address of the
+            document to be parsed for links and its associated robots.txt file.
+            </param>
+            <returns>
+            An <see cref="T:System.Collections.ArrayList"/> of <see cref="T:CrawlWave.Common.InternetUrlToIndex"/> objects encapsulating
+            the links contained in the parsed document.
+            </returns>
+        </member>
+        <member name="M:CrawlWave.Client.Parser.ExtractText(System.String@)">
+            <summary>
+            Extracts the contents of the document in plain text format.
+            </summary>
+            <param name="content">
+            The content of the document from which the text must be extracted.
+            </param>
+            <returns>
+            A string containing the document's content in plain text format.
+            </returns>
+        </member>
+        <member name="M:CrawlWave.Client.Parser.ExtractText(System.Byte[])">
+            <summary>
+            Extracts the contents of the document in plain text format.
+            </summary>
+            <param name="content">
+            An array of bytes holding the content of the document from which the text must be extracted.
+            </param>
+            <returns>
+            A string containing the document's content in plain text format.
+            </returns>
+        </member>
+        <member name="M:CrawlWave.Client.Parser.ExtractContent(System.String@,System.Boolean)">
+            <summary>
+            Performs a special processing of a document in order to extract some parts of
+            its contents.
+            </summary>
+            <param name="content">
+            The content of the document that will go through the processing.
+            </param>
+            <param name="Flag">
+            A generic boolean flag that can be used to indicate what kind of processing
+            must be performed on the document.
+            </param>
+            <returns>
+            A string containing the requested contents of a document.
+            </returns>
+        </member>
+        <member name="M:CrawlWave.Client.Parser.ExtractContent(System.Byte[],System.Boolean)">
+            <summary>
+            Performs a special processing of a document in order to extract some parts of
+            its contents.
+            </summary>
+            <param name="content">
+            A byte array holding the content of the document that will go through the processing.
+            </param>
+            <param name="Flag">
+            A generic boolean flag that can be used to indicate what kind of processing
+            must be performed on the document.
+            </param>
+            <returns>
+            A string containing the requested contents of a document.
+            </returns>
+        </member>
+        <member name="P:CrawlWave.Client.Parser.ContentType">
+            <summary>
+            Gets a string containing the Content Type supported by a class implementing the
+            <see cref="T:CrawlWave.Client.IParser"/> interface.
+            </summary>
+        </member>
+        <member name="T:CrawlWave.Client.IParser">
+            <summary>
+            Defines the common interface for all Parser classes that can be used to extract
+            text and links from documents of different content type.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Client.IParser.ExtractLinks(System.String@,CrawlWave.Common.InternetUrlToCrawl@)">
+            <summary>
+            Extracts the hypertext references (links) contained in a document.
+            </summary>
+            <param name="content">
+            The content of the document that will be parsed for links.
+            </param>
+            <param name="contentUrl">
+            An <see cref="T:CrawlWave.Common.InternetUrlToCrawl"/> object encapsulating the Uri address of the
+            document to be parsed for links and its associated robots.txt file.
+            </param>
+            <returns>
+            An <see cref="T:System.Collections.ArrayList"/> of <see cref="T:CrawlWave.Common.InternetUrlToIndex"/> objects encapsulating
+            the links contained in the parsed document.
+            </returns>
+        </member>
+        <member name="M:CrawlWave.Client.IParser.ExtractLinks(System.Byte[],CrawlWave.Common.InternetUrlToCrawl@)">
+            <summary>
+            Extracts the hypertext references (links) contained in a document.
+            </summary>
+            <param name="content">
+            An array of bytes holding the content of the document that will be parsed for links.
+            </param>
+            <param name="contentUrl">
+            An <see cref="T:CrawlWave.Common.InternetUrlToCrawl"/> object encapsulating the Uri address of the
+            document to be parsed for links and its associated robots.txt file.
+            </param>
+            <returns>
+            An <see cref="T:System.Collections.ArrayList"/> of <see cref="T:CrawlWave.Common.InternetUrlToIndex"/> objects encapsulating
+            the links contained in the parsed document.
+            </returns>
+        </member>
+        <member name="M:CrawlWave.Client.IParser.ExtractText(System.String@)">
+            <summary>
+            Extracts the contents of the document in plain text format.
+            </summary>
+            <param name="content">
+            The content of the document from which the text must be extracted.
+            </param>
+            <returns>
+            A string containing the document's content in plain text format.
+            </returns>
+        </member>
+        <member name="M:CrawlWave.Client.IParser.ExtractText(System.Byte[])">
+            <summary>
+            Extracts the contents of the document in plain text format.
+            </summary>
+            <param name="content">
+            An array of bytes holding the content of the document from which the text must be extracted.
+            </param>
+            <returns>
+            A string containing the document's content in plain text format.
+            </returns>
+        </member>
+        <member name="M:CrawlWave.Client.IParser.ExtractContent(System.String@,System.Boolean)">
+            <summary>
+            Performs a special processing of a document in order to extract some parts of
+            its contents.
+            </summary>
+            <param name="content">
+            The content of the document that will go through the processing.
+            </param>
+            <param name="Flag">
+            A generic boolean flag that can be used to indicate what kind of processing
+            must be performed on the document.
+            </param>
+            <returns>
+            A string containing the requested contents of a document.
+            </returns>
+        </member>
+        <member name="M:CrawlWave.Client.IParser.ExtractContent(System.Byte[],System.Boolean)">
+            <summary>
+            Performs a special processing of a document in order to extract some parts of
+            its contents.
+            </summary>
+            <param name="content">
+            A byte array holding the content of the document that will go through the processing.
+            </param>
+            <param name="Flag">
+            A generic boolean flag that can be used to indicate what kind of processing
+            must be performed on the document.
+            </param>
+            <returns>
+            A string containing the requested contents of a document.
+            </returns>
+        </member>
+        <member name="P:CrawlWave.Client.IParser.ContentType">
+            <summary>
+            Gets a string containing the Content Type supported by a class implementing the
+            <see cref="T:CrawlWave.Client.IParser"/> interface.
+            </summary>
+        </member>
+        <member name="E:CrawlWave.Client.IParser.ExtractLinksComplete">
+            <summary>
+            Occurs when the extraction of links from a url is complete.
+            </summary>
+        </member>
+        <member name="E:CrawlWave.Client.IParser.ExtractTextComplete">
+            <summary>
+            Occurs when the extraction of text from a url is complete.
+            </summary>
+        </member>
+        <member name="E:CrawlWave.Client.IParser.ExtractContentComplete">
+            <summary>
+            Occurs when the extraction of content from a url is complete.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Client.HtmlParser.#ctor">
+            <summary>
+            The constructor is private so that only the class itself can create an instance.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Client.HtmlParser.Instance">
+            <summary>
+            Provides a global access point for the single instance of the <see cref="T:CrawlWave.Client.HtmlParser"/>
+            class.
+            </summary>
+            <returns>A reference to the single instance of <see cref="T:CrawlWave.Client.HtmlParser"/>.</returns>
+        </member>
+        <member name="M:CrawlWave.Client.HtmlParser.ExtractLinks(System.String@,CrawlWave.Common.InternetUrlToCrawl@)">
+            <summary>
+            Performs the extraction of links from an html document. It can extract simple
+            links, image map links and frame links. The results are returned as an <see cref="T:System.Collections.ArrayList"/>
+            of <see cref="T:CrawlWave.Common.InternetUrlToIndex"/> objects.
+            </summary>
+            <remarks>
+            Besides the parsing and extraction of Urls, ExtractLinks also performs other 
+            tasks as well, such as:<br/>
+            <list type="bullet">
+              <item>
+                <description>Filtering of urls to resources of unsupported content-type, e.g. css, images, etc.</description>
+              </item>
+              <item>
+                <description>Filtering of script urls (javascript and vbscript) and mailto urls.</description>
+              </item>
+              <item>
+                <description>Filtering of multimple links to the same url and to the document itself.</description>
+              </item>
+              <item>
+                <description>Filtering of session id variables in dynamic Urls and limiting
+                of the number of GET variables in dynamic Urls.</description>
+              </item>
+              <item>
+                <description>Flagging of Urls according to their country domain.</description>
+              </item>
+            </list>
+            <b>Update History</b>
+            <list type="table">
+              <listheader>
+            	<term>Date</term>
+            	<description>Description</description>
+              </listheader>
+              <item>
+                <term>26/11/04</term>
+                <description>Added support for extracting links from refresh meta tags.</description>
+              </item>
+              <item>
+                <term>12/09/04</term>
+                <description>General revision, rewritten many functions from scratch.</description>
+              </item>
+              <item>
+                <term>30/08/03</term>
+                <description>Added support for filtering circular links.</description>
+              </item>
+              <item>
+                <term>28/08/03</term>
+                <description>Added support for limiting the number of parameters of dynamic urls.</description>
+              </item>
+              <item>
+                <term>23/07/03</term>
+                <description>Added support for removing session ids from dynamic urls.</description>
+              </item>
+            </list>
+            </remarks>
+            <param name="content">The HTML content of a Url that must be parsed for links.
+            It is passed by reference in order to reduce memory consumption.</param>
+            <param name="contentUrl">The Url from which the content comes.</param>
+            <returns>
+            An <see cref="T:System.Collections.ArrayList"/> of <see cref="T:CrawlWave.Common.InternetUrlToIndex"/> objects, one for
+            each link found in the content.
+            </returns>
+        </member>
+        <member name="M:CrawlWave.Client.HtmlParser.ExtractLinks(System.Byte[],CrawlWave.Common.InternetUrlToCrawl@)">
+            <summary>
+            Performs the extraction of links from an html document. It can extract simple
+            links, image map links and frame links. The results are returned as an <see cref="T:System.Collections.ArrayList"/>
+            of <see cref="T:CrawlWave.Common.InternetUrlToIndex"/> objects.
+            </summary>
+            <remarks>
+            Besides the parsing and extraction of Urls, ExtractLinks also performs other 
+            tasks as well, such as:<br/>
+            <list type="bullet">
+              <item>
+                <description>Filtering of urls to resources of unsupported content-type, e.g. css, images, etc.</description>
+              </item>
+              <item>
+                <description>Filtering of script urls (javascript and vbscript) and mailto urls, as well as stylesheets.</description>
+              </item>
+              <item>
+                <description>Filtering of multimple links to the same url and to the document itself.</description>
+              </item>
+              <item>
+                <description>Filtering of session id variables in dynamic Urls and limiting
+                of the number of GET variables in dynamic Urls.</description>
+              </item>
+              <item>
+                <description>Flagging of Urls according to their country domain.</description>
+              </item>
+            </list>
+            <b>Update History</b>
+            <list type="table">
+              <listheader>
+            	<term>Date</term>
+            	<description>Description</description>
+              </listheader>
+              <item>
+                <term>12/09/04</term>
+                <description>General revision, rewritten many functions from scratch.</description>
+              </item>
+              <item>
+                <term>30/08/03</term>
+                <description>Added support for filtering circular links.</description>
+              </item>
+              <item>
+                <term>28/08/03</term>
+                <description>Added support for limiting the number of parameters of dynamic urls.</description>
+              </item>
+              <item>
+                <term>23/07/03</term>
+                <description>Added support for removing session ids from dynamic urls.</description>
+              </item>
+            </list>
+            </remarks>
+            <param name="content">The HTML content of a Url that must be parsed for links.
+            It is passed as an array of bytes containing the HTML contents in UTF8 binary
+            format, in order to reduce memory consumption.</param>
+            <param name="contentUrl">The Url from which the content comes.</param>
+            <returns>
+            An <see cref="T:System.Collections.ArrayList"/> of <see cref="T:CrawlWave.Common.InternetUrlToIndex"/> objects, one for each
+            link found in the content.
+            </returns>
+        </member>
+        <member name="M:CrawlWave.Client.HtmlParser.ExtractText(System.String@)">
+            <summary>
+            Performs the extraction of text from the HTML contents of an html document. The
+            text is extracted by removing all the tags in the document and compacting white
+            space characters (consecutive) and other html entities, like &amp;nbsp;.
+            </summary>
+            <param name="content">The html contents of the document from which the text must
+            be extracted.</param>
+            <returns>A string containing the 'clean' text extracted from the document.</returns>
+        </member>
+        <member name="M:CrawlWave.Client.HtmlParser.ExtractText(System.Byte[])">
+            <summary>
+            Performs the extraction of text from the contents of an HTML document by removing
+            all the html tags. Receives an array of bytes containing the UTF8 encoded format
+            of a string.
+            </summary>
+            <param name="content">An array of bytes containing the UTF8 encoded format of
+            an HTML document.</param>
+            <returns>A string containing the 'clean' text extracted from the document.</returns>
+        </member>
+        <member name="M:CrawlWave.Client.HtmlParser.ExtractContent(System.String@,System.Boolean)">
+            <summary>
+            Performs the extraction of content from an HTML document. Depending on the value
+            of the Flag provided it simply removes all kinds of scripts from the document or
+            it removes the scripts and includes the content of the description and keywords
+            meta tags. [Note: this is not implemented since this could allow techniques such
+            as keyword stuffing to influence the page's ranking.]
+            </summary>
+            <param name="content">The html contents of the document from which the content
+            must be extracted.</param>
+            <param name="Flag">Determines what kind of processing will be performed on the
+            input. If set to false only the various kinds of scripts are removed from the
+            input. If set to false it could also extract information from meta tags, such as
+            description and keyword meta tags. However this is not a good idea, so instead a
+            <see cref="T:System.NotSupportedException"/> is thrown.</param>
+            <returns>A string containing the desired extracted content.</returns>
+            <exception cref="T:System.NotSupportedException">Thrown if the value of the flag is true.</exception>
+        </member>
+        <member name="M:CrawlWave.Client.HtmlParser.ExtractContent(System.Byte[],System.Boolean)">
+            <summary>
+            Performs the extraction of content from an HTML document. Depending on the value
+            of the Flag provided it simply removes all kinds of scripts from the document or
+            it removes the scripts and includes the content of the description and keywords
+            meta tags. [Note: this is not implemented since this could allow techniques such
+            as keyword stuffing to influence the page's ranking.]
+            </summary>
+            <param name="content">The html contents of the document from which the content
+            must be extracted. Passed as an array of bytes containing the UTF8 format of the
+            HTML content.</param>
+            <param name="Flag">Determines what kind of processing will be performed on the
+            input. If set to false only the various kinds of scripts are removed from the
+            input. If set to true it could also extract information from meta tags, such as
+            description and keyword meta tags. However this is not a good idea, so instead a
+            <see cref="T:System.NotSupportedException"/> is thrown.</param>
+            <returns>A string containing the desired extracted content.</returns>
+            <exception cref="T:System.NotSupportedException">Thrown if the value of the flag is true.</exception>
+        </member>
+        <member name="M:CrawlWave.Client.HtmlParser.ClearString(System.Text.StringBuilder@)">
+            <summary>
+            Clears the contents of a <see cref="T:System.Text.StringBuilder"/>.
+            </summary>
+            <param name="sb">The <see cref="T:System.Text.StringBuilder"/> object to be cleared.</param>
+        </member>
+        <member name="M:CrawlWave.Client.HtmlParser.BaseUrl(System.String@,System.String@)">
+            <summary>
+            Finds the base Url of a given Url, including the trailing slash. Works for both
+            absolute and relative Urls.
+            </summary>
+            <example>
+            <code>
+            string contentUrl = "http://www.in.gr";
+            string content = "&lt;html&gt;&lt;/html&gt;";
+            string result = null;
+            result = BaseUrl(ref contentUrl, ref content); // returns http://www.in.gr/
+            contentUrl = "http://www.in.gr/photos/a.html";
+            result = BaseUrl(ref contentUrl, ref content); // returns http://www.in.gr/photos/
+            contentUrl = "photos/a.html";
+            result = BaseUrl(ref contentUrl, ref content); // returns photos/
+            </code>
+            </example>
+            <remarks>
+            This method does not use <see cref="T:System.Text.StringBuilder"/> objects to perform the
+            processing, since that would only cause more code complexity without any gain.<br/>
+            <b>Update History</b>
+            Update History:
+            <list type="table">
+              <listheader>
+            	<term>Date</term>
+            	<description>Description</description>
+              </listheader>
+              <item>
+            	<term>11/05/03</term>
+            	<description>Initial release.</description>
+              </item>
+              <item>
+            	<term>16/09/03</term>
+            	<description>Better compliance with RFC1808, now able to parse the
+            	&lt;base href="..."&gt; meta tag.</description>
+              </item>
+              <item>
+            	<term>01/09/04</term>
+            	<description>Updated the code in order to improve performance and decrease
+            	memory consumption.</description>
+              </item>
+            </list>
+            </remarks>
+            <exception cref="T:System.ArgumentNullException">Thrown if the input strings are null.</exception>
+            <param name="contentUrl">
+            The Url from which the base Url must be extracted.
+            </param>
+            <param name="content">
+            The contents of the Url that must be parsed for the base meta tag.
+            </param>
+            <returns>A string containing the base Url of the given Url.</returns>
+        </member>
+        <member name="M:CrawlWave.Client.HtmlParser.TrimUrl(System.String)">
+            <summary>
+            Takes as input a string containing a Url probably surrounded by other tags and
+            enclosed in quotes or double quotes and it trims out everything but the Url.
+            </summary>
+            <example>
+            <code>
+            string input = "a href=index.html target=_blank";
+            string result = null;
+            result = TrimUrl(input); // returns index.html
+            input = "a class=\"text\" href=\"http://www.in.gr/\" target=\"_blank\"";
+            result = TrimUrl(input); // returns http://www.in.gr/
+            input = "frame width=500 src=\"index.html\" noresize&gt;";
+            result = TrimUrl(input); // returns index.html
+            input = "base src=\"http://www.aueb.gr/\"&gt;;
+            result = TrimUrl(input); // returns http://www.aueb.gr/
+            </code>
+            </example>
+            <remarks>
+            This method uses <see cref="T:System.Text.StringBuilder"/> objects to perform the processing,
+            in order to increase performance and consume the least possible memory.
+            </remarks>
+            <param name="input">The input string containing the Url to be trimmed out.</param>
+            <returns>A string containing the trimmed-out Url.</returns>
+        </member>
+        <member name="M:CrawlWave.Client.HtmlParser.OneUp(System.String@)">
+            <summary>
+            Goes one directory up, e.g. http://www.in.gr/photos/menu/ -> http://www.in.gr/photos/
+            </summary>
+            <param name="url">The initial Url.</param>
+            <returns>It's parent directory Url.</returns>
+        </member>
+        <member name="M:CrawlWave.Client.HtmlParser.NormalizeUrl(System.String@,System.String@)">
+            <summary>
+            Returns the canonical form of a url whose base url is baseUrl, even if they are
+            relative urls, e.g.
+            ../photos/a.html + http://www.in.gr/ram/ returns http://www.in.gr/photos/a.html
+            /pages/index.php + http://www.in.gr/ram/ returns http://www.in.gr/pages/index.php
+            http://www.in.gr + null returns http://www.in.gr/
+            </summary>
+            <param name="url">The url to be normalized.</param>
+            <param name="baseUrl">The base url of the url to be normalized.</param>
+            <returns>The normalized form of the url.</returns>
+        </member>
+        <member name="M:CrawlWave.Client.HtmlParser.CombineUrls(System.String,System.String)">
+            <summary>
+            Combines two urls, either relative or not, to provide the resulting url
+            </summary>
+            <param name="baseUrl">The base url.</param>
+            <param name="newUrl">The url to be combined with baseUrl.</param>
+            <returns>The url that occurs from the combination of baseUrl and newUrl.</returns>
+        </member>
+        <member name="M:CrawlWave.Client.HtmlParser.CleanUrlParams(System.String@)">
+            <summary>
+            Performs a processing of the GET parameters of dynamic urls. It removes any
+            session IDs and limits the number of parameters to 3, so as to avoid urls that
+            act as "black holes". It also removes named anchors from the end of the urls
+            for the same reason and performs a calculation of the url's 'importance', taking
+            into account the length of the absolute path and the number of its parameters.
+            </summary>
+            <remarks>
+            This method uses <see cref="T:System.Text.StringBuilder"/> objects to perform the processing,
+            and receives its input by reference, so as to minimize the memory consumed.<br/>
+            The priority of the resulting url is calculated as follows:<br/>
+            The priority for a top level url is equal to 1.<br/>
+            If the Absolute Path of the url is not empty then for each level (folder depth)
+            the priority is increased by 1.<br/>
+            If the url is dynamic (it has parameters) the priority is increased by 2 and for
+            each parameter contained in the Query segment if it is a session id variable the
+            priority is increased by 2, otherwise it is increased by 1.<br/>
+            Finally, if the url contains named anchors the priority is increased by 1.<br/>
+            <b>Update History</b>
+            <list type="table">
+              <listheader>
+            	<term>Date</term>
+            	<description>Description</description>
+              </listheader>
+              <item>
+            	<term>4/11/04</term>
+            	<description>Added support for checking for session IDs in hexadecimal or
+            	Guid format in all parameters, not only the ones whose name is in the list
+            	of common Session ID Variable names. 
+            	</description>
+              </item>
+              <item>
+            	<term>12/09/04</term>
+            	<description>Rewritten from scratch. All the processing is performed using
+            	<see cref="T:System.Text.StringBuilder"/> objects to hold the strings. The priority of
+            	the url is calculated. The method now removes session id variables that are
+            	within the Query segment without removing all the parameters after such a
+            	variable is encountered. Improved efficiency and less memory consumption. 
+            	</description>
+              </item>
+              <item>
+            	<term>23/08/03</term>
+            	<description>
+            	Limit the number of parameters of dynamic urls to 3, remove named anchors.
+            	</description>
+              </item>
+              <item>
+            	<term>28/07/03</term>
+            	<description>Initial release, after noticing that there can be countless
+            	session ids for the same url, causing some urls to act as "black holes".
+            	</description>
+              </item>
+            </list>
+            </remarks>
+            <example>
+            http://www.aueb.gr/ -&gt; http://www.aueb.gr/, priority:1<br/>
+            http://www.aueb.gr/index.php?id=1#top -&gt; http://www.aueb.gr/index.php?id=1, priority:5<br/>
+            http://www.aueb.gr/a/b/index.php?id=5&amp;session_id=xxx&amp;a=1&amp;b=2#top -&gt; http://www.aueb.gr/a/b/index.php?id=5&amp;a=1&amp;b=2, priority: 11
+            </example>
+            <param name="url">
+            The Url from which the Session ID params must be removed. Passed by reference so that it
+            can be altered and avoid using more memory since most of the urls aren't dynamic.
+            </param>
+            <returns>An unsigned 8 bit integer indicating the Url's priority.</returns>
+        </member>
+        <member name="M:CrawlWave.Client.HtmlParser.FilterUrl(System.String@,System.String@)">
+            <summary>
+            FilterUrl filters out urls that must not be visited, such as javascript: or
+            mailto: urls. Returns true if the Url is OK and can be crawled and false if
+            it must be rejected. This could be adapted to filter out urls that are not 
+            part of a specific domain, eg .gr or it could be adapted to use some kind of
+            rules like regular expressions that define which urls should be filtered out.
+            <br/>Written: 19/5/03<br/>
+            Updated:30/8/03 - Added support for removing circular links
+            </summary>
+            <param name="url">The url to examine</param>
+            <param name="contentUrl">The url in whose the contents the examined Url is found</param>
+            <returns>True if it is OK to crawl the url, false otherwise</returns>
+        </member>
+        <member name="M:CrawlWave.Client.HtmlParser.ExtractRobotsMetaTag(System.String@)">
+            <summary>
+            Parses the content of an HTML page for the robots meta tag and if one exists it
+            creates a <see cref="T:CrawlWave.Common.RobotsMetaTagValue"/> corresponding to the options it sets.
+            </summary>
+            <param name="content">The HTML content that must be parsed for the robots meta tag.</param>
+            <returns>A <see cref="T:CrawlWave.Common.RobotsMetaTagValue"/> corresponding to the robots meta tag options of the document.</returns>
+        </member>
+        <member name="M:CrawlWave.Client.HtmlParser.ExtractDomainFlag(System.String@)">
+            <summary>
+            Attempts to extract the appropriate FlagDomain value from the contents of the page.
+            </summary>
+            <param name="content">The HTML content that must be parsed for Domain Flag value.</param>
+            <returns>A <see cref="T:CrawlWave.Common.DomainFlagValue"/> indicating whether the content of the 
+            HTML document is in the language that interests us.
+            </returns>
+            <remarks>
+            The method first attempts to perform a regular expression math for a charset tag,
+            if this doesn't succeed it attempts to find greek letters in the content.
+            </remarks>
+        </member>
+        <member name="M:CrawlWave.Client.HtmlParser.OnExtractLinksComplete(CrawlWave.Client.ParserEventArgs)">
+            <summary>
+            Raises an ExtractLinksComplete event when the extraction of links is complete
+            </summary>
+            <param name="e">The <see cref="T:CrawlWave.Client.ParserEventArgs"/> related to the event.</param>
+        </member>
+        <member name="M:CrawlWave.Client.HtmlParser.OnExtractTextComplete(CrawlWave.Client.ParserEventArgs)">
+            <summary>
+            Raises an ExtractTextComplete event when the extraction of text is complete
+            </summary>
+            <param name="e">The <see cref="T:CrawlWave.Client.ParserEventArgs"/> related to the event.</param>
+        </member>
+        <member name="M:CrawlWave.Client.HtmlParser.OnExtractContentComplete(CrawlWave.Client.ParserEventArgs)">
+            <summary>
+            Raises an ExtractContentComplete event when the extraction of content is complete
+            </summary>
+            <param name="e">The <see cref="T:CrawlWave.Client.ParserEventArgs"/> related to the event.</param>
+        </member>
+        <member name="P:CrawlWave.Client.HtmlParser.ContentType">
+            <summary>
+            Gets a string indicating the Content Type of the documents supported by the parser.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Client.HtmlParser.AlternativeContentType">
+            <summary>
+            Gets a string indicating the alternative Content Type of the documents supported by the parser.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Client.HtmlParser.AlternativeContentType2">
+            <summary>
+            Gets a string indicating the second alternative Content Type of the documents supported by the parser.
+            </summary>
+        </member>
+        <member name="E:CrawlWave.Client.HtmlParser.ExtractLinksComplete">
+            <summary>
+            Occurs when the extraction of links from an html document is complete
+            </summary>
+        </member>
+        <member name="E:CrawlWave.Client.HtmlParser.ExtractTextComplete">
+            <summary>
+            Occurs when the extraction of text from an html document is complete
+            </summary>
+        </member>
+        <member name="E:CrawlWave.Client.HtmlParser.ExtractContentComplete">
+            <summary>
+            Occurs when the extraction of content from an html document is complete
+            </summary>
+        </member>
+        <member name="T:CrawlWave.Client.PdfParser">
+            <summary>
+            PdfParser is a Singleton class that performs the link extraction and parsing of
+            the contents of Adobe Portable Document Format documents (PDF) and generally of
+            documents with content type "application/pdf" or "application/x-pdf".
+            </summary>
+            <remarks>
+            The PdfParser class uses a COM library (CrawlWave.Pdf2Text) to perform the whole
+            processing of the PDF documents. It first converts the document into a temporary
+            text document and then uses an instance of <see cref="T:CrawlWave.Client.TextParser"/> in order to
+            extract the links or text it contains. It needs to use temporary storage for the
+            intermediate text documents, which are stored in the client's work directory.
+            </remarks>
+        </member>
+        <member name="M:CrawlWave.Client.PdfParser.#ctor">
+            <summary>
+            The constructor is private so that only the class itself can create an instance.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Client.PdfParser.Instance">
+            <summary>
+            Provides a global access point for the single instance of the <see cref="T:CrawlWave.Client.PdfParser"/>
+            class.
+            </summary>
+            <returns>A reference to the single instance of <see cref="T:CrawlWave.Client.PdfParser"/></returns>
+        </member>
+        <member name="M:CrawlWave.Client.PdfParser.ExtractLinks(System.String@,CrawlWave.Common.InternetUrlToCrawl@)">
+            <summary>
+            Extracts links from the contents of a PDF document.
+            </summary>
+            <param name="content">The contents of the PDF document.</param>
+            <param name="contentUrl">The url of the PDF document.</param>
+            <returns>
+            An <see cref="T:System.Collections.ArrayList"/> of <see cref="T:CrawlWave.Common.InternetUrlToIndex"/> objects, one for
+            each link found in the content.
+            </returns>
+            <exception cref="T:System.NotSupportedException">Whenever this method is called.</exception>
+            <remarks>
+            Since a PDF document can not be converted to a string this method <b>ALWAYS</b>
+            throws a <see cref="T:System.NotSupportedException"/>.
+            </remarks>
+        </member>
+        <member name="M:CrawlWave.Client.PdfParser.ExtractLinks(System.Byte[],CrawlWave.Common.InternetUrlToCrawl@)">
+            <summary>
+            Extracts links from the contents of a PDF document.
+            </summary>
+            <param name="content">The contents of the PDF document.</param>
+            <param name="contentUrl">The url of the PDF document.</param>
+            <returns>
+            An <see cref="T:System.Collections.ArrayList"/> of <see cref="T:CrawlWave.Common.InternetUrlToIndex"/> objects, one for
+            each link found in the content.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">If the input buffer is null or empty.</exception>
+        </member>
+        <member name="M:CrawlWave.Client.PdfParser.ExtractText(System.String@)">
+            <summary>
+            Extracts text from the contents of a PDF document.
+            </summary>
+            <param name="content">The contents of the PDF document.</param>
+            <returns>The text extracted from the PDF document.</returns>
+            <exception cref="T:System.NotSupportedException">Whenever this method is called.</exception>
+            <remarks>
+            Since a PDF document can not be converted to a string this method <b>ALWAYS</b>
+            throws a <see cref="T:System.NotSupportedException"/>.
+            </remarks>
+        </member>
+        <member name="M:CrawlWave.Client.PdfParser.ExtractText(System.Byte[])">
+            <summary>
+            Extracts text from the contents of a PDF document.
+            </summary>
+            <param name="content">The contents of the PDF document.</param>
+            <returns>The text extracted from the PDF document.</returns>
+            <exception cref="T:System.ArgumentNullException">If the input buffer is null or empty.</exception>
+            <remarks>
+            </remarks>
+        </member>
+        <member name="M:CrawlWave.Client.PdfParser.ExtractContent(System.String@,System.Boolean)">
+            <summary>
+            Performs the extraction of content from a PDF document. Depending on the value
+            of the Flag provided it simply returns a string same as the text produced from
+            the parsing of the PDF document or it removes consecutive whitespace characters
+            in order to perform a compaction.
+            </summary>
+            <param name="content">
+            The contents of the document from which the content must be extracted.
+            </param>
+            <param name="Flag">Determines what kind of processing will be performed on the
+            input. If set to false it simply returns a string same to the input. If set to
+            true it performs whitespace compaction.
+            </param>
+            <returns>A string containing the desired extracted content.</returns>
+            <exception cref="T:System.NotSupportedException">Whenever this method is called.</exception>
+            <remarks>
+            Since a PDF document can not be converted to a string this method <b>ALWAYS</b>
+            throws a <see cref="T:System.NotSupportedException"/>.
+            </remarks>
+        </member>
+        <member name="M:CrawlWave.Client.PdfParser.ExtractContent(System.Byte[],System.Boolean)">
+            <summary>
+            Performs the extraction of content from a PDF document. Depending on the value
+            of the Flag provided it simply returns a string same as the text produced from
+            the parsing of the PDF document or it removes consecutive whitespace characters
+            in order to perform a compaction.
+             </summary>
+            <param name="content">
+            The contents of the document from which the content must be extracted.
+            </param>
+            <param name="Flag">Determines what kind of processing will be performed on the
+            input. If set to false it simply returns a string same as the text produced from
+            the parsing of the PDF document. If set to true it removes consecutive white
+            space characters in order to perform a compaction.
+            </param>
+            <returns>A string containing the desired extracted content.</returns>
+            <exception cref="T:System.ArgumentNullException">If the input buffer is null or empty.</exception>
+        </member>
+        <member name="M:CrawlWave.Client.PdfParser.OnExtractLinksComplete(CrawlWave.Client.ParserEventArgs)">
+            <summary>
+            Raises an ExtractLinksComplete event when the extraction of links is complete
+            </summary>
+            <param name="e">The <see cref="T:CrawlWave.Client.ParserEventArgs"/> related to the event.</param>
+        </member>
+        <member name="M:CrawlWave.Client.PdfParser.OnExtractTextComplete(CrawlWave.Client.ParserEventArgs)">
+            <summary>
+            Raises an ExtractTextComplete event when the extraction of text is complete
+            </summary>
+            <param name="e">The <see cref="T:CrawlWave.Client.ParserEventArgs"/> related to the event.</param>
+        </member>
+        <member name="M:CrawlWave.Client.PdfParser.OnExtractContentComplete(CrawlWave.Client.ParserEventArgs)">
+            <summary>
+            Raises an ExtractContentComplete event when the extraction of content is complete
+            </summary>
+            <param name="e">The <see cref="T:CrawlWave.Client.ParserEventArgs"/> related to the event.</param>
+        </member>
+        <member name="P:CrawlWave.Client.PdfParser.ContentType">
+            <summary>
+            Gets a string indicating the Content Type of the documents supported by the parser.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Client.PdfParser.AlternativeContentType">
+            <summary>
+            Gets a string indicating the Content Type of the documents supported by the parser.
+            </summary>
+        </member>
+        <member name="E:CrawlWave.Client.PdfParser.ExtractLinksComplete">
+            <summary>
+            Occurs when the extraction of links from a PDF document is complete
+            </summary>
+        </member>
+        <member name="E:CrawlWave.Client.PdfParser.ExtractTextComplete">
+            <summary>
+            Occurs when the extraction of text from a PDF document is complete
+            </summary>
+        </member>
+        <member name="E:CrawlWave.Client.PdfParser.ExtractContentComplete">
+            <summary>
+            Occurs when the extraction of content from a PDF document is complete
+            </summary>
+        </member>
+        <member name="T:CrawlWave.Client.Globals">
+            <summary>
+            Globals is a Singleton class that holds all the variables that need to be available
+            globally throughout the application. It is a Singleton so that only one instance of
+            these variables will exist during the application's execution and all other classes
+            can use this class when they need access on any of them.
+            </summary>
+        </member>
+        <member name="F:CrawlWave.Client.Globals.instance">
+            <summary>
+            The single class instance
+            </summary>
+        </member>
+        <member name="F:CrawlWave.Client.Globals.userAgent">
+            <summary>
+            The signature the Crawler will leave on the crawled hosts
+            </summary>
+        </member>
+        <member name="F:CrawlWave.Client.Globals.appPath">
+            <summary>
+            The path of the directory where the application is stored.
+            </summary>
+        </member>
+        <member name="F:CrawlWave.Client.Globals.dataPath">
+            <summary>
+            The path of the directory where the IP Address and robots cache files are stored.
+            </summary>
+        </member>
+        <member name="F:CrawlWave.Client.Globals.workPath">
+            <summary>
+            The path of the directory where the work units, the crawl results and the 
+            document conversion temporary files will be stored.
+            </summary>
+        </member>
+        <member name="F:CrawlWave.Client.Globals.logEventSource">
+            <summary>
+            Identifier for the events stored in the system event log
+            </summary>
+        </member>
+        <member name="F:CrawlWave.Client.Globals.logFileName">
+            <summary>
+            The name of the file that will store the application's event log.
+            </summary>
+        </member>
+        <member name="F:CrawlWave.Client.Globals.settings">
+            <summary>
+            The application's settings.
+            </summary>
+        </member>
+        <member name="F:CrawlWave.Client.Globals.clientInfo">
+            <summary>
+            The client's info.
+            </summary>
+        </member>
+        <member name="F:CrawlWave.Client.Globals.systemLog">
+            <summary>
+            The <see cref="T:CrawlWave.Common.SystemEventLogger"/> that will be used by the application
+            </summary>
+        </member>
+        <member name="F:CrawlWave.Client.Globals.fileLog">
+            <summary>
+            The <see cref="T:CrawlWave.Common.FileEventLogger"/> that will be used by the application
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Client.Globals.#ctor">
+            <summary>
+            Constructs a new instance of the <see cref="T:CrawlWave.Client.Globals"/> class.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Client.Globals.Instance">
+            <summary>
+            Provides a global access point for the single instance of the <see cref="T:CrawlWave.Client.Globals"/>
+            class.
+            </summary>
+            <returns>A reference to the single instance of <see cref="T:CrawlWave.Client.Globals"/>.</returns>
+        </member>
+        <member name="M:CrawlWave.Client.Globals.GetAppPath">
+            <summary>
+            Determines the application's path.
+            </summary>
+            <returns>The application's path, including the trailing slashes</returns>
+        </member>
+        <member name="P:CrawlWave.Client.Globals.UserAgent">
+            <summary>
+            Gets a string with the signature the crawler must leave on the visited hosts
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Client.Globals.AppPath">
+            <summary>
+            Gets a string containing the application's path, including the trailing baskslash.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Client.Globals.AppDataPath">
+            <summary>
+            Gets a string containing the application's data directory path.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Client.Globals.AppWorkPath">
+            <summary>
+            Gets a string containing the application's work directory path.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Client.Globals.LogEventSource">
+            <summary>
+            Gets a string containing the description of the event source used in the log.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Client.Globals.LogFileName">
+            <summary>
+            Gets the name of the file that will store the application's event log.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Client.Globals.Settings">
+            <summary>
+            Gets an <see cref="T:CrawlWave.Client.Common.ClientSettings"/> object providing access to the application's settings
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Client.Globals.Client_Info">
+            <summary>
+            Gets the client's <see cref="T:CrawlWave.Common.ClientInfo"/>.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Client.Globals.SystemLog">
+            <summary>
+            Gets a reference to the <see cref="T:CrawlWave.Common.SystemEventLogger"/> used by the application.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Client.Globals.FileLog">
+            <summary>
+            Gets a reference to the <see cref="T:CrawlWave.Common.SystemEventLogger"/> used by the application.
+            </summary>
+        </member>
+        <member name="T:CrawlWave.Client.DomainFilter">
+            <summary>
+            DomainFilter is a Singleton class that performs filtering of Urls according to their
+            country domain.
+            </summary>
+            <remarks>
+            It is very difficult to determine the domain of origin of a Url when it doesn't have
+            a host name but an IP Address instead. This is why an <see cref="T:CrawlWave.Common.IPCountryTable"/> 
+            is used. This causes an extra 3.5MB of memory consumption but allows for extremely 
+            fast (&gt;100000/sec) ISO country code lookups. It only works for IPv4 addresses.
+            </remarks>
+        </member>
+        <member name="M:CrawlWave.Client.DomainFilter.#ctor">
+            <summary>
+            The constructor is private so that only the class itself can create an instance.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Client.DomainFilter.Instance">
+            <summary>
+            Provides a global access point for the single instance of the <see cref="T:CrawlWave.Client.DomainFilter"/>
+            class.
+            </summary>
+            <returns>A reference to the single instance of <see cref="T:CrawlWave.Client.DomainFilter"/>.</returns>
+        </member>
+        <member name="M:CrawlWave.Client.DomainFilter.FilterUrl(System.String@)">
+            <summary>
+            Checks if a Url belongs to the part of the web we wish to crawl.
+            </summary>
+            <param name="targetUrl">The url to examine</param>
+            <returns>
+            A <see cref="T:CrawlWave.Common.DomainFlagValue"/> indicating whether the input Url belongs to the
+            part of the web we wish to crawl.
+            </returns>
+            <remarks>
+            Since it is possible for a url that belongs to a non-greek domain (e.g. .com) to
+            contain greek content, all Urls that do not belong to the .gr domain will get the
+            value of <see cref="F:CrawlWave.Common.DomainFlagValue.Unknown"/>. This allows the system to assign
+            them at a later time to a client who will visit them and check their content-type
+            encoding, in order to determine whether they are of interest to the system.
+            </remarks>
+        </member>
+        <member name="M:CrawlWave.Client.DomainFilter.LoadIPAddresses">
+            <summary>
+            Loads the IP addresses from the APNIC, ARIN, LACNIC and RIPENCC registry files.
+            If the files are more than 1 month old then a fresh copy is downloaded.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Client.DomainFilter.IsIPAddress(System.String@)">
+            <summary>
+            Checks if a string contains a valid IPv4 or IPv6 Address
+            </summary>
+            <param name="address">The string to check</param>
+            <returns>True if it is a valid IP address, false otherwise.</returns>
+        </member>
+        <member name="T:CrawlWave.Client.Client">
+            <summary>
+            Client is a Singleton class that contains the application's Main method and startup
+            code. It performs all the necessary initialization as well as the time scheduling
+            of the CrawlWave Client, if the user has enabled it. It also makes sure that there
+            is only one instance of the application running on the machine.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Client.Client.#ctor">
+            <summary>
+            The constructor is private so that only the class itself can create an instance.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Client.Client.Instance">
+            <summary>
+            Provides a global access point for the single instance of the <see cref="T:CrawlWave.Client.Client"/>
+            class.
+            </summary>
+            <returns>A reference to the single instance of <see cref="T:CrawlWave.Client.Client"/>.</returns>
+        </member>
+        <member name="M:CrawlWave.Client.Client.Main(System.String[])">
+            <summary>
+            The main entry point for the application.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Client.Client.CheckForRunningInstances(System.Boolean)">
+            <summary>
+            Checks if there is another instance of the Client running, either in GUI mode
+            or in quiet mode.
+            </summary>
+            <param name="GUIMode">The mode in which to check if there are other instances running.</param>
+            <returns>True if there is another instance of the Client running in the given mode.</returns>
+        </member>
+        <member name="M:CrawlWave.Client.Client.UnhandledExceptionHandler(System.Object,System.UnhandledExceptionEventArgs)">
+            <summary>
+            Provides a default Exception Handler for unhandled exceptions.
+            </summary>
+            <param name="sender">The object related to the event.</param>
+            <param name="e">The arguments related to the event.</param>
+        </member>
+        <member name="M:CrawlWave.Client.Client.ApplicationThreadExceptionHandler(System.Object,System.Threading.ThreadExceptionEventArgs)">
+            <summary>
+            Provides an Exception Handler for ApplicationThreadExceptions.
+            </summary>
+            <param name="sender">The object related to the event.</param>
+            <param name="e">The arguments related to the event.</param>
+        </member>
+        <member name="M:CrawlWave.Client.Client.SystemEvents_SessionEnding(System.Object,Microsoft.Win32.SessionEndingEventArgs)">
+            <summary>
+            Handles the SessionEnding events, allowing the client to terminate if the system
+            is shutting down but not be affected if the user is simply logging off.
+            </summary>
+            <param name="sender">The object related to the event.</param>
+            <param name="e">The arguments related to the event.</param>
+        </member>
+        <member name="M:CrawlWave.Client.Client.startScheduler_OnAlarmBell(System.Object,System.EventArgs)">
+            <summary>
+            Handles the time scheduler events that start the crawler
+            </summary>
+            <param name="sender">The object related to the event.</param>
+            <param name="e">The <see cref="T:System.EventArgs"/> related to the event.</param>
+        </member>
+        <member name="M:CrawlWave.Client.Client.stopScheduler_OnAlarmBell(System.Object,System.EventArgs)">
+            <summary>
+            Handles the time scheduler events that stop the crawler.
+            </summary>
+            <param name="sender">The object related to the event.</param>
+            <param name="e">The <see cref="T:System.EventArgs"/> related to the event.</param>
+        </member>
+        <member name="P:CrawlWave.Client.Client.MustTerminate">
+            <summary>
+            Sets a <see cref="T:System.Boolean"/> value that determines whether the application must
+            terminate its operation.
+            </summary>
+        </member>
+        <member name="T:CrawlWave.Client.Forms.Form1">
+            <summary>
+            Summary description for Form1.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Client.Forms.Form1.#ctor">
+            <summary>
+            Main Form
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Client.Forms.Form1.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Client.Forms.Form1.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Client.Forms.Form1.test">
+            <summary>
+            The main entry point for the application.
+            </summary>
+        </member>
+        <member name="T:CrawlWave.Client.RobotsFilter">
+            <summary>
+            RobotsFilter is a Singleton class that performs filtering of Urls according to the
+            <a href="http://www.robotstxt.org/wc/exclusion.html">Robots Exclusion Standard</a>.
+            It holds a <see cref="T:System.Collections.Generic.Dictionary`2"/> of <see cref="T:CrawlWave.Common.RobotsTxtEntry"/> objects, one for
+            each host in order to allow for fast lookup. It grows up to a specific size and can
+            be saved to permament storage (an XML file) and restored from an XML file.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Client.RobotsFilter.#ctor">
+            <summary>
+            The constructor is private so that only the class itself can create an instance.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Client.RobotsFilter.Instance">
+            <summary>
+            Provides a global access point for the single instance of the <see cref="T:CrawlWave.Client.RobotsFilter"/>
+            class.
+            </summary>
+            <returns>A reference to the single instance of <see cref="T:CrawlWave.Client.RobotsFilter"/>.</returns>
+        </member>
+        <member name="M:CrawlWave.Client.RobotsFilter.FilterUrl(System.String,CrawlWave.Common.InternetUrlToCrawl,CrawlWave.Common.RobotsMetaTagValue)">
+            <summary>
+            Checks if the Robots Exclusion Standard allows the crawler to visit a url.
+            </summary>
+            <param name="targetUrl">The url that is to be validated.</param>
+            <param name="sourceUrl">The <see cref="T:CrawlWave.Common.InternetUrlToCrawl"/> containing the targetUrl.</param>
+            <param name="robotsMeta">A <see cref="T:CrawlWave.Common.RobotsMetaTagValue"/> flag indicating the 
+            restrictions posed by the robots meta tag contained in the sourceUrl.</param>
+            <returns> A <see cref="T:System.Boolean"/> value indicating whether the crawler is 
+            allowed (false) or disallowed (true) to visit the target Url.</returns>
+            <remarks>This method is safe for multi-threaded operations. However only one
+            thread will be able to perform a check at any given time.
+            </remarks>
+        </member>
+        <member name="M:CrawlWave.Client.RobotsFilter.SaveEntries">
+            <summary>
+            Stores the entries contained in the internal Hashtable in serialized form in a
+            file on permanent storage (disk). It is thread-safe.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Client.RobotsFilter.LoadEntries">
+            <summary>
+            Loads the internal Hashtable from the cache of robots.txt files on disk and
+            removes the expired entries. It is thread-safe.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Client.RobotsFilter.DownloadRobots(System.String)">
+            <summary>
+            Downloads the robots.txt file from a host and returns its contents as a string.
+            </summary>
+            <param name="hostname">The host from where the robots.txt will be downloaded.</param>
+            <returns>A string containing the contents of the robots.txt file if it exists,
+            an empty string if it doesn't exist (an HTTP Status Code 404 is returned) or a
+            null reference if something else goes wrong.</returns>
+            <remarks>
+            DownloadRobots does not follow redirections by default, because that might lead
+            to a deadlock. For example, if the crawler wants to visit http://a.host/a.html
+            and the robots.txt for that host is not available the RobotsFilter will attempt
+            to download http://a.host/robots.txt. If this url redirects the RobotsFilter to
+            a.html then there is a deadlock, because both robots.txt and a.html will have to
+            wait for one another.
+            </remarks>
+        </member>
+        <member name="M:CrawlWave.Client.RobotsFilter.FetchRobots(System.String)">
+            <summary>
+            Downloads a robots.txt from a specified host, parses it and constructs a new
+            <see cref="T:CrawlWave.Common.RobotsTxtEntry"/> object with the entries of the downloaded file.
+            </summary>
+            <param name="hostname">The host for which the robots.txt file is required.</param>
+            <returns>A new <see cref="T:CrawlWave.Common.RobotsTxtEntry"/> object based on the newly downloaded
+            robots.txt file.</returns>
+        </member>
+        <member name="M:CrawlWave.Client.RobotsFilter.ParseRobots(System.String)">
+            <summary>
+            Parses a string (the contents robots.txt file) and creates a list of all the
+            disallowed paths for 2 types of crawlers: * (every crawler) and CrawlWave.
+            </summary>
+            <param name="contents">The contents of the robots.txt file to be parsed.</param>
+            <returns>An array of strings, each containing a disallowed path.</returns>
+        </member>
+        <member name="M:CrawlWave.Client.RobotsFilter.ConcatenatePaths(System.String[])">
+            <summary>
+            Concatenates an array of strings each containing a disallowed path into a string
+            separated by spaces.
+            </summary>
+            <param name="paths">An array of strings each containing a disallowed path.</param>
+            <returns>A string containing all the paths concatenated and separated by spaces.</returns>
+        </member>
+        <member name="M:CrawlWave.Client.RobotsFilter.SplitPaths(System.String)">
+            <summary>
+            Does the exact opposite from what <see cref="M:CrawlWave.Client.RobotsFilter.ConcatenatePaths(System.String[])"/> does.
+            </summary>
+            <param name="paths">A string containing disallowed paths separated by spaces</param>
+            <returns>An array of strings, each containing one disallowed path.</returns>
+        </member>
+        <member name="T:CrawlWave.Client.Crawler">
+            <summary>
+            Crawler is the class that performs the crawling of web pages. It is a multithreaded
+            class that provides a control interface so that the scheduler can start or stop him
+            at desired times. It also publishes some events that allow the easy notification of
+            other classes, and are more useful in updating the User Interface. It also collects
+            some statistics about the crawling process that are exposed as public properties.
+            </summary>
+            <remarks>
+            The Crawler class communicates asynchronously with <c>CrawlWave.Server</c>,
+            and the results are stored on disk in case the server is unable to respond in time
+            and timeouts occur. The results are sent by a thread that is dedicated to that task
+            so that the crawling process will not be affected.<br/><br/>
+            <b>Update History:</b>
+            <list type="table">
+              <listheader>
+            	<term>Date</term>
+            	<description>Description</description>
+              </listheader>
+              <item>
+            	<term>03/08/05</term>
+            	<description>Fixed a bug that would cause Crawling threads to die unexpectedly
+            	because gzip compressed streams would not be handled properly. This revision
+            	uses SharpZipLib to decompress the gzipped streams and then performs standard
+            	processing on their content.
+            	</description>
+              </item>
+              <item>
+            	<term>09/02/05</term>
+            	<description>General revision. Changes include improvements in url filtering,
+            	automatic detection of the charset/encoding of the crawled data, limiting of
+            	the amount of data that can be returned by each url, added InstanceExists, etc.
+            	</description>
+              </item>
+              <item>
+            	<term>16/10/04</term>
+            	<description>Wired up the client with the Web Service (CrawlWave.Server).
+            	</description>
+              </item>
+              <item>
+            	<term>22/09/04</term>
+            	<description>Initial release. The class has been rewritten from scratch in order
+            	to achieve better performance and reliability. The whole class architecture has
+            	been revised and the synchronization mechanisms are employed a lot more heavily.
+            	Added support for asynchronous sending of results to server, control interface,
+            	statistics interface, events for client notification. The communication with the
+            	server is performed using Web Service Enhancements 2.0.
+            	</description>
+              </item>
+              <item>
+            	<term>06/09/03</term>
+            	<description>Fixed a bug that caused the HtmlParser to create wrong urls if a
+            	redirection had occured when crawling a page.
+            	</description>
+              </item>
+              <item>
+            	<term>25/08/03</term>
+            	<description>Added support for host anti-slammering protection and logging.
+            	</description>
+              </item>
+              <item>
+            	<term>18/08/03</term>
+            	<description>Updated Url Crawling method so that it can obtain the HTTP Status
+            	Code even when an exception occurs while crawling a Url.
+            	</description>
+              </item>
+            </list>
+            </remarks>
+        </member>
+        <member name="M:CrawlWave.Client.Crawler.#ctor">
+            <summary>
+            Constructs a new istance of the <see cref="T:CrawlWave.Client.Crawler"/> class and initializes its
+            properties with the default values. The constructor is private so that only the
+            class itself can create an instance.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Client.Crawler.Instance">
+            <summary>
+            Provides a global access point for the single instance of the <see cref="T:CrawlWave.Client.Crawler"/>
+            class.
+            </summary>
+            <returns>A reference to the single instance of <see cref="T:CrawlWave.Client.Crawler"/>.</returns>
+        </member>
+        <member name="M:CrawlWave.Client.Crawler.InstanceExists">
+            <summary>
+            Allows the clients to check if an instance of the <see cref="T:CrawlWave.Client.Crawler"/> has been
+            created.
+            </summary>
+            <returns>True if an instance has been created, false otherwise.</returns>
+        </member>
+        <member name="M:CrawlWave.Client.Crawler.Start">
+            <summary>
+            Starts the crawling process. If the crawler is already in the <see cref="F:CrawlWave.Client.Common.CrawlerState.Running"/>
+            state it has no effect.
+            </summary>
+            <exception cref="T:CrawlWave.Common.CWException">Thrown if the crawler is in the <see cref="F:CrawlWave.Client.Common.CrawlerState.Paused"/> state.</exception>
+        </member>
+        <member name="M:CrawlWave.Client.Crawler.Stop">
+            <summary>
+            Stops the crawling process. If the crawler is already in the <see cref="F:CrawlWave.Client.Common.CrawlerState.Stopped"/>
+            state it has no effect. If the crawling is in progress it is not stopped abruptly
+            but the method waits until the current working Url Set is processed.
+            </summary>
+            <remarks>This method will be removed and replaced by StopImmediately in future versions.</remarks>
+        </member>
+        <member name="M:CrawlWave.Client.Crawler.StopImmediately">
+            <summary>
+            Stops the crawling process immediately without waiting for the crawling threads
+            to finish. If the crawler is already in the <see cref="F:CrawlWave.Client.Common.CrawlerState.Stopped"/>
+            state it has no effect.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Client.Crawler.Pause">
+            <summary>
+            Pauses the crawling process by calling <see cref="M:System.Threading.Thread.Suspend"/> on all the
+            crawling threads. If the crawler is already in the <see cref="F:CrawlWave.Client.Common.CrawlerState.Paused"/>
+            state it has no effect.
+            </summary>
+            <exception cref="T:CrawlWave.Common.CWException">Thrown if the crawler is in the <see cref="F:CrawlWave.Client.Common.CrawlerState.Stopped"/> state.</exception>
+        </member>
+        <member name="M:CrawlWave.Client.Crawler.Resume">
+            <summary>
+            Resumes the crawling process if it has been paused.
+            </summary>
+            <exception cref="T:CrawlWave.Common.CWException">
+            Thrown if the crawler is in the <see cref="F:CrawlWave.Client.Common.CrawlerState.Stopped"/> or 
+            <see cref="F:CrawlWave.Client.Common.CrawlerState.Running"/> state.
+            </exception>
+        </member>
+        <member name="M:CrawlWave.Client.Crawler.InitializeResultsQueue">
+            <summary>
+            Initializes the queue containing the names of the files that store the crawl
+            data results.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Client.Crawler.InitializeUrlsQueue">
+            <summary>
+            Initializes the queue of Urls from a file on disk containing the last set of
+            urls that the crawler downloaded but didn't have the time to crawl.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Client.Crawler.SynchronizeProcess">
+            <summary>
+            Synchronizes the processes by waiting for all the threads to finish downloading
+            pages before downloading a new set of urls to crawl.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Client.Crawler.DownloadUrlsToCrawl">
+            <summary>
+            Downloads a new set of Urls to crawl from the server. Since this method may be
+            interrupted or aborted at any time it must handle ThreadInterruptedException
+            and ThreadAbortException.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Client.Crawler.PerformCrawling">
+            <summary>
+            Performs the crawling process. This is the method that all the crawler threads
+            are running throughout the application's operation. Since these threads may be
+            aborted or interrupted at any time this method handles ThreadAbortException and
+            ThreadInterruptedException.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Client.Crawler.SelectUrlToCrawl">
+            <summary>
+            Dequeues an <see cref="T:CrawlWave.Common.InternetUrlToCrawl"/> object from the queue of the urls
+            that must be crawled in a thread-safe manner. If the queue is empty a null
+            reference is returned. Called from <see cref="M:CrawlWave.Client.Crawler.PerformCrawling"/>.
+            </summary>
+            <returns>A <see cref="T:CrawlWave.Common.InternetUrlToCrawl"/> object to be crawled if the queue of
+            urls contains items, otherwise a null reference.</returns>
+        </member>
+        <member name="M:CrawlWave.Client.Crawler.CrawlUrl(CrawlWave.Common.InternetUrlToCrawl@)">
+            <summary>
+            Crawls a Url and creates a <see cref="T:CrawlWave.Common.UrlCrawlData"/> object that is stored in
+            the internal crawledUrls <see cref="T:System.Collections.ArrayList"/>. Since it runs in one of the
+            crawling threads that may be interrupted or aborted at any time it must be able
+            to handle ThreadAbortException and ThreadInterruptedException.
+            </summary>
+            <param name="urlToCrawl">A reference to the <see cref="T:CrawlWave.Common.InternetUrlToCrawl"/>
+            object that encapsulates the url that must be crawled.</param>
+        </member>
+        <member name="M:CrawlWave.Client.Crawler.SelectParser(System.String)">
+            <summary>
+            Selects the appropriate parser according to the content type of the document.
+            </summary>
+            <param name="contentType">The content-type of the document.</param>
+            <returns>A reference to a <see cref="T:CrawlWave.Client.Parser"/> object that can parse documents
+            of the given content-type, or null if no appropriate parser exists.</returns>
+        </member>
+        <member name="M:CrawlWave.Client.Crawler.UpdateStatistics(System.Net.HttpStatusCode,System.Int64)">
+            <summary>
+            Updates the statistics table every time a Url is crawled, so that the client
+            can be informed about the status of the last request.
+            </summary>
+            <param name="statusCode">The <see cref="T:System.Net.HttpStatusCode"/> returned by the last <see cref="T:System.Net.WebRequest"/></param>
+            <param name="contentLength">The length of the content returned during the last <see cref="T:System.Net.WebRequest"/></param>
+        </member>
+        <member name="M:CrawlWave.Client.Crawler.DetectContentEncoding(System.String@)">
+            <summary>
+            Attempts to detect the document encoding of HTML documents 
+            </summary>
+            <param name="content"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CrawlWave.Client.Crawler.DecompressGzippedContent(System.Byte[],System.Byte[]@)">
+            <summary>
+            Decompresses an array of bytes that contains Gzipped content and stores the result into
+            a new array of bytes. It is used in order to decompress the contents of urls that some
+            servers send gzipped in order to save bandwidth.
+            </summary>
+            <param name="compressed">An array of bytes containing the compressed input.</param>
+            <param name="decompressed">The buffer where the decompressed input will be returned.</param>
+            <remarks>
+            The decompressed buffer is passed back to the calling method as an <b>out</b>
+            parameter. That means that the calling method doesn't need to initialize the
+            decompressed buffer.
+            </remarks>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if the compressed input buffer is empty or null.
+            </exception>
+            <exception cref="T:CrawlWave.Common.CWZipException">
+            Thrown if a problem is encountered during the decompression process.
+            </exception>
+        </member>
+        <member name="M:CrawlWave.Client.Crawler.CleanupRedirectUrl(System.String@)">
+            <summary>
+            Performs a processing of the GET parameters of dynamic urls. It removes any
+            session IDs and limits the number of parameters to 3, so as to avoid urls that
+            act as "black holes". It also removes named anchors from the end of the urls
+            for the same reason and performs a calculation of the url's 'importance', taking
+            into account the length of the absolute path and the number of its parameters.
+            </summary>
+            <remarks>
+            Works exactly the same way as <see cref="M:CrawlWave.Client.HtmlParser.CleanUrlParams(System.String@)"/>.
+            </remarks>
+            <param name="url">The url to be processed and whose priority is wanted.</param>
+            <returns>An unsigned 8 bit integer indicating the Url's priority.</returns>
+        </member>
+        <member name="M:CrawlWave.Client.Crawler.SendResultsToServer">
+            <summary>
+            SendResultsToServer runs on a dedicated thread. It periodically attempts to send
+            the data produced from the crawling of urls back to the server. It communicates
+            with the CrawlWave.Server web service asynchronously.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Client.Crawler.SendResultsSynchronously">
+            <summary>
+            Sends the crawl results to the server in a synchronous mode, it reads one data
+            file at a time.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Client.Crawler.SendResultsInlined">
+            <summary>
+            Sends the crawl results currently in the results queue in a synchronous mode.
+            </summary>
+            <returns>True on success, false if the operation fails.</returns>
+        </member>
+        <member name="M:CrawlWave.Client.Crawler.StoreCrawlResults">
+            <summary>
+            Stores the crawled urls to an xml file on disk and updates the internal queue
+            of resultFileNames
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Client.Crawler.StopAllThreads">
+            <summary>
+            Stops all the running threads. It calls Join on them to interrupt them and
+            waits until they have finished executing.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Client.Crawler.KillAllThreads">
+            <summary>
+            Kills all the running threads by calling Abort and then Join on them.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Client.Crawler.SuspendAllThreads">
+            <summary>
+            Suspends the execution of all the running threads.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Client.Crawler.ResumeAllThreads">
+            <summary>
+            Resumes the execution of all the running threads
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Client.Crawler.OnStatisticsChanged(System.EventArgs)">
+            <summary>
+            Raises the <see cref="E:CrawlWave.Client.Crawler.StatisticsChanged"/> event
+            </summary>
+            <param name="e">The <see cref="T:System.EventArgs"/> related to the event.</param>
+        </member>
+        <member name="M:CrawlWave.Client.Crawler.OnStateChanged(System.EventArgs)">
+            <summary>
+            Raises the <see cref="E:CrawlWave.Client.Crawler.StateChanged"/> event
+            </summary>
+            <param name="e">The <see cref="T:System.EventArgs"/> related to the event.</param>
+        </member>
+        <member name="M:CrawlWave.Client.Crawler.OnResultsSent(System.EventArgs)">
+            <summary>
+            Raises the <see cref="E:CrawlWave.Client.Crawler.ResultsSent"/> event
+            </summary>
+            <param name="e">The <see cref="T:System.EventArgs"/> related to the event.</param>
+        </member>
+        <member name="M:CrawlWave.Client.Crawler.OnUrlSetReceived(System.EventArgs)">
+            <summary>
+            Raises the <see cref="E:CrawlWave.Client.Crawler.UrlSetReceived"/> event
+            </summary>
+            <param name="e">The <see cref="T:System.EventArgs"/> related to the event.</param>
+        </member>
+        <member name="M:CrawlWave.Client.Crawler.OnUrlProcessed(CrawlWave.Client.ParserEventArgs)">
+            <summary>
+            Raises the <see cref="E:CrawlWave.Client.Crawler.UrlProcessed"/> event
+            </summary>
+            <param name="e">The <see cref="T:CrawlWave.Client.ParserEventArgs"/> related to the event.</param>
+        </member>
+        <member name="E:CrawlWave.Client.Crawler.StatisticsChanged">
+            <summary>
+            Occurs when a change occurs to the statistics for which the UI must be notified.
+            </summary>
+        </member>
+        <member name="E:CrawlWave.Client.Crawler.StateChanged">
+            <summary>
+            Occurs when the <see cref="T:CrawlWave.Client.Crawler"/>'s <see cref="T:CrawlWave.Client.Common.CrawlerState"/> changes.
+            </summary>
+        </member>
+        <member name="E:CrawlWave.Client.Crawler.ResultsSent">
+            <summary>
+            Occurs when the <see cref="T:CrawlWave.Client.Crawler"/> succeeds in returning crawled urls to the server.
+            </summary>
+        </member>
+        <member name="E:CrawlWave.Client.Crawler.UrlSetReceived">
+            <summary>
+            Occurs when the <see cref="T:CrawlWave.Client.Crawler"/> succeeds in receiving a list of urls to crawl.
+            </summary>
+        </member>
+        <member name="E:CrawlWave.Client.Crawler.UrlProcessed">
+            <summary>
+            Occurs when the <see cref="T:CrawlWave.Client.Crawler"/> is done downloading and extracting links
+            and content from a url.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Client.Crawler.State">
+            <summary>
+            Gets a <see cref="T:CrawlWave.Client.Common.CrawlerState"/> value indicating the <see cref="T:CrawlWave.Client.Crawler"/>'s
+            internal state.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Client.Crawler.RunningThreads">
+            <summary>
+            Gets the number of currently running crawler threads
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Client.Crawler.Statistics">
+            <summary>
+            Gets an array of long integers containing various statistics related to the 
+            crawling process.
+            </summary>
+        </member>
+        <member name="T:CrawlWave.Client.CrawlWave.Server.CrawlWaveServer">
+            <remarks/>
+        </member>
+        <member name="M:CrawlWave.Client.CrawlWave.Server.CrawlWaveServer.#ctor">
+            <remarks/>
+        </member>
+        <member name="M:CrawlWave.Client.CrawlWave.Server.CrawlWaveServer.IsAlive">
+            <remarks/>
+        </member>
+        <member name="M:CrawlWave.Client.CrawlWave.Server.CrawlWaveServer.BeginIsAlive(System.AsyncCallback,System.Object)">
+            <remarks/>
+        </member>
+        <member name="M:CrawlWave.Client.CrawlWave.Server.CrawlWaveServer.EndIsAlive(System.IAsyncResult)">
+            <remarks/>
+        </member>
+        <member name="M:CrawlWave.Client.CrawlWave.Server.CrawlWaveServer.IsAliveAsync">
+            <remarks/>
+        </member>
+        <member name="M:CrawlWave.Client.CrawlWave.Server.CrawlWaveServer.IsAliveAsync(System.Object)">
+            <remarks/>
+        </member>
+        <member name="M:CrawlWave.Client.CrawlWave.Server.CrawlWaveServer.GetClientComputerInfo(CrawlWave.Client.CrawlWave.Server.ClientInfo,CrawlWave.Client.CrawlWave.Server.CWComputerInfo)">
+            <remarks/>
+        </member>
+        <member name="M:CrawlWave.Client.CrawlWave.Server.CrawlWaveServer.BeginGetClientComputerInfo(CrawlWave.Client.CrawlWave.Server.ClientInfo,CrawlWave.Client.CrawlWave.Server.CWComputerInfo,System.AsyncCallback,System.Object)">
+            <remarks/>
+        </member>
+        <member name="M:CrawlWave.Client.CrawlWave.Server.CrawlWaveServer.EndGetClientComputerInfo(System.IAsyncResult)">
+            <remarks/>
+        </member>
+        <member name="M:CrawlWave.Client.CrawlWave.Server.CrawlWaveServer.GetClientComputerInfoAsync(CrawlWave.Client.CrawlWave.Server.ClientInfo,CrawlWave.Client.CrawlWave.Server.CWComputerInfo)">
+            <remarks/>
+        </member>
+        <member name="M:CrawlWave.Client.CrawlWave.Server.CrawlWaveServer.GetClientComputerInfoAsync(CrawlWave.Client.CrawlWave.Server.ClientInfo,CrawlWave.Client.CrawlWave.Server.CWComputerInfo,System.Object)">
+            <remarks/>
+        </member>
+        <member name="M:CrawlWave.Client.CrawlWave.Server.CrawlWaveServer.GetCrawlResults(CrawlWave.Client.CrawlWave.Server.ClientInfo,CrawlWave.Client.CrawlWave.Server.UrlCrawlData[])">
+            <remarks/>
+        </member>
+        <member name="M:CrawlWave.Client.CrawlWave.Server.CrawlWaveServer.BeginGetCrawlResults(CrawlWave.Client.CrawlWave.Server.ClientInfo,CrawlWave.Client.CrawlWave.Server.UrlCrawlData[],System.AsyncCallback,System.Object)">
+            <remarks/>
+        </member>
+        <member name="M:CrawlWave.Client.CrawlWave.Server.CrawlWaveServer.EndGetCrawlResults(System.IAsyncResult)">
+            <remarks/>
+        </member>
+        <member name="M:CrawlWave.Client.CrawlWave.Server.CrawlWaveServer.GetCrawlResultsAsync(CrawlWave.Client.CrawlWave.Server.ClientInfo,CrawlWave.Client.CrawlWave.Server.UrlCrawlData[])">
+            <remarks/>
+        </member>
+        <member name="M:CrawlWave.Client.CrawlWave.Server.CrawlWaveServer.GetCrawlResultsAsync(CrawlWave.Client.CrawlWave.Server.ClientInfo,CrawlWave.Client.CrawlWave.Server.UrlCrawlData[],System.Object)">
+            <remarks/>
+        </member>
+        <member name="M:CrawlWave.Client.CrawlWave.Server.CrawlWaveServer.GetCrawlResultsRaw(CrawlWave.Client.CrawlWave.Server.ClientInfo,System.Byte[])">
+            <remarks/>
+        </member>
+        <member name="M:CrawlWave.Client.CrawlWave.Server.CrawlWaveServer.BeginGetCrawlResultsRaw(CrawlWave.Client.CrawlWave.Server.ClientInfo,System.Byte[],System.AsyncCallback,System.Object)">
+            <remarks/>
+        </member>
+        <member name="M:CrawlWave.Client.CrawlWave.Server.CrawlWaveServer.EndGetCrawlResultsRaw(System.IAsyncResult)">
+            <remarks/>
+        </member>
+        <member name="M:CrawlWave.Client.CrawlWave.Server.CrawlWaveServer.GetCrawlResultsRawAsync(CrawlWave.Client.CrawlWave.Server.ClientInfo,System.Byte[])">
+            <remarks/>
+        </member>
+        <member name="M:CrawlWave.Client.CrawlWave.Server.CrawlWaveServer.GetCrawlResultsRawAsync(CrawlWave.Client.CrawlWave.Server.ClientInfo,System.Byte[],System.Object)">
+            <remarks/>
+        </member>
+        <member name="M:CrawlWave.Client.CrawlWave.Server.CrawlWaveServer.RegisterClient(CrawlWave.Client.CrawlWave.Server.ClientInfo@,CrawlWave.Client.CrawlWave.Server.CWComputerInfo)">
+            <remarks/>
+        </member>
+        <member name="M:CrawlWave.Client.CrawlWave.Server.CrawlWaveServer.BeginRegisterClient(CrawlWave.Client.CrawlWave.Server.ClientInfo,CrawlWave.Client.CrawlWave.Server.CWComputerInfo,System.AsyncCallback,System.Object)">
+            <remarks/>
+        </member>
+        <member name="M:CrawlWave.Client.CrawlWave.Server.CrawlWaveServer.EndRegisterClient(System.IAsyncResult,CrawlWave.Client.CrawlWave.Server.ClientInfo@)">
+            <remarks/>
+        </member>
+        <member name="M:CrawlWave.Client.CrawlWave.Server.CrawlWaveServer.RegisterClientAsync(CrawlWave.Client.CrawlWave.Server.ClientInfo,CrawlWave.Client.CrawlWave.Server.CWComputerInfo)">
+            <remarks/>
+        </member>
+        <member name="M:CrawlWave.Client.CrawlWave.Server.CrawlWaveServer.RegisterClientAsync(CrawlWave.Client.CrawlWave.Server.ClientInfo,CrawlWave.Client.CrawlWave.Server.CWComputerInfo,System.Object)">
+            <remarks/>
+        </member>
+        <member name="M:CrawlWave.Client.CrawlWave.Server.CrawlWaveServer.RegisterUser(System.Int32@,System.String,System.Byte[],System.String)">
+            <remarks/>
+        </member>
+        <member name="M:CrawlWave.Client.CrawlWave.Server.CrawlWaveServer.BeginRegisterUser(System.Int32,System.String,System.Byte[],System.String,System.AsyncCallback,System.Object)">
+            <remarks/>
+        </member>
+        <member name="M:CrawlWave.Client.CrawlWave.Server.CrawlWaveServer.EndRegisterUser(System.IAsyncResult,System.Int32@)">
+            <remarks/>
+        </member>
+        <member name="M:CrawlWave.Client.CrawlWave.Server.CrawlWaveServer.RegisterUserAsync(System.Int32,System.String,System.Byte[],System.String)">
+            <remarks/>
+        </member>
+        <member name="M:CrawlWave.Client.CrawlWave.Server.CrawlWaveServer.RegisterUserAsync(System.Int32,System.String,System.Byte[],System.String,System.Object)">
+            <remarks/>
+        </member>
+        <member name="M:CrawlWave.Client.CrawlWave.Server.CrawlWaveServer.SendBannedHosts(CrawlWave.Client.CrawlWave.Server.ClientInfo,System.Data.DataSet@)">
+            <remarks/>
+        </member>
+        <member name="M:CrawlWave.Client.CrawlWave.Server.CrawlWaveServer.BeginSendBannedHosts(CrawlWave.Client.CrawlWave.Server.ClientInfo,System.AsyncCallback,System.Object)">
+            <remarks/>
+        </member>
+        <member name="M:CrawlWave.Client.CrawlWave.Server.CrawlWaveServer.EndSendBannedHosts(System.IAsyncResult,System.Data.DataSet@)">
+            <remarks/>
+        </member>
+        <member name="M:CrawlWave.Client.CrawlWave.Server.CrawlWaveServer.SendBannedHostsAsync(CrawlWave.Client.CrawlWave.Server.ClientInfo)">
+            <remarks/>
+        </member>
+        <member name="M:CrawlWave.Client.CrawlWave.Server.CrawlWaveServer.SendBannedHostsAsync(CrawlWave.Client.CrawlWave.Server.ClientInfo,System.Object)">
+            <remarks/>
+        </member>
+        <member name="M:CrawlWave.Client.CrawlWave.Server.CrawlWaveServer.SendLatestVersion(CrawlWave.Client.CrawlWave.Server.ClientInfo,System.String@)">
+            <remarks/>
+        </member>
+        <member name="M:CrawlWave.Client.CrawlWave.Server.CrawlWaveServer.BeginSendLatestVersion(CrawlWave.Client.CrawlWave.Server.ClientInfo,System.AsyncCallback,System.Object)">
+            <remarks/>
+        </member>
+        <member name="M:CrawlWave.Client.CrawlWave.Server.CrawlWaveServer.EndSendLatestVersion(System.IAsyncResult,System.String@)">
+            <remarks/>
+        </member>
+        <member name="M:CrawlWave.Client.CrawlWave.Server.CrawlWaveServer.SendLatestVersionAsync(CrawlWave.Client.CrawlWave.Server.ClientInfo)">
+            <remarks/>
+        </member>
+        <member name="M:CrawlWave.Client.CrawlWave.Server.CrawlWaveServer.SendLatestVersionAsync(CrawlWave.Client.CrawlWave.Server.ClientInfo,System.Object)">
+            <remarks/>
+        </member>
+        <member name="M:CrawlWave.Client.CrawlWave.Server.CrawlWaveServer.SendServers(CrawlWave.Client.CrawlWave.Server.ClientInfo,System.Data.DataSet@)">
+            <remarks/>
+        </member>
+        <member name="M:CrawlWave.Client.CrawlWave.Server.CrawlWaveServer.BeginSendServers(CrawlWave.Client.CrawlWave.Server.ClientInfo,System.AsyncCallback,System.Object)">
+            <remarks/>
+        </member>
+        <member name="M:CrawlWave.Client.CrawlWave.Server.CrawlWaveServer.EndSendServers(System.IAsyncResult,System.Data.DataSet@)">
+            <remarks/>
+        </member>
+        <member name="M:CrawlWave.Client.CrawlWave.Server.CrawlWaveServer.SendServersAsync(CrawlWave.Client.CrawlWave.Server.ClientInfo)">
+            <remarks/>
+        </member>
+        <member name="M:CrawlWave.Client.CrawlWave.Server.CrawlWaveServer.SendServersAsync(CrawlWave.Client.CrawlWave.Server.ClientInfo,System.Object)">
+            <remarks/>
+        </member>
+        <member name="M:CrawlWave.Client.CrawlWave.Server.CrawlWaveServer.SendUpdatedVersion(CrawlWave.Client.CrawlWave.Server.ClientInfo,System.String,System.Byte[]@)">
+            <remarks/>
+        </member>
+        <member name="M:CrawlWave.Client.CrawlWave.Server.CrawlWaveServer.BeginSendUpdatedVersion(CrawlWave.Client.CrawlWave.Server.ClientInfo,System.String,System.AsyncCallback,System.Object)">
+            <remarks/>
+        </member>
+        <member name="M:CrawlWave.Client.CrawlWave.Server.CrawlWaveServer.EndSendUpdatedVersion(System.IAsyncResult,System.Byte[]@)">
+            <remarks/>
+        </member>
+        <member name="M:CrawlWave.Client.CrawlWave.Server.CrawlWaveServer.SendUpdatedVersionAsync(CrawlWave.Client.CrawlWave.Server.ClientInfo,System.String)">
+            <remarks/>
+        </member>
+        <member name="M:CrawlWave.Client.CrawlWave.Server.CrawlWaveServer.SendUpdatedVersionAsync(CrawlWave.Client.CrawlWave.Server.ClientInfo,System.String,System.Object)">
+            <remarks/>
+        </member>
+        <member name="M:CrawlWave.Client.CrawlWave.Server.CrawlWaveServer.SendUrlsToCrawl(CrawlWave.Client.CrawlWave.Server.ClientInfo,CrawlWave.Client.CrawlWave.Server.InternetUrlToCrawl[]@)">
+            <remarks/>
+        </member>
+        <member name="M:CrawlWave.Client.CrawlWave.Server.CrawlWaveServer.BeginSendUrlsToCrawl(CrawlWave.Client.CrawlWave.Server.ClientInfo,System.AsyncCallback,System.Object)">
+            <remarks/>
+        </member>
+        <member name="M:CrawlWave.Client.CrawlWave.Server.CrawlWaveServer.EndSendUrlsToCrawl(System.IAsyncResult,CrawlWave.Client.CrawlWave.Server.InternetUrlToCrawl[]@)">
+            <remarks/>
+        </member>
+        <member name="M:CrawlWave.Client.CrawlWave.Server.CrawlWaveServer.SendUrlsToCrawlAsync(CrawlWave.Client.CrawlWave.Server.ClientInfo)">
+            <remarks/>
+        </member>
+        <member name="M:CrawlWave.Client.CrawlWave.Server.CrawlWaveServer.SendUrlsToCrawlAsync(CrawlWave.Client.CrawlWave.Server.ClientInfo,System.Object)">
+            <remarks/>
+        </member>
+        <member name="M:CrawlWave.Client.CrawlWave.Server.CrawlWaveServer.SendUserStatistics(CrawlWave.Client.CrawlWave.Server.ClientInfo,CrawlWave.Client.CrawlWave.Server.UserStatistics@)">
+            <remarks/>
+        </member>
+        <member name="M:CrawlWave.Client.CrawlWave.Server.CrawlWaveServer.BeginSendUserStatistics(CrawlWave.Client.CrawlWave.Server.ClientInfo,System.AsyncCallback,System.Object)">
+            <remarks/>
+        </member>
+        <member name="M:CrawlWave.Client.CrawlWave.Server.CrawlWaveServer.EndSendUserStatistics(System.IAsyncResult,CrawlWave.Client.CrawlWave.Server.UserStatistics@)">
+            <remarks/>
+        </member>
+        <member name="M:CrawlWave.Client.CrawlWave.Server.CrawlWaveServer.SendUserStatisticsAsync(CrawlWave.Client.CrawlWave.Server.ClientInfo)">
+            <remarks/>
+        </member>
+        <member name="M:CrawlWave.Client.CrawlWave.Server.CrawlWaveServer.SendUserStatisticsAsync(CrawlWave.Client.CrawlWave.Server.ClientInfo,System.Object)">
+            <remarks/>
+        </member>
+        <member name="M:CrawlWave.Client.CrawlWave.Server.CrawlWaveServer.CancelAsync(System.Object)">
+            <remarks/>
+        </member>
+        <member name="E:CrawlWave.Client.CrawlWave.Server.CrawlWaveServer.IsAliveCompleted">
+            <remarks/>
+        </member>
+        <member name="E:CrawlWave.Client.CrawlWave.Server.CrawlWaveServer.GetClientComputerInfoCompleted">
+            <remarks/>
+        </member>
+        <member name="E:CrawlWave.Client.CrawlWave.Server.CrawlWaveServer.GetCrawlResultsCompleted">
+            <remarks/>
+        </member>
+        <member name="E:CrawlWave.Client.CrawlWave.Server.CrawlWaveServer.GetCrawlResultsRawCompleted">
+            <remarks/>
+        </member>
+        <member name="E:CrawlWave.Client.CrawlWave.Server.CrawlWaveServer.RegisterClientCompleted">
+            <remarks/>
+        </member>
+        <member name="E:CrawlWave.Client.CrawlWave.Server.CrawlWaveServer.RegisterUserCompleted">
+            <remarks/>
+        </member>
+        <member name="E:CrawlWave.Client.CrawlWave.Server.CrawlWaveServer.SendBannedHostsCompleted">
+            <remarks/>
+        </member>
+        <member name="E:CrawlWave.Client.CrawlWave.Server.CrawlWaveServer.SendLatestVersionCompleted">
+            <remarks/>
+        </member>
+        <member name="E:CrawlWave.Client.CrawlWave.Server.CrawlWaveServer.SendServersCompleted">
+            <remarks/>
+        </member>
+        <member name="E:CrawlWave.Client.CrawlWave.Server.CrawlWaveServer.SendUpdatedVersionCompleted">
+            <remarks/>
+        </member>
+        <member name="E:CrawlWave.Client.CrawlWave.Server.CrawlWaveServer.SendUrlsToCrawlCompleted">
+            <remarks/>
+        </member>
+        <member name="E:CrawlWave.Client.CrawlWave.Server.CrawlWaveServer.SendUserStatisticsCompleted">
+            <remarks/>
+        </member>
+        <member name="T:CrawlWave.Client.CrawlWave.Server.ClientInfo">
+            <remarks/>
+        </member>
+        <member name="P:CrawlWave.Client.CrawlWave.Server.ClientInfo.UserID">
+            <remarks/>
+        </member>
+        <member name="P:CrawlWave.Client.CrawlWave.Server.ClientInfo.ClientID">
+            <remarks/>
+        </member>
+        <member name="P:CrawlWave.Client.CrawlWave.Server.ClientInfo.Version">
+            <remarks/>
+        </member>
+        <member name="T:CrawlWave.Client.CrawlWave.Server.UserStatistics">
+            <remarks/>
+        </member>
+        <member name="P:CrawlWave.Client.CrawlWave.Server.UserStatistics.RegistrationDate">
+            <remarks/>
+        </member>
+        <member name="P:CrawlWave.Client.CrawlWave.Server.UserStatistics.NumClients">
+            <remarks/>
+        </member>
+        <member name="P:CrawlWave.Client.CrawlWave.Server.UserStatistics.UrlsAssigned">
+            <remarks/>
+        </member>
+        <member name="P:CrawlWave.Client.CrawlWave.Server.UserStatistics.UrlsReturned">
+            <remarks/>
+        </member>
+        <member name="P:CrawlWave.Client.CrawlWave.Server.UserStatistics.LastActive">
+            <remarks/>
+        </member>
+        <member name="T:CrawlWave.Client.CrawlWave.Server.InternetUrl">
+            <remarks/>
+        </member>
+        <member name="P:CrawlWave.Client.CrawlWave.Server.InternetUrl.ID">
+            <remarks/>
+        </member>
+        <member name="P:CrawlWave.Client.CrawlWave.Server.InternetUrl.Url">
+            <remarks/>
+        </member>
+        <member name="P:CrawlWave.Client.CrawlWave.Server.InternetUrl.MD5">
+            <remarks/>
+        </member>
+        <member name="T:CrawlWave.Client.CrawlWave.Server.InternetUrlToIndex">
+            <remarks/>
+        </member>
+        <member name="P:CrawlWave.Client.CrawlWave.Server.InternetUrlToIndex.FlagRobots">
+            <remarks/>
+        </member>
+        <member name="P:CrawlWave.Client.CrawlWave.Server.InternetUrlToIndex.FlagDomain">
+            <remarks/>
+        </member>
+        <member name="P:CrawlWave.Client.CrawlWave.Server.InternetUrlToIndex.Priority">
+            <remarks/>
+        </member>
+        <member name="T:CrawlWave.Client.CrawlWave.Server.DomainFlagValue">
+            <remarks/>
+        </member>
+        <member name="F:CrawlWave.Client.CrawlWave.Server.DomainFlagValue.MustVisit">
+            <remarks/>
+        </member>
+        <member name="F:CrawlWave.Client.CrawlWave.Server.DomainFlagValue.MustNotVisit">
+            <remarks/>
+        </member>
+        <member name="F:CrawlWave.Client.CrawlWave.Server.DomainFlagValue.Unknown">
+            <remarks/>
+        </member>
+        <member name="T:CrawlWave.Client.CrawlWave.Server.InternetUrlToCrawl">
+            <remarks/>
+        </member>
+        <member name="P:CrawlWave.Client.CrawlWave.Server.InternetUrlToCrawl.CRC">
+            <remarks/>
+        </member>
+        <member name="P:CrawlWave.Client.CrawlWave.Server.InternetUrlToCrawl.FlagDomain">
+            <remarks/>
+        </member>
+        <member name="P:CrawlWave.Client.CrawlWave.Server.InternetUrlToCrawl.FlagFetchRobots">
+            <remarks/>
+        </member>
+        <member name="P:CrawlWave.Client.CrawlWave.Server.InternetUrlToCrawl.RobotsDisallowedPaths">
+            <remarks/>
+        </member>
+        <member name="T:CrawlWave.Client.CrawlWave.Server.UrlCrawlData">
+            <remarks/>
+        </member>
+        <member name="P:CrawlWave.Client.CrawlWave.Server.UrlCrawlData.Url">
+            <remarks/>
+        </member>
+        <member name="P:CrawlWave.Client.CrawlWave.Server.UrlCrawlData.UrlToCrawl">
+            <remarks/>
+        </member>
+        <member name="P:CrawlWave.Client.CrawlWave.Server.UrlCrawlData.ID">
+            <remarks/>
+        </member>
+        <member name="P:CrawlWave.Client.CrawlWave.Server.UrlCrawlData.MD5">
+            <remarks/>
+        </member>
+        <member name="P:CrawlWave.Client.CrawlWave.Server.UrlCrawlData.Updated">
+            <remarks/>
+        </member>
+        <member name="P:CrawlWave.Client.CrawlWave.Server.UrlCrawlData.Redirected">
+            <remarks/>
+        </member>
+        <member name="P:CrawlWave.Client.CrawlWave.Server.UrlCrawlData.RedirectedFlagRobots">
+            <remarks/>
+        </member>
+        <member name="P:CrawlWave.Client.CrawlWave.Server.UrlCrawlData.RedirectedFlagDomain">
+            <remarks/>
+        </member>
+        <member name="P:CrawlWave.Client.CrawlWave.Server.UrlCrawlData.RedirectedPriority">
+            <remarks/>
+        </member>
+        <member name="P:CrawlWave.Client.CrawlWave.Server.UrlCrawlData.CRC">
+            <remarks/>
+        </member>
+        <member name="P:CrawlWave.Client.CrawlWave.Server.UrlCrawlData.FlagFetchRobots">
+            <remarks/>
+        </member>
+        <member name="P:CrawlWave.Client.CrawlWave.Server.UrlCrawlData.RobotsDisallowedPaths">
+            <remarks/>
+        </member>
+        <member name="P:CrawlWave.Client.CrawlWave.Server.UrlCrawlData.HttpStatusCode">
+            <remarks/>
+        </member>
+        <member name="P:CrawlWave.Client.CrawlWave.Server.UrlCrawlData.Data">
+            <remarks/>
+        </member>
+        <member name="P:CrawlWave.Client.CrawlWave.Server.UrlCrawlData.TimeStamp">
+            <remarks/>
+        </member>
+        <member name="P:CrawlWave.Client.CrawlWave.Server.UrlCrawlData.RetrievalTime">
+            <remarks/>
+        </member>
+        <member name="P:CrawlWave.Client.CrawlWave.Server.UrlCrawlData.OutLinks">
+            <remarks/>
+        </member>
+        <member name="T:CrawlWave.Client.CrawlWave.Server.HttpStatusCode">
+            <remarks/>
+        </member>
+        <member name="F:CrawlWave.Client.CrawlWave.Server.HttpStatusCode.Continue">
+            <remarks/>
+        </member>
+        <member name="F:CrawlWave.Client.CrawlWave.Server.HttpStatusCode.SwitchingProtocols">
+            <remarks/>
+        </member>
+        <member name="F:CrawlWave.Client.CrawlWave.Server.HttpStatusCode.OK">
+            <remarks/>
+        </member>
+        <member name="F:CrawlWave.Client.CrawlWave.Server.HttpStatusCode.Created">
+            <remarks/>
+        </member>
+        <member name="F:CrawlWave.Client.CrawlWave.Server.HttpStatusCode.Accepted">
+            <remarks/>
+        </member>
+        <member name="F:CrawlWave.Client.CrawlWave.Server.HttpStatusCode.NonAuthoritativeInformation">
+            <remarks/>
+        </member>
+        <member name="F:CrawlWave.Client.CrawlWave.Server.HttpStatusCode.NoContent">
+            <remarks/>
+        </member>
+        <member name="F:CrawlWave.Client.CrawlWave.Server.HttpStatusCode.ResetContent">
+            <remarks/>
+        </member>
+        <member name="F:CrawlWave.Client.CrawlWave.Server.HttpStatusCode.PartialContent">
+            <remarks/>
+        </member>
+        <member name="F:CrawlWave.Client.CrawlWave.Server.HttpStatusCode.MultipleChoices">
+            <remarks/>
+        </member>
+        <member name="F:CrawlWave.Client.CrawlWave.Server.HttpStatusCode.Ambiguous">
+            <remarks/>
+        </member>
+        <member name="F:CrawlWave.Client.CrawlWave.Server.HttpStatusCode.MovedPermanently">
+            <remarks/>
+        </member>
+        <member name="F:CrawlWave.Client.CrawlWave.Server.HttpStatusCode.Moved">
+            <remarks/>
+        </member>
+        <member name="F:CrawlWave.Client.CrawlWave.Server.HttpStatusCode.Found">
+            <remarks/>
+        </member>
+        <member name="F:CrawlWave.Client.CrawlWave.Server.HttpStatusCode.Redirect">
+            <remarks/>
+        </member>
+        <member name="F:CrawlWave.Client.CrawlWave.Server.HttpStatusCode.SeeOther">
+            <remarks/>
+        </member>
+        <member name="F:CrawlWave.Client.CrawlWave.Server.HttpStatusCode.RedirectMethod">
+            <remarks/>
+        </member>
+        <member name="F:CrawlWave.Client.CrawlWave.Server.HttpStatusCode.NotModified">
+            <remarks/>
+        </member>
+        <member name="F:CrawlWave.Client.CrawlWave.Server.HttpStatusCode.UseProxy">
+            <remarks/>
+        </member>
+        <member name="F:CrawlWave.Client.CrawlWave.Server.HttpStatusCode.Unused">
+            <remarks/>
+        </member>
+        <member name="F:CrawlWave.Client.CrawlWave.Server.HttpStatusCode.TemporaryRedirect">
+            <remarks/>
+        </member>
+        <member name="F:CrawlWave.Client.CrawlWave.Server.HttpStatusCode.RedirectKeepVerb">
+            <remarks/>
+        </member>
+        <member name="F:CrawlWave.Client.CrawlWave.Server.HttpStatusCode.BadRequest">
+            <remarks/>
+        </member>
+        <member name="F:CrawlWave.Client.CrawlWave.Server.HttpStatusCode.Unauthorized">
+            <remarks/>
+        </member>
+        <member name="F:CrawlWave.Client.CrawlWave.Server.HttpStatusCode.PaymentRequired">
+            <remarks/>
+        </member>
+        <member name="F:CrawlWave.Client.CrawlWave.Server.HttpStatusCode.Forbidden">
+            <remarks/>
+        </member>
+        <member name="F:CrawlWave.Client.CrawlWave.Server.HttpStatusCode.NotFound">
+            <remarks/>
+        </member>
+        <member name="F:CrawlWave.Client.CrawlWave.Server.HttpStatusCode.MethodNotAllowed">
+            <remarks/>
+        </member>
+        <member name="F:CrawlWave.Client.CrawlWave.Server.HttpStatusCode.NotAcceptable">
+            <remarks/>
+        </member>
+        <member name="F:CrawlWave.Client.CrawlWave.Server.HttpStatusCode.ProxyAuthenticationRequired">
+            <remarks/>
+        </member>
+        <member name="F:CrawlWave.Client.CrawlWave.Server.HttpStatusCode.RequestTimeout">
+            <remarks/>
+        </member>
+        <member name="F:CrawlWave.Client.CrawlWave.Server.HttpStatusCode.Conflict">
+            <remarks/>
+        </member>
+        <member name="F:CrawlWave.Client.CrawlWave.Server.HttpStatusCode.Gone">
+            <remarks/>
+        </member>
+        <member name="F:CrawlWave.Client.CrawlWave.Server.HttpStatusCode.LengthRequired">
+            <remarks/>
+        </member>
+        <member name="F:CrawlWave.Client.CrawlWave.Server.HttpStatusCode.PreconditionFailed">
+            <remarks/>
+        </member>
+        <member name="F:CrawlWave.Client.CrawlWave.Server.HttpStatusCode.RequestEntityTooLarge">
+            <remarks/>
+        </member>
+        <member name="F:CrawlWave.Client.CrawlWave.Server.HttpStatusCode.RequestUriTooLong">
+            <remarks/>
+        </member>
+        <member name="F:CrawlWave.Client.CrawlWave.Server.HttpStatusCode.UnsupportedMediaType">
+            <remarks/>
+        </member>
+        <member name="F:CrawlWave.Client.CrawlWave.Server.HttpStatusCode.RequestedRangeNotSatisfiable">
+            <remarks/>
+        </member>
+        <member name="F:CrawlWave.Client.CrawlWave.Server.HttpStatusCode.ExpectationFailed">
+            <remarks/>
+        </member>
+        <member name="F:CrawlWave.Client.CrawlWave.Server.HttpStatusCode.InternalServerError">
+            <remarks/>
+        </member>
+        <member name="F:CrawlWave.Client.CrawlWave.Server.HttpStatusCode.NotImplemented">
+            <remarks/>
+        </member>
+        <member name="F:CrawlWave.Client.CrawlWave.Server.HttpStatusCode.BadGateway">
+            <remarks/>
+        </member>
+        <member name="F:CrawlWave.Client.CrawlWave.Server.HttpStatusCode.ServiceUnavailable">
+            <remarks/>
+        </member>
+        <member name="F:CrawlWave.Client.CrawlWave.Server.HttpStatusCode.GatewayTimeout">
+            <remarks/>
+        </member>
+        <member name="F:CrawlWave.Client.CrawlWave.Server.HttpStatusCode.HttpVersionNotSupported">
+            <remarks/>
+        </member>
+        <member name="T:CrawlWave.Client.CrawlWave.Server.SerializedException">
+            <remarks/>
+        </member>
+        <member name="P:CrawlWave.Client.CrawlWave.Server.SerializedException.Type">
+            <remarks/>
+        </member>
+        <member name="P:CrawlWave.Client.CrawlWave.Server.SerializedException.Message">
+            <remarks/>
+        </member>
+        <member name="P:CrawlWave.Client.CrawlWave.Server.SerializedException.StackTrace">
+            <remarks/>
+        </member>
+        <member name="T:CrawlWave.Client.CrawlWave.Server.CWComputerInfo">
+            <remarks/>
+        </member>
+        <member name="P:CrawlWave.Client.CrawlWave.Server.CWComputerInfo.CPUType">
+            <remarks/>
+        </member>
+        <member name="P:CrawlWave.Client.CrawlWave.Server.CWComputerInfo.RAMSize">
+            <remarks/>
+        </member>
+        <member name="P:CrawlWave.Client.CrawlWave.Server.CWComputerInfo.HDDSpace">
+            <remarks/>
+        </member>
+        <member name="P:CrawlWave.Client.CrawlWave.Server.CWComputerInfo.ConnectionSpeed">
+            <remarks/>
+        </member>
+        <member name="T:CrawlWave.Client.CrawlWave.Server.CWConnectionSpeed">
+            <remarks/>
+        </member>
+        <member name="F:CrawlWave.Client.CrawlWave.Server.CWConnectionSpeed.Unknown">
+            <remarks/>
+        </member>
+        <member name="F:CrawlWave.Client.CrawlWave.Server.CWConnectionSpeed.Modem56K">
+            <remarks/>
+        </member>
+        <member name="F:CrawlWave.Client.CrawlWave.Server.CWConnectionSpeed.ISDN64K">
+            <remarks/>
+        </member>
+        <member name="F:CrawlWave.Client.CrawlWave.Server.CWConnectionSpeed.ISDN128K">
+            <remarks/>
+        </member>
+        <member name="F:CrawlWave.Client.CrawlWave.Server.CWConnectionSpeed.DSL256K">
+            <remarks/>
+        </member>
+        <member name="F:CrawlWave.Client.CrawlWave.Server.CWConnectionSpeed.DSL384K">
+            <remarks/>
+        </member>
+        <member name="F:CrawlWave.Client.CrawlWave.Server.CWConnectionSpeed.DSL512K">
+            <remarks/>
+        </member>
+        <member name="F:CrawlWave.Client.CrawlWave.Server.CWConnectionSpeed.DSL1M">
+            <remarks/>
+        </member>
+        <member name="F:CrawlWave.Client.CrawlWave.Server.CWConnectionSpeed.T1">
+            <remarks/>
+        </member>
+        <member name="F:CrawlWave.Client.CrawlWave.Server.CWConnectionSpeed.T3">
+            <remarks/>
+        </member>
+        <member name="F:CrawlWave.Client.CrawlWave.Server.CWConnectionSpeed.Fiber">
+            <remarks/>
+        </member>
+        <member name="F:CrawlWave.Client.CrawlWave.Server.CWConnectionSpeed.ATM">
+            <remarks/>
+        </member>
+        <member name="T:CrawlWave.Client.CrawlWave.Server.IsAliveCompletedEventHandler">
+            <remarks/>
+        </member>
+        <member name="T:CrawlWave.Client.CrawlWave.Server.IsAliveCompletedEventArgs">
+            <remarks/>
+        </member>
+        <member name="P:CrawlWave.Client.CrawlWave.Server.IsAliveCompletedEventArgs.Result">
+            <remarks/>
+        </member>
+        <member name="T:CrawlWave.Client.CrawlWave.Server.GetClientComputerInfoCompletedEventHandler">
+            <remarks/>
+        </member>
+        <member name="T:CrawlWave.Client.CrawlWave.Server.GetClientComputerInfoCompletedEventArgs">
+            <remarks/>
+        </member>
+        <member name="P:CrawlWave.Client.CrawlWave.Server.GetClientComputerInfoCompletedEventArgs.Result">
+            <remarks/>
+        </member>
+        <member name="T:CrawlWave.Client.CrawlWave.Server.GetCrawlResultsCompletedEventHandler">
+            <remarks/>
+        </member>
+        <member name="T:CrawlWave.Client.CrawlWave.Server.GetCrawlResultsCompletedEventArgs">
+            <remarks/>
+        </member>
+        <member name="P:CrawlWave.Client.CrawlWave.Server.GetCrawlResultsCompletedEventArgs.Result">
+            <remarks/>
+        </member>
+        <member name="T:CrawlWave.Client.CrawlWave.Server.GetCrawlResultsRawCompletedEventHandler">
+            <remarks/>
+        </member>
+        <member name="T:CrawlWave.Client.CrawlWave.Server.GetCrawlResultsRawCompletedEventArgs">
+            <remarks/>
+        </member>
+        <member name="P:CrawlWave.Client.CrawlWave.Server.GetCrawlResultsRawCompletedEventArgs.Result">
+            <remarks/>
+        </member>
+        <member name="T:CrawlWave.Client.CrawlWave.Server.RegisterClientCompletedEventHandler">
+            <remarks/>
+        </member>
+        <member name="T:CrawlWave.Client.CrawlWave.Server.RegisterClientCompletedEventArgs">
+            <remarks/>
+        </member>
+        <member name="P:CrawlWave.Client.CrawlWave.Server.RegisterClientCompletedEventArgs.Result">
+            <remarks/>
+        </member>
+        <member name="P:CrawlWave.Client.CrawlWave.Server.RegisterClientCompletedEventArgs.ci">
+            <remarks/>
+        </member>
+        <member name="T:CrawlWave.Client.CrawlWave.Server.RegisterUserCompletedEventHandler">
+            <remarks/>
+        </member>
+        <member name="T:CrawlWave.Client.CrawlWave.Server.RegisterUserCompletedEventArgs">
+            <remarks/>
+        </member>
+        <member name="P:CrawlWave.Client.CrawlWave.Server.RegisterUserCompletedEventArgs.Result">
+            <remarks/>
+        </member>
+        <member name="P:CrawlWave.Client.CrawlWave.Server.RegisterUserCompletedEventArgs.ID">
+            <remarks/>
+        </member>
+        <member name="T:CrawlWave.Client.CrawlWave.Server.SendBannedHostsCompletedEventHandler">
+            <remarks/>
+        </member>
+        <member name="T:CrawlWave.Client.CrawlWave.Server.SendBannedHostsCompletedEventArgs">
+            <remarks/>
+        </member>
+        <member name="P:CrawlWave.Client.CrawlWave.Server.SendBannedHostsCompletedEventArgs.Result">
+            <remarks/>
+        </member>
+        <member name="P:CrawlWave.Client.CrawlWave.Server.SendBannedHostsCompletedEventArgs.data">
+            <remarks/>
+        </member>
+        <member name="T:CrawlWave.Client.CrawlWave.Server.SendLatestVersionCompletedEventHandler">
+            <remarks/>
+        </member>
+        <member name="T:CrawlWave.Client.CrawlWave.Server.SendLatestVersionCompletedEventArgs">
+            <remarks/>
+        </member>
+        <member name="P:CrawlWave.Client.CrawlWave.Server.SendLatestVersionCompletedEventArgs.Result">
+            <remarks/>
+        </member>
+        <member name="P:CrawlWave.Client.CrawlWave.Server.SendLatestVersionCompletedEventArgs.version">
+            <remarks/>
+        </member>
+        <member name="T:CrawlWave.Client.CrawlWave.Server.SendServersCompletedEventHandler">
+            <remarks/>
+        </member>
+        <member name="T:CrawlWave.Client.CrawlWave.Server.SendServersCompletedEventArgs">
+            <remarks/>
+        </member>
+        <member name="P:CrawlWave.Client.CrawlWave.Server.SendServersCompletedEventArgs.Result">
+            <remarks/>
+        </member>
+        <member name="P:CrawlWave.Client.CrawlWave.Server.SendServersCompletedEventArgs.data">
+            <remarks/>
+        </member>
+        <member name="T:CrawlWave.Client.CrawlWave.Server.SendUpdatedVersionCompletedEventHandler">
+            <remarks/>
+        </member>
+        <member name="T:CrawlWave.Client.CrawlWave.Server.SendUpdatedVersionCompletedEventArgs">
+            <remarks/>
+        </member>
+        <member name="P:CrawlWave.Client.CrawlWave.Server.SendUpdatedVersionCompletedEventArgs.Result">
+            <remarks/>
+        </member>
+        <member name="P:CrawlWave.Client.CrawlWave.Server.SendUpdatedVersionCompletedEventArgs.data">
+            <remarks/>
+        </member>
+        <member name="T:CrawlWave.Client.CrawlWave.Server.SendUrlsToCrawlCompletedEventHandler">
+            <remarks/>
+        </member>
+        <member name="T:CrawlWave.Client.CrawlWave.Server.SendUrlsToCrawlCompletedEventArgs">
+            <remarks/>
+        </member>
+        <member name="P:CrawlWave.Client.CrawlWave.Server.SendUrlsToCrawlCompletedEventArgs.Result">
+            <remarks/>
+        </member>
+        <member name="P:CrawlWave.Client.CrawlWave.Server.SendUrlsToCrawlCompletedEventArgs.data">
+            <remarks/>
+        </member>
+        <member name="T:CrawlWave.Client.CrawlWave.Server.SendUserStatisticsCompletedEventHandler">
+            <remarks/>
+        </member>
+        <member name="T:CrawlWave.Client.CrawlWave.Server.SendUserStatisticsCompletedEventArgs">
+            <remarks/>
+        </member>
+        <member name="P:CrawlWave.Client.CrawlWave.Server.SendUserStatisticsCompletedEventArgs.Result">
+            <remarks/>
+        </member>
+        <member name="P:CrawlWave.Client.CrawlWave.Server.SendUserStatisticsCompletedEventArgs.stats">
+            <remarks/>
+        </member>
+        <member name="T:CrawlWave.Client.TextParser">
+            <summary>
+            TextParser is a Singleton class that performs the link extraction and parsing of
+            the contents of text files and generally documents with content type "text/plain".
+            </summary>
+            <remarks>
+            The TextParser uses <see cref="N:System.Text.RegularExpressions">Regular Expressions
+            </see> in order to perform the link extraction. The Regular Expression objects are
+            used with the <see cref="F:System.Text.RegularExpressions.RegexOptions.Compiled"/> option. This allows them to work
+            much faster, because they are compiled and loaded statically into main memory. The
+            disadvantage of using this option is that the memory allocated for these instances
+            is never released, not even when they are disposed, until the application that is
+            using them terminates. This is the main reason that lead to the implementation of
+            this class as a Singleton. This way it is easy to make sure that only one instance
+            of each of the required regular expression objects will ever be constructed.<br/>
+            <para>
+            Update History:
+            <list type="table">
+              <listheader>
+            	<term>Date</term>
+            	<description>Description</description>
+              </listheader>
+              <item>
+            	<term>12/09/04</term>
+            	<description>Initial Release. The class implements the <see cref="T:CrawlWave.Client.IParser"/>
+            	interface and most string processing tasks are performed using <see cref="T:System.Text.StringBuilder"/>
+            	objects in order to reduce memory consumption. The thread safety mechanisms
+            	are employed heavily so as to improve performance.
+            	</description>
+              </item>
+            </list>
+            </para>
+            <para>
+            <b>TODO:</b> Implement Domain Flagging and Robots Flagging methods
+            </para>
+            </remarks>
+        </member>
+        <member name="M:CrawlWave.Client.TextParser.#ctor">
+            <summary>
+            The constructor is private so that only the class itself can create an instance.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Client.TextParser.Instance">
+            <summary>
+            Provides a global access point for the single instance of the <see cref="T:CrawlWave.Client.TextParser"/>
+            class.
+            </summary>
+            <returns>A reference to the single instance of <see cref="T:CrawlWave.Client.TextParser"/></returns>
+        </member>
+        <member name="M:CrawlWave.Client.TextParser.ExtractLinks(System.String@,CrawlWave.Common.InternetUrlToCrawl@)">
+            <summary>
+            Performs the extraction of links from a text document. It can extract simple
+            links that are separated from the rest of the text using spaces or line brakes
+            or any other delimiters. The results are returned as an <see cref="T:System.Collections.ArrayList"/>
+            of <see cref="T:CrawlWave.Common.InternetUrlToIndex"/> objects.
+            </summary>
+            <remarks>
+            Besides the parsing and extraction of Urls, ExtractLinks also performs other 
+            tasks as well, such as:<br/>
+            <list type="bullet">
+              <item>
+                <description>Filtering of urls to resources of unsupported content-type, e.g. css, images, etc.</description>
+              </item>
+              <item>
+                <description>Filtering of multimple links to the same url and to the document itself.</description>
+              </item>
+              <item>
+                <description>Filtering of session id variables in dynamic Urls and limiting
+                of the number of GET variables in dynamic Urls.</description>
+              </item>
+              <item>
+                <description>Flagging of Urls according to their country domain.</description>
+              </item>
+            </list>
+            <b>Update History</b>
+            <list type="table">
+              <listheader>
+            	<term>Date</term>
+            	<description>Description</description>
+              </listheader>
+              <item>
+                <term>15/09/04</term>
+                <description>First release. A lot more needs to be done.</description>
+              </item>
+            </list>
+            </remarks>
+            <param name="content">The text that must be parsed for links. It is passed by
+            reference in order to reduce memory consumption.</param>
+            <param name="contentUrl">The Url from which the content comes.</param>
+            <returns>
+            An <see cref="T:System.Collections.ArrayList"/> of <see cref="T:CrawlWave.Common.InternetUrlToIndex"/> objects, one for
+            each link found in the content.
+            </returns>
+        </member>
+        <member name="M:CrawlWave.Client.TextParser.ExtractLinks(System.Byte[],CrawlWave.Common.InternetUrlToCrawl@)">
+            <summary>
+            Performs the extraction of links from a text document. It can extract simple
+            links that are separated from the rest of the text using spaces or line brakes
+            or any other delimiters. The results are returned as an <see cref="T:System.Collections.ArrayList"/>
+            of <see cref="T:CrawlWave.Common.InternetUrlToIndex"/> objects.
+            </summary>
+            <remarks>
+            Besides the parsing and extraction of Urls, ExtractLinks also performs other 
+            tasks as well, such as:<br/>
+            <list type="bullet">
+              <item>
+                <description>Filtering of urls to resources of unsupported content-type, e.g. css, images, etc.</description>
+              </item>
+              <item>
+                <description>Filtering of multimple links to the same url and to the document itself.</description>
+              </item>
+              <item>
+                <description>Filtering of session id variables in dynamic Urls and limiting
+                of the number of GET variables in dynamic Urls.</description>
+              </item>
+              <item>
+                <description>Flagging of Urls according to their country domain.</description>
+              </item>
+            </list>
+            <b>Update History</b>
+            <list type="table">
+              <listheader>
+            	<term>Date</term>
+            	<description>Description</description>
+              </listheader>
+              <item>
+                <term>15/09/04</term>
+                <description>First release. A lot more needs to be done.</description>
+              </item>
+            </list>
+            </remarks>
+            <param name="content">The text that must be parsed for links. IIt is passed as
+            an array of bytes containing the text contents in UTF8 binary format, in order
+            to reduce memory consumption.</param>
+            <param name="contentUrl">The Url from which the content comes.</param>
+            <returns>
+            An <see cref="T:System.Collections.ArrayList"/> of <see cref="T:CrawlWave.Common.InternetUrlToIndex"/> objects, one for
+            each link found in the content.
+            </returns>
+        </member>
+        <member name="M:CrawlWave.Client.TextParser.ExtractText(System.String@)">
+            <summary>
+            Performs the extraction of text from a text document. The text is extracted by
+            compacting consecutive white space characters.
+            </summary>
+            <param name="content">
+            The contents of the document from which the text must be extracted. Passes by
+            reference in order to reduce memory consumption.
+            </param>
+            <returns>A string containing the 'clean' text extracted from the document.</returns>
+        </member>
+        <member name="M:CrawlWave.Client.TextParser.ExtractText(System.Byte[])">
+            <summary>
+            Performs the extraction of text from a text document. The text is extracted by
+            compacting consecutive white space characters.
+            </summary>
+            <param name="content">
+            The contents of the document from which the text must be extracted.
+            </param>
+            <returns>A string containing the 'clean' text extracted from the document.</returns>
+        </member>
+        <member name="M:CrawlWave.Client.TextParser.ExtractContent(System.String@,System.Boolean)">
+            <summary>
+            Performs the extraction of content from a text document. Depending on the value
+            of the Flag provided it simply returns a string same as the input or it removes
+            consecutive spaces in order to perform a white space compaction.
+            </summary>
+            <param name="content">
+            The contents of the document from which the content must be extracted.
+            </param>
+            <param name="Flag">Determines what kind of processing will be performed on the
+            input. It has no effect, the method performs white space character compaction
+            on the input string.
+            </param>
+            <returns>A string containing the desired extracted content.</returns>
+        </member>
+        <member name="M:CrawlWave.Client.TextParser.ExtractContent(System.Byte[],System.Boolean)">
+            <summary>
+            Performs the extraction of content from a text document. Depending on the value
+            of the Flag provided it simply returns a string same as the input or it removes
+            consecutive white space characters in order to perform a compaction.
+            </summary>
+            <param name="content">
+            The contents of the document from which the content must be extracted.
+            </param>
+            <param name="Flag">Determines what kind of processing will be performed on the
+            input. If set to false it simply returns a string same to the input. If set to
+            true it performs whitespace compaction.
+            </param>
+            <returns>A string containing the desired extracted content.</returns>
+        </member>
+        <member name="M:CrawlWave.Client.TextParser.BaseUrl(System.String@)">
+            <summary>
+            Finds the base Url of a given Url, including the trailing slash. Works for both
+            absolute and relative Urls.
+            </summary>
+            <example>
+            <code>
+            string contentUrl = "http://www.in.gr";
+            string content = "&lt;html&gt;&lt;/html&gt;";
+            string result = null;
+            result = BaseUrl(ref contentUrl, ref content); // returns http://www.in.gr/
+            contentUrl = "http://www.in.gr/photos/a.html";
+            result = BaseUrl(ref contentUrl, ref content); // returns http://www.in.gr/photos/
+            contentUrl = "photos/a.html";
+            result = BaseUrl(ref contentUrl, ref content); // returns photos/
+            </code>
+            </example>
+            <remarks>
+            This method does not use <see cref="T:System.Text.StringBuilder"/> objects to perform the
+            processing, since that would only cause more code complexity without any gain.<br/>
+            <b>Update History</b>
+            Update History:
+            <list type="table">
+              <listheader>
+            	<term>Date</term>
+            	<description>Description</description>
+              </listheader>
+              <item>
+            	<term>15/09/04</term>
+            	<description>Initial release, based on <see cref="M:CrawlWave.Client.HtmlParser.BaseUrl(System.String@,System.String@)"/>.</description>
+              </item>
+            </list>
+            </remarks>
+            <exception cref="T:System.ArgumentNullException">Thrown if the input strings are null.</exception>
+            <param name="contentUrl">
+            The Url from which the base Url must be extracted.
+            </param>
+            <returns>A string containing the base Url of the given Url.</returns>
+        </member>
+        <member name="M:CrawlWave.Client.TextParser.NormalizeUrl(System.String@,System.String@)">
+            <summary>
+            Returns the canonical form of a url whose base url is baseUrl, even if they are
+            relative urls, e.g.
+            ../photos/a.html + http://www.in.gr/ram/ returns http://www.in.gr/photos/a.html
+            /pages/index.php + http://www.in.gr/ram/ returns http://www.in.gr/pages/index.php
+            http://www.in.gr + null returns http://www.in.gr/
+            </summary>
+            <param name="url">The url to be normalized.</param>
+            <param name="baseUrl">The base url of the url to be normalized.</param>
+            <returns>The normalized form of the url.</returns>
+        </member>
+        <member name="M:CrawlWave.Client.TextParser.CombineUrls(System.String,System.String)">
+            <summary>
+            Combines two urls, either relative or not, to provide the resulting url
+            </summary>
+            <param name="baseUrl">The base url.</param>
+            <param name="newUrl">The url to be combined with baseUrl.</param>
+            <returns>The url that occurs from the combination of baseUrl and newUrl.</returns>
+        </member>
+        <member name="M:CrawlWave.Client.TextParser.CleanUrlParams(System.String@)">
+            <summary>
+            Performs a processing of the GET parameters of dynamic urls. It removes any
+            session IDs and limits the number of parameters to 3, so as to avoid urls that
+            act as "black holes". It also removes named anchors from the end of the urls
+            for the same reason and performs a calculation of the url's 'importance', taking
+            into account the length of the absolute path and the number of its parameters.
+            </summary>
+            <remarks>
+            This method uses <see cref="T:System.Text.StringBuilder"/> objects to perform the processing,
+            and receives its input by reference, so as to minimize the memory consumed.<br/>
+            The priority of the resulting url is calculated as follows:<br/>
+            The priority for a top level url is equal to 1.<br/>
+            If the Absolute Path of the url is not empty then for each level (folder depth)
+            the priority is increased by 1.<br/>
+            If the url is dynamic (it has parameters) the priority is increased by 2 and for
+            each parameter contained in the Query segment if it is a session id variable the
+            priority is increased by 2, otherwise it is increased by 1.<br/>
+            Finally, if the url contains named anchors the priority is increased by 1.<br/>
+            <b>Update History</b>
+            <list type="table">
+              <listheader>
+            	<term>Date</term>
+            	<description>Description</description>
+              </listheader>
+              <item>
+            	<term>15/09/04</term>
+            	<description>Initial release, works exactly like <see cref="M:CrawlWave.Client.HtmlParser.CleanUrlParams(System.String@)"/>. 
+            	</description>
+              </item>
+            </list>
+            </remarks>
+            <example>
+            http://www.aueb.gr/ -&gt; http://www.aueb.gr/, priority:1<br/>
+            http://www.aueb.gr/index.php?id=1#top -&gt; http://www.aueb.gr/index.php?id=1, priority:5<br/>
+            http://www.aueb.gr/a/b/index.php?id=5&amp;session_id=xxx&amp;a=1&amp;b=2#top -&gt; http://www.aueb.gr/a/b/index.php?id=5&amp;a=1&amp;b=2, priority: 11
+            </example>
+            <param name="url">
+            The Url from which the Session ID params must be removed. Passed by reference so that it
+            can be altered and avoid using more memory since most of the urls aren't dynamic.
+            </param>
+            <returns>An unsigned 8 bit integer indicating the Url's priority.</returns>
+        </member>
+        <member name="M:CrawlWave.Client.TextParser.FilterUrl(System.String@,System.String@)">
+            <summary>
+            FilterUrl filters out urls that must not be visited, such as urls to photos.
+            Returns true if the Url is OK and can be crawled and false if it must be 
+            rejected. This could be adapted to filter out urls that are not part of a
+            specific domain, eg .gr or it could be adapted to use some kind of rules like
+            regular expressions that define which urls should be filtered out.
+            <br/>Written: 19/5/03<br/>
+            Updated:30/8/03 - Added support for removing circular links
+            </summary>
+            <param name="url">The url to examine</param>
+            <param name="contentUrl">The url in whose the contents the examined Url is found</param>
+            <returns>True if it is OK to crawl the url, false otherwise</returns>
+        </member>
+        <member name="M:CrawlWave.Client.TextParser.ExtractDomainFlag(System.String@)">
+            <summary>
+            Attempts to extract the appropriate FlagDomain value from the contents of the document.
+            </summary>
+            <param name="content">The HTML content that must be parsed for Domain Flag value.</param>
+            <returns>A <see cref="T:CrawlWave.Common.DomainFlagValue"/> indicating whether the content of the 
+            text document is in the language that interests us.
+            </returns>
+        </member>
+        <member name="M:CrawlWave.Client.TextParser.OnExtractLinksComplete(CrawlWave.Client.ParserEventArgs)">
+            <summary>
+            Raises an ExtractLinksComplete event when the extraction of links is complete
+            </summary>
+            <param name="e">The <see cref="T:CrawlWave.Client.ParserEventArgs"/> related to the event.</param>
+        </member>
+        <member name="M:CrawlWave.Client.TextParser.OnExtractTextComplete(CrawlWave.Client.ParserEventArgs)">
+            <summary>
+            Raises an ExtractTextComplete event when the extraction of text is complete
+            </summary>
+            <param name="e">The <see cref="T:CrawlWave.Client.ParserEventArgs"/> related to the event.</param>
+        </member>
+        <member name="M:CrawlWave.Client.TextParser.OnExtractContentComplete(CrawlWave.Client.ParserEventArgs)">
+            <summary>
+            Raises an ExtractContentComplete event when the extraction of content is complete
+            </summary>
+            <param name="e">The <see cref="T:CrawlWave.Client.ParserEventArgs"/> related to the event.</param>
+        </member>
+        <member name="P:CrawlWave.Client.TextParser.ContentType">
+            <summary>
+            Gets a string indicating the Content Type of the documents supported by the parser.
+            </summary>
+        </member>
+        <member name="E:CrawlWave.Client.TextParser.ExtractLinksComplete">
+            <summary>
+            Occurs when the extraction of links from a text document is complete
+            </summary>
+        </member>
+        <member name="E:CrawlWave.Client.TextParser.ExtractTextComplete">
+            <summary>
+            Occurs when the extraction of text from a text document is complete
+            </summary>
+        </member>
+        <member name="E:CrawlWave.Client.TextParser.ExtractContentComplete">
+            <summary>
+            Occurs when the extraction of content from a text document is complete
+            </summary>
+        </member>
+        <member name="T:CrawlWave.Client.HostBanFilter">
+            <summary>
+            HostbanFilter is a Singleton class that performs filtering of Urls according to a 
+            list of banned hosts that is maintained in the system's database. If a host is in
+            the ban list then no requests at all must be made to him, not even for robots.txt
+            files, so the <see cref="T:CrawlWave.Client.Parser"/>s consult the <see cref="T:CrawlWave.Client.HostBanFilter"/> first.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Client.HostBanFilter.#ctor">
+            <summary>
+            The constructor is private so that only the class itself can create an instance.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Client.HostBanFilter.Instance">
+            <summary>
+            Provides a global access point for the single instance of the <see cref="T:CrawlWave.Client.HostBanFilter"/>
+            class.
+            </summary>
+            <returns>A reference to the single instance of <see cref="T:CrawlWave.Client.HostBanFilter"/>.</returns>
+        </member>
+        <member name="M:CrawlWave.Client.HostBanFilter.FilterHost(System.String@)">
+            <summary>
+            Checks if a host belongs to the list of banned hosts.
+            </summary>
+            <param name="hostName">The address of the host to check.</param>
+            <returns>True if the host is banned, false otherwise.</returns>
+        </member>
+        <member name="M:CrawlWave.Client.HostBanFilter.FilterUrl(CrawlWave.Common.InternetUrlToIndex@)">
+            <summary>
+            Checks if a url is served by a host that belongs to the list of banned hosts.
+            </summary>
+            <param name="targetUrl">A <see cref="T:CrawlWave.Common.InternetUrlToIndex"/> to check.</param>
+            <returns>True if the host is banned, false otherwise.</returns>
+        </member>
+        <member name="M:CrawlWave.Client.HostBanFilter.FilterUrl(CrawlWave.Common.InternetUrlToCrawl@)">
+            <summary>
+            Checks if a url is served by a host that belongs to the list of banned hosts.
+            </summary>
+            <param name="targetUrl">A <see cref="T:CrawlWave.Common.InternetUrlToCrawl"/> to check.</param>
+            <returns>True if the host is banned, false otherwise.</returns>
+        </member>
+        <member name="M:CrawlWave.Client.HostBanFilter.FilterUrl(CrawlWave.Common.InternetUrl@)">
+            <summary>
+            Checks if a url is served by a host that belongs to the list of banned hosts.
+            </summary>
+            <param name="targetUrl">A <see cref="T:CrawlWave.Common.InternetUrl"/> to check.</param>
+            <returns>True if the host is banned, false otherwise.</returns>
+        </member>
+        <member name="M:CrawlWave.Client.HostBanFilter.InitializeBannedHosts">
+            <summary>
+            Clears the banned hosts list and initializes it with the latest version.
+            </summary>
+        </member>
+        <member name="T:CrawlWave.Client.NullParser">
+            <summary>
+            NullParser is the default parser that is used when the crawler visits a document of
+            an unsupported content type.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Client.NullParser.#ctor">
+            <summary>
+            The constructor is private so that only the class itself can create an instance.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Client.NullParser.Instance">
+            <summary>
+            Provides a global access point for the single instance of the <see cref="T:CrawlWave.Client.NullParser"/>
+            class.
+            </summary>
+            <returns>A reference to the single instance of <see cref="T:CrawlWave.Client.NullParser"/></returns>
+        </member>
+        <member name="M:CrawlWave.Client.NullParser.ExtractLinks(System.String@,CrawlWave.Common.InternetUrlToCrawl@)">
+            <summary>
+            Extracts links from the contents of a document.
+            </summary>
+            <param name="content">The contents of the document.</param>
+            <param name="contentUrl">The url of the document.</param>
+            <returns>
+            An <see cref="T:System.Collections.ArrayList"/> of <see cref="T:CrawlWave.Common.InternetUrlToIndex"/> objects, one for
+            each link found in the content.
+            </returns>
+            <remarks>
+            This method <b>ALWAYS</b> returns an empty ArrayList.
+            </remarks>
+        </member>
+        <member name="M:CrawlWave.Client.NullParser.ExtractLinks(System.Byte[],CrawlWave.Common.InternetUrlToCrawl@)">
+            <summary>
+            Extracts links from the contents of a document.
+            </summary>
+            <param name="content">The contents of the document.</param>
+            <param name="contentUrl">The url of the document.</param>
+            <returns>
+            An <see cref="T:System.Collections.ArrayList"/> of <see cref="T:CrawlWave.Common.InternetUrlToIndex"/> objects, one for
+            each link found in the content.
+            </returns>
+            <remarks>This method <b>ALWAYS</b> returns an empty ArrayList.</remarks>
+        </member>
+        <member name="M:CrawlWave.Client.NullParser.ExtractText(System.String@)">
+            <summary>
+            Extracts text from the contents of a document.
+            </summary>
+            <param name="content">The contents of the document.</param>
+            <returns>The text extracted from the document.</returns>
+            <remarks>This method <b>ALWAYS</b> returns an empty string.</remarks>
+        </member>
+        <member name="M:CrawlWave.Client.NullParser.ExtractText(System.Byte[])">
+            <summary>
+            Extracts text from the contents of a document.
+            </summary>
+            <param name="content">The contents of the document.</param>
+            <returns>The text extracted from the document.</returns>
+            <remarks>This method <b>ALWAYS</b> returns an empty string.</remarks>
+        </member>
+        <member name="M:CrawlWave.Client.NullParser.ExtractContent(System.String@,System.Boolean)">
+            <summary>
+            Extracts the desired contents of a document.
+            </summary>
+            <param name="content">The contents of the document.</param>
+            <param name="Flag">The parameter is not used in this method.</param>
+            <returns>The contents extracted from the document.</returns>
+            <remarks>This method <b>ALWAYS</b> returns an empty string.</remarks>
+        </member>
+        <member name="M:CrawlWave.Client.NullParser.ExtractContent(System.Byte[],System.Boolean)">
+            <summary>
+            Performs the extraction of content from a document.
+            </summary>
+            <param name="content">
+            The contents of the document from which the content must be extracted.
+            </param>
+            <param name="Flag">The parameter is not used in this method.</param>
+            <returns>A string containing the desired extracted content.</returns>
+            <remarks>This method <b>ALWAYS</b> returns an empty string.</remarks>
+        </member>
+        <member name="M:CrawlWave.Client.NullParser.OnExtractLinksComplete(CrawlWave.Client.ParserEventArgs)">
+            <summary>
+            Raises an ExtractLinksComplete event when the extraction of links is complete
+            </summary>
+            <param name="e">The <see cref="T:CrawlWave.Client.ParserEventArgs"/> related to the event.</param>
+        </member>
+        <member name="M:CrawlWave.Client.NullParser.OnExtractTextComplete(CrawlWave.Client.ParserEventArgs)">
+            <summary>
+            Raises an ExtractTextComplete event when the extraction of text is complete
+            </summary>
+            <param name="e">The <see cref="T:CrawlWave.Client.ParserEventArgs"/> related to the event.</param>
+        </member>
+        <member name="M:CrawlWave.Client.NullParser.OnExtractContentComplete(CrawlWave.Client.ParserEventArgs)">
+            <summary>
+            Raises an ExtractContentComplete event when the extraction of content is complete
+            </summary>
+            <param name="e">The <see cref="T:CrawlWave.Client.ParserEventArgs"/> related to the event.</param>
+        </member>
+        <member name="P:CrawlWave.Client.NullParser.ContentType">
+            <summary>
+            Gets a string indicating the Content Type of the documents supported by the parser.
+            </summary>
+        </member>
+        <member name="E:CrawlWave.Client.NullParser.ExtractLinksComplete">
+            <summary>
+            Occurs when the extraction of links from a document is complete
+            </summary>
+        </member>
+        <member name="E:CrawlWave.Client.NullParser.ExtractTextComplete">
+            <summary>
+            Occurs when the extraction of text from a document is complete
+            </summary>
+        </member>
+        <member name="E:CrawlWave.Client.NullParser.ExtractContentComplete">
+            <summary>
+            Occurs when the extraction of content from a document is complete
+            </summary>
+        </member>
+        <member name="T:CrawlWave.Client.SwfParser">
+            <summary>
+            SwfParser is a Singleton class that performs the link extraction and parsing of
+            the contents of shockwave flash movies and generally documents with content type
+            "application/x-shockwave-flash".
+            </summary>
+            <remarks>
+            The SwfParser class uses a COM library (CrawlWave.Swf2Html) to perform the whole
+            processing of the shockwave flash documents. It first converts the document into
+            a temporary html document and then uses an instance of <see cref="T:CrawlWave.Client.HtmlParser"/>
+            to extract the links or text it contains. It needs to use temporary storage for
+            the intermediate html documents, which are stored in the client's work directory.
+            </remarks>
+        </member>
+        <member name="M:CrawlWave.Client.SwfParser.#ctor">
+            <summary>
+            The constructor is private so that only the class itself can create an instance.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Client.SwfParser.Instance">
+            <summary>
+            Provides a global access point for the single instance of the <see cref="T:CrawlWave.Client.SwfParser"/>
+            class.
+            </summary>
+            <returns>A reference to the single instance of <see cref="T:CrawlWave.Client.SwfParser"/></returns>
+        </member>
+        <member name="M:CrawlWave.Client.SwfParser.ExtractLinks(System.String@,CrawlWave.Common.InternetUrlToCrawl@)">
+            <summary>
+            Extracts links from the contents of a SWF document.
+            </summary>
+            <param name="content">The contents of the SWF document.</param>
+            <param name="contentUrl">The url of the PDF document.</param>
+            <returns>
+            An <see cref="T:System.Collections.ArrayList"/> of <see cref="T:CrawlWave.Common.InternetUrlToIndex"/> objects, one for
+            each link found in the content.
+            </returns>
+            <exception cref="T:System.NotSupportedException">Whenever this method is called.</exception>
+            <remarks>
+            Since a SWF document can not be converted to a string this method <b>ALWAYS</b>
+            throws a <see cref="T:System.NotSupportedException"/>.
+            </remarks>
+        </member>
+        <member name="M:CrawlWave.Client.SwfParser.ExtractLinks(System.Byte[],CrawlWave.Common.InternetUrlToCrawl@)">
+            <summary>
+            Extracts links from the contents of a SWF document.
+            </summary>
+            <param name="content">The contents of the SWF document.</param>
+            <param name="contentUrl">The url of the SWF document.</param>
+            <returns>
+            An <see cref="T:System.Collections.ArrayList"/> of <see cref="T:CrawlWave.Common.InternetUrlToIndex"/> objects, one for
+            each link found in the content.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">If the input buffer is null or empty.</exception>
+        </member>
+        <member name="M:CrawlWave.Client.SwfParser.ExtractText(System.String@)">
+            <summary>
+            Extracts text from the contents of a SWF document.
+            </summary>
+            <param name="content">The contents of the SWF document.</param>
+            <returns>The text extracted from the SWF document.</returns>
+            <exception cref="T:System.NotSupportedException">Whenever this method is called.</exception>
+            <remarks>
+            Since a SWF document can not be converted to a string this method <b>ALWAYS</b>
+            throws a <see cref="T:System.NotSupportedException"/>.
+            </remarks>
+        </member>
+        <member name="M:CrawlWave.Client.SwfParser.ExtractText(System.Byte[])">
+            <summary>
+            Extracts text from the contents of a SWF document.
+            </summary>
+            <param name="content">The contents of the SWF document.</param>
+            <returns>The text extracted from the SWF document.</returns>
+            <exception cref="T:System.ArgumentNullException">If the input buffer is null or empty.</exception>
+            <remarks>
+            </remarks>
+        </member>
+        <member name="M:CrawlWave.Client.SwfParser.ExtractContent(System.String@,System.Boolean)">
+            <summary>
+            Extracts the desired contents of a SWF document.
+            </summary>
+            <param name="content">The contents of the SWF document.</param>
+            <param name="Flag">
+            If set to false it simply returns a string containing the HTML format of the 
+            input. If set to true it returns the text format of the input after performing
+            a white space compaction.
+            </param>
+            <returns>The contents extracted from the SWF document.</returns>
+            <exception cref="T:System.NotSupportedException">Whenever this method is called.</exception>
+        </member>
+        <member name="M:CrawlWave.Client.SwfParser.ExtractContent(System.Byte[],System.Boolean)">
+            <summary>
+            Performs the extraction of content from a SWF document. Depending on the value
+            of the Flag provided it simply returns a string containing the HTML format of 
+            the input or it returns the text format of the input after performing a white
+            space compaction.
+            </summary>
+            <param name="content">
+            The contents of the document from which the content must be extracted.
+            </param>
+            <param name="Flag">Determines what kind of processing will be performed on the
+            input. If set to false it simply returns a string containing the HTML format of 
+            the input. If set to true it returns the text format of the input after performing
+            a white space compaction.
+            </param>
+            <returns>A string containing the desired extracted content.</returns>
+            <exception cref="T:System.ArgumentNullException">If the input buffer is null or empty.</exception>
+        </member>
+        <member name="M:CrawlWave.Client.SwfParser.OnExtractLinksComplete(CrawlWave.Client.ParserEventArgs)">
+            <summary>
+            Raises an ExtractLinksComplete event when the extraction of links is complete
+            </summary>
+            <param name="e">The <see cref="T:CrawlWave.Client.ParserEventArgs"/> related to the event.</param>
+        </member>
+        <member name="M:CrawlWave.Client.SwfParser.OnExtractTextComplete(CrawlWave.Client.ParserEventArgs)">
+            <summary>
+            Raises an ExtractTextComplete event when the extraction of text is complete
+            </summary>
+            <param name="e">The <see cref="T:CrawlWave.Client.ParserEventArgs"/> related to the event.</param>
+        </member>
+        <member name="M:CrawlWave.Client.SwfParser.OnExtractContentComplete(CrawlWave.Client.ParserEventArgs)">
+            <summary>
+            Raises an ExtractContentComplete event when the extraction of content is complete
+            </summary>
+            <param name="e">The <see cref="T:CrawlWave.Client.ParserEventArgs"/> related to the event.</param>
+        </member>
+        <member name="P:CrawlWave.Client.SwfParser.ContentType">
+            <summary>
+            Gets a string indicating the Content Type of the documents supported by the parser.
+            </summary>
+        </member>
+        <member name="E:CrawlWave.Client.SwfParser.ExtractLinksComplete">
+            <summary>
+            Occurs when the extraction of links from a SWF document is complete
+            </summary>
+        </member>
+        <member name="E:CrawlWave.Client.SwfParser.ExtractTextComplete">
+            <summary>
+            Occurs when the extraction of text from a SWF document is complete
+            </summary>
+        </member>
+        <member name="E:CrawlWave.Client.SwfParser.ExtractContentComplete">
+            <summary>
+            Occurs when the extraction of content from a SWF document is complete
+            </summary>
+        </member>
+        <member name="T:CrawlWave.Client.ParserEventArgs">
+            <summary>
+            Encapsulates the data returned by a <see cref="T:CrawlWave.Client.Parser"/> object when a parsing event
+            is raised. The only data that interests us is the Url that was processed.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Client.ParserEventArgs.#ctor(System.String)">
+            <summary>
+            Constructs an instance of the <see cref="T:CrawlWave.Client.ParserEventArgs"/> class.
+            </summary>
+            <param name="Url">The Url related to the event.</param>
+        </member>
+        <member name="P:CrawlWave.Client.ParserEventArgs.Url">
+            <summary>
+            Gets a string containing the Url that is related to the event.
+            </summary>
+        </member>
+        <member name="T:CrawlWave.Client.ParserEventHandler">
+            <summary>
+            Defines the interface of the methods that can act as listeners for events raised by
+            <see cref="T:CrawlWave.Client.Parser"/> objects.
+            </summary>
+        </member>
+        <member name="T:CrawlWave.Client.Controller">
+            <summary>
+            Controller is a remotable object that implements <see cref="T:CrawlWave.Client.Common.ICrawlerController"/>.
+            It is used as an interface to the Crawler and is able to control its operation and
+            retrieve its status. It should be used as a Singleton Remoting Service.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Client.Controller.#ctor">
+            <summary>
+            Creates a new instance of the <see cref="T:CrawlWave.Client.Controller"/> class.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Client.Controller.InitializeLifetimeService">
+            <summary>
+            Initializes the remotable object's LifeTimeService.
+            </summary>
+            <returns>Null, thus causing the object's lifetime never to expire.</returns>
+        </member>
+        <member name="M:CrawlWave.Client.Controller.GetStatistics">
+            <summary>
+            Retrieves the crawler's statistics as an array of longs.
+            </summary>
+            <returns>An array of longs containing the crawler's statistics.</returns>
+        </member>
+        <member name="M:CrawlWave.Client.Controller.GetSettings">
+            <summary>
+            Provides access to the Client's settings.
+            </summary>
+            <returns>A <see cref="T:CrawlWave.Client.Common.ClientSettings"/> object containing the Client's settings.</returns>
+        </member>
+        <member name="M:CrawlWave.Client.Controller.GetUserStatistics(CrawlWave.Common.UserStatistics@)">
+            <summary>
+            Attempts to retrieve the user's statistics from the server.
+            </summary>
+            <param name="stats">The statistics of the user.</param>
+            <returns>Null if the operation succeeds, or a <see cref="T:CrawlWave.Common.SerializedException"/> 
+            encapsulating the error that occured if the operation fails.</returns>
+        </member>
+        <member name="M:CrawlWave.Client.Controller.GetState">
+            <summary>
+            Gets the current state of the Crawler.
+            </summary>
+            <returns>The Crawler's <see cref="T:CrawlWave.Client.Common.CrawlerState"/>.</returns>
+            <remarks>If the crawler has not been initialized yet the method always returns
+            <see cref="F:CrawlWave.Client.Common.CrawlerState.Stopped"/>.</remarks>
+        </member>
+        <member name="M:CrawlWave.Client.Controller.GetMemoryUsage">
+            <summary>
+            Retrieves the amount of (virtual) memory consumed by the application.
+            </summary>
+            <returns>An integer value containing the amount of memory consumed by the
+            application in KB.</returns>
+        </member>
+        <member name="M:CrawlWave.Client.Controller.GetEventQueue">
+            <summary>
+            Provides access to the Client's event log.
+            </summary>
+            <returns>A <see cref="T:System.Collections.Queue"/> containing <see cref="T:CrawlWave.Common.EventLoggerEntry"/> objects,
+            holding the events logged by the Client.</returns>
+        </member>
+        <member name="M:CrawlWave.Client.Controller.SetSettings(CrawlWave.Client.Common.ClientSettings)">
+            <summary>
+            Sets the Client's settings and stores them.
+            </summary>
+            <param name="settings">The new <see cref="T:CrawlWave.Client.Common.ClientSettings"/> to be assigned to the Cleint.</param>
+        </member>
+        <member name="M:CrawlWave.Client.Controller.RegisterUser(System.String,System.String,System.String)">
+            <summary>
+            Attempts to perform the registration of a new user.
+            </summary>
+            <param name="UserName">The user's username.</param>
+            <param name="Password">The user's password.</param>
+            <param name="Email">The user's email address.</param>
+            <returns>Null if the operation succeeds, or a <see cref="T:CrawlWave.Common.SerializedException"/> 
+            encapsulating the error that occured if the operation fails.</returns>
+        </member>
+        <member name="M:CrawlWave.Client.Controller.Start">
+            <summary>
+            Attempts to start the Crawler and enable the logging of events.
+            </summary>
+            <returns>Null if the operation succeeds, or a <see cref="T:CrawlWave.Common.SerializedException"/> 
+            encapsulating the error that occured if the operation fails.</returns>
+        </member>
+        <member name="M:CrawlWave.Client.Controller.Pause">
+            <summary>
+            Attempts to pause the Crawler.
+            </summary>
+            <returns>Null if the operation succeeds, or a <see cref="T:CrawlWave.Common.SerializedException"/> 
+            encapsulating the error that occured if the operation fails.</returns>
+            <exception cref="T:System.InvalidOperationException">Thrown if the Crawler has not yet been initialized.</exception>
+        </member>
+        <member name="M:CrawlWave.Client.Controller.Resume">
+            <summary>
+            Attempts to resume the Crawler if if has been paused.
+            </summary>
+            <returns>Null if the operation succeeds, or a <see cref="T:CrawlWave.Common.SerializedException"/> 
+            encapsulating the error that occured if the operation fails.</returns>
+            <exception cref="T:System.InvalidOperationException">Thrown if the Crawler has not yet been initialized.</exception>
+        </member>
+        <member name="M:CrawlWave.Client.Controller.Stop">
+            <summary>
+            Attempts to stop the Crawler.
+            </summary>
+            <returns>Null if the operation succeeds, or a <see cref="T:CrawlWave.Common.SerializedException"/> 
+            encapsulating the error that occured if the operation fails.</returns>
+            <exception cref="T:System.InvalidOperationException">Thrown if the Crawler has not yet been initialized.</exception>
+        </member>
+        <member name="M:CrawlWave.Client.Controller.Terminate(CrawlWave.Common.SerializedException@)">
+            <summary>
+            Attempts to terminate the application.
+            </summary>
+            <returns>Null if the operation succeeds, or a <see cref="T:CrawlWave.Common.SerializedException"/> 
+            encapsulating the error that occured if the operation fails.</returns>
+        </member>
+        <member name="M:CrawlWave.Client.Controller.AttachObservers">
+            <summary>
+            Attaches the observers needed in order to log the Crawler's events.
+            </summary>
+        </member>
+    </members>
+</doc>

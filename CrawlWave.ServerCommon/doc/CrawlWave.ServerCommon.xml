@@ -1,0 +1,510 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>CrawlWave.ServerCommon</name>
+    </assembly>
+    <members>
+        <member name="T:CrawlWave.ServerCommon.UrlDataProvider">
+            <summary>
+            UrlDataProvider provides access to the urls' data to any class that needs it.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerCommon.UrlDataProvider.#ctor">
+            <summary>
+            The constructor is private so that only the class itself can create an instance.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerCommon.UrlDataProvider.Instance">
+            <summary>
+            Provides a global access point for the single instance of the <see cref="T:CrawlWave.ServerCommon.UrlDataProvider"/>
+            class.
+            </summary>
+            <returns>A reference to the single instance of <see cref="T:CrawlWave.ServerCommon.UrlDataProvider"/>.</returns>
+        </member>
+        <member name="M:CrawlWave.ServerCommon.UrlDataProvider.ProvideUrlData(System.Int32)">
+            <summary>
+            Provides the data of a Url given it's unique ID. It transparently undertakes the
+            decompression of the data stored in the database for the given Url.
+            </summary>
+            <param name="urlID">The ID of the Url</param>
+            <returns>The Url's data as a string, or an empty string if the operation fails.</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown if a negative value is given for Url ID.</exception>
+            <exception cref="T:CrawlWave.Common.CWException">If the given Url's data cannot be found in the database.</exception>
+        </member>
+        <member name="M:CrawlWave.ServerCommon.UrlDataProvider.ConnectToDatabase">
+            <summary>
+            Creates the connection to the database if necessary and opens it.
+            </summary>
+            <returns>True if the operation is successful, false otherwise.</returns>
+        </member>
+        <member name="M:CrawlWave.ServerCommon.UrlDataProvider.DisconnectFromDatabase">
+            <summary>
+            Disconeects the CrawlWave Server from the system's database.
+            </summary>
+            <returns>True if the operation is successful, false otherwise.</returns>
+        </member>
+        <member name="P:CrawlWave.ServerCommon.UrlDataProvider.DBConnectionString">
+            <summary>
+            Sets the Database Connection String that will be used by the class, in case the
+            one provided by <see cref="T:CrawlWave.ServerCommon.DBConnectionStringProvider"/> can or must not be used.
+            </summary>
+        </member>
+        <member name="T:CrawlWave.ServerCommon.RobotsCache">
+            <summary>
+            RobotsCache is a Singleton class that holds a cache of the robots.txt files for all
+            hosts. This way it allows easy access to the list of robots files to all the plugins
+            that need it. It provides methods to add and remove entries to the cache, as well as
+            events for easy client notification.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerCommon.RobotsCache.#ctor">
+            <summary>
+            The constructor is private so that only the class itself can create an instance.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerCommon.RobotsCache.Instance">
+            <summary>
+            Provides a global access point for the single instance of the <see cref="T:CrawlWave.ServerCommon.RobotsCache"/>
+            class.
+            </summary>
+            <returns>A reference to the single instance of <see cref="T:CrawlWave.ServerCommon.RobotsCache"/>.</returns>
+        </member>
+        <member name="M:CrawlWave.ServerCommon.RobotsCache.AddEntry(System.String,CrawlWave.Common.RobotsTxtEntry)">
+            <summary>
+            Adds a new robots entry to the cache
+            </summary>
+            <param name="hostName">A string containing the hostname to add to the cache.</param>
+            <param name="entry">The <see cref="T:CrawlWave.Common.RobotsTxtEntry"/> related to the host.</param>
+        </member>
+        <member name="M:CrawlWave.ServerCommon.RobotsCache.AddEntry(System.Byte[],CrawlWave.Common.RobotsTxtEntry)">
+            <summary>
+            Adds a new robots entry to the cache
+            </summary>
+            <param name="hostNameMD5">The md5 of the hostname to add to the cache.</param>
+            <param name="entry">The <see cref="T:CrawlWave.Common.RobotsTxtEntry"/> related to the host.</param>
+        </member>
+        <member name="M:CrawlWave.ServerCommon.RobotsCache.RemoveEntry(System.String)">
+            <summary>
+            Removes a robots entry from the cache.
+            </summary>
+            <param name="hostName">A string containing the hostname to remove from the cache.</param>
+        </member>
+        <member name="M:CrawlWave.ServerCommon.RobotsCache.RemoveEntry(System.Byte[])">
+            <summary>
+            Removes a robots entry from the cache.
+            </summary>
+            <param name="hostNameMD5">The md5 of the hostname to remove from the cache.</param>
+        </member>
+        <member name="M:CrawlWave.ServerCommon.RobotsCache.GetEntry(System.Byte[])">
+            <summary>
+            Works the same way as the indexer but if the requested entry is not found in the
+            cache then it is requested from the database again before returning null.
+            </summary>
+            <param name="hostID">The ID of the host (md5 hash of the hostname).</param>
+        </member>
+        <member name="M:CrawlWave.ServerCommon.RobotsCache.GetEntry(System.String)">
+            <summary>
+            Works the same way as the indexer but if the requested entry is not found in the
+            cache then it is requested from the database again before returning null.
+            </summary>
+            <param name="hostName">The  host name.</param>
+        </member>
+        <member name="M:CrawlWave.ServerCommon.RobotsCache.LoadCache">
+            <summary>
+            Loads the cache with the banned host entries stored in the database.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerCommon.RobotsCache.ConcatenatePaths(System.String[])">
+            <summary>
+            Concatenates an array of strings each containing a disallowed path into a string
+            separated by spaces.
+            </summary>
+            <param name="paths">An array of strings each containing a disallowed path.</param>
+            <returns>A string containing all the paths concatenated and separated by spaces.</returns>
+        </member>
+        <member name="M:CrawlWave.ServerCommon.RobotsCache.SplitPaths(System.String)">
+            <summary>
+            Does the exact opposite from what <see cref="M:CrawlWave.ServerCommon.RobotsCache.ConcatenatePaths(System.String[])"/> does.
+            </summary>
+            <param name="paths">A string containing disallowed paths separated by spaces</param>
+            <returns>An array of strings, each containing one disallowed path.</returns>
+        </member>
+        <member name="M:CrawlWave.ServerCommon.RobotsCache.OnCacheUpdated(System.EventArgs)">
+            <summary>
+            Raises the <see cref="E:CrawlWave.ServerCommon.RobotsCache.CacheUpdated"/> event.
+            </summary>
+            <param name="e">The <see cref="T:System.EventArgs"/> related to the event.</param>
+        </member>
+        <member name="E:CrawlWave.ServerCommon.RobotsCache.CacheUpdated">
+            <summary>
+            Occurs when new entries about robots.txt files are added to the cache.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.ServerCommon.RobotsCache.DBConnectionString">
+            <summary>
+            Sets the Database Connection string to be used in case the default Connection
+            String provided by DBConnectionStringProvider can or must not be used.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.ServerCommon.RobotsCache.Item(System.String)">
+            <summary>
+            Indexer property
+            </summary>
+        </member>
+        <member name="P:CrawlWave.ServerCommon.RobotsCache.Item(System.Byte[])">
+            <summary>
+            Indexer property
+            </summary>
+        </member>
+        <member name="T:CrawlWave.ServerCommon.GlobalSettingsProvider">
+            <summary>
+            GlobalSettingsProvider is a Singleton class that acts as a repository of Global settings.
+            All the server-side applications or components can use it in order to obtain the
+            system-wide settings, defined during system installation or by using ServerManager.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerCommon.GlobalSettingsProvider.#ctor">
+            <summary>
+            The constructor is private so that only the class itself can create an instance.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerCommon.GlobalSettingsProvider.Instance">
+            <summary>
+            Provides a global access point for the single instance of the <see cref="T:CrawlWave.ServerCommon.GlobalSettingsProvider"/>
+            class.
+            </summary>
+            <returns>A reference to the single instance of <see cref="T:CrawlWave.ServerCommon.GlobalSettingsProvider"/>.</returns>
+        </member>
+        <member name="P:CrawlWave.ServerCommon.GlobalSettingsProvider.MaxDBSize">
+            <summary>
+            Gets the maximum size of the database as defined during installation.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.ServerCommon.GlobalSettingsProvider.DataFilesPath">
+            <summary>
+            Gets the path of the folder where the url crawl data files are stored.
+            </summary>
+        </member>
+        <member name="T:CrawlWave.ServerCommon.Settings">
+            <summary>
+            Settings is a Singleton class that holds all the settings and provides a global 
+            point of access to them.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerCommon.Settings.#ctor">
+            <summary>
+            The constructor is private so that only the class itself can create an instance.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerCommon.Settings.Instance">
+            <summary>
+            Provides a global access point for the single instance of the <see cref="T:CrawlWave.ServerCommon.Settings"/>
+            class.
+            </summary>
+            <returns>A reference to the single instance of <see cref="T:CrawlWave.ServerCommon.Settings"/>.</returns>
+        </member>
+        <member name="M:CrawlWave.ServerCommon.Settings.GetPath">
+            <summary>
+            Determines the library's path.
+            </summary>
+            <returns>The library's path, including the trailing slashes</returns>
+        </member>
+        <member name="M:CrawlWave.ServerCommon.Settings.LoadSettings">
+            <summary>
+            Loads the settings of the plugin from the configuration file.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerCommon.Settings.SaveSettings">
+            <summary>
+            Saves the plugin's settings in a new xml file on disk
+            </summary>
+        </member>
+        <member name="P:CrawlWave.ServerCommon.Settings.SQLServer">
+            <summary>
+            Gets the SQL server used for the system's data repository.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.ServerCommon.Settings.SQLLogin">
+            <summary>
+            Gets the login of the system's database
+            </summary>
+        </member>
+        <member name="P:CrawlWave.ServerCommon.Settings.SQLPass">
+            <summary>
+            Gets the password of the system's database
+            </summary>
+        </member>
+        <member name="P:CrawlWave.ServerCommon.Settings.DataFilesPath">
+            <summary>
+            Gets the path where the temporary data files are stored.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.ServerCommon.Settings.MaxDBSize">
+            <summary>
+            Gets the maximum allowed database size.
+            </summary>
+        </member>
+        <member name="T:CrawlWave.ServerCommon.SCSettings">
+            <summary>
+            SCSettings provides a collection of all the settings required for the library's
+            operation. They allow the settings defined by the user or system to be stored in
+            persistent form (in an XML file on disk) using serialization.
+            </summary>
+        </member>
+        <member name="F:CrawlWave.ServerCommon.SCSettings.SQLServer">
+            <summary>
+            The SQL Server used for the system's data repository.
+            </summary>
+        </member>
+        <member name="F:CrawlWave.ServerCommon.SCSettings.SQLLogin">
+            <summary>
+            The login of the system's database.
+            </summary>
+        </member>
+        <member name="F:CrawlWave.ServerCommon.SCSettings.SQLPass">
+            <summary>
+            The password of the system's database
+            </summary>
+        </member>
+        <member name="F:CrawlWave.ServerCommon.SCSettings.DataFilesPath">
+            <summary>
+            The path where the temporary data files will be stored.
+            </summary>
+        </member>
+        <member name="F:CrawlWave.ServerCommon.SCSettings.MaxDBSize">
+            <summary>
+            An integer value indicating the maximum allowed size of the database.
+            </summary>
+        </member>
+        <member name="T:CrawlWave.ServerCommon.DBConnectionStringProvider">
+            <summary>
+            DBConnectionStringProvider is a Singleton class that implements a Connection String
+            Provider. Any Server-side component or application can use this class to obtain a
+            Connection String that will allow it to access the system's database.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerCommon.DBConnectionStringProvider.#ctor">
+            <summary>
+            The constructor is private so that only the class itself can create an instance.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerCommon.DBConnectionStringProvider.Instance">
+            <summary>
+            Provides a global access point for the single instance of the <see cref="T:CrawlWave.ServerCommon.DBConnectionStringProvider"/>
+            class.
+            </summary>
+            <returns>A reference to the single instance of <see cref="T:CrawlWave.ServerCommon.DBConnectionStringProvider"/>.</returns>
+        </member>
+        <member name="M:CrawlWave.ServerCommon.DBConnectionStringProvider.ProvideDBConnectionString(System.String)">
+            <summary>
+            Provides a Connection String to all the server applications that need access to
+            the system's database.
+            </summary>
+            <param name="appName">
+            The name of the application that needs access to the system's database.
+            </param>
+            <returns>The Connection String that the calling application can use.</returns>
+        </member>
+        <member name="M:CrawlWave.ServerCommon.DBConnectionStringProvider.LoadSettings">
+            <summary>
+            Creates the connection string.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerCommon.ICrawlWaveServer.IsAlive">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CrawlWave.ServerCommon.ICrawlWaveServer.GetClientComputerInfo(CrawlWave.Common.ClientInfo,CrawlWave.Common.CWComputerInfo)">
+            <summary>
+            Updates the computer hardware info related to a client.
+            </summary>
+            <param name="ci">The <see cref="T:CrawlWave.Common.ClientInfo"/> of the client.</param>
+            <param name="info">The <see cref="T:CrawlWave.Common.CWComputerInfo"/> of the client computer.</param>
+            <returns>Null if the operation succeeds, or <see cref="T:CrawlWave.Common.SerializedException"/> 
+            encapsulating the error that occured if the operation fails.</returns>
+        </member>
+        <member name="M:CrawlWave.ServerCommon.ICrawlWaveServer.GetCrawlResults(CrawlWave.Common.ClientInfo,CrawlWave.Common.UrlCrawlData[])">
+            <summary>
+            Stores the results that the clients return after crawling a set of Urls.
+            </summary>
+            <param name="ci">The <see cref="T:CrawlWave.Common.ClientInfo"/> of the client returning the data.</param>
+            <param name="data">An array of <see cref="T:CrawlWave.Common.UrlCrawlData"/> objects containing the data of the crawled urls.</param>
+            <returns>Null if the operation succeeds, or <see cref="T:CrawlWave.Common.SerializedException"/> 
+            encapsulating the error that occured if the operation fails.</returns>
+            <remarks>
+            This method does not actually update the database with the data of the crawled
+            urls, since that is a very time-consuming process and the timeouts that occur
+            would slow down the clients. Also this might lead to 'losing' urls because the
+            database server will have to deal with great load if a big number of clients is
+            returning data all the time. To avoid these problems the server simply updates
+            the database with the fresh robots.txt files fetched by the clients and stores
+            the data in a compressed zip file on disk. This allows their processing and the
+            update of the database with the data of the urls and the links they contain to
+            be performed at a later time by another process (the DBUpdater plugin).
+            </remarks>
+        </member>
+        <member name="M:CrawlWave.ServerCommon.ICrawlWaveServer.RegisterClient(CrawlWave.Common.ClientInfo@,CrawlWave.Common.CWComputerInfo)">
+            <summary>
+            Performs the registration of a new client for a registered user of the system.
+            </summary>
+            <param name="ci">The <see cref="T:CrawlWave.Common.ClientInfo"/> containing the information of the
+            client that wishes to be registered to the system.</param>
+            <param name="info">The <see cref="T:CrawlWave.Common.CWComputerInfo"/> containing information about
+            the hardware of the computer running the client.</param>
+            <returns>Null if the operation succeeds, or <see cref="T:CrawlWave.Common.SerializedException"/> 
+            encapsulating the error that occured if the operation fails.</returns>
+            <remarks>
+            The ClientInfo argument is passed by reference. After the registration process
+            is complete the argument will be updated with the ID that has been assigned to
+            the new client.
+            </remarks>
+        </member>
+        <member name="M:CrawlWave.ServerCommon.ICrawlWaveServer.RegisterUser(System.Int32@,System.String,System.Byte[],System.String)">
+            <summary>
+            Performs the registration of a new user to the system.
+            </summary>
+            <param name="ID">The ID that will be assigned to the new user, passed by reference.</param>
+            <param name="username">The username requested from the new user.</param>
+            <param name="password">The hash of the new user's password.</param>
+            <param name="email">The user's email address.</param>
+            <returns>Null if the operation succeeds, or <see cref="T:CrawlWave.Common.SerializedException"/> 
+            encapsulating the error that occured if the operation fails.</returns>
+        </member>
+        <member name="M:CrawlWave.ServerCommon.ICrawlWaveServer.SendBannedHosts(CrawlWave.Common.ClientInfo,System.Data.DataSet@)">
+            <summary>
+            Selects and returns a list of all the banned hosts.
+            </summary>
+            <param name="ci">The <see cref="T:CrawlWave.Common.ClientInfo"/> of the client performing the call.</param>
+            <param name="data">A <see cref="T:System.Data.DataSet"/> that will contain the list of banned hosts.</param>
+            <returns>Null if the operation succeeds, or <see cref="T:CrawlWave.Common.SerializedException"/> 
+            encapsulating the error that occured if the operation fails.</returns>
+        </member>
+        <member name="M:CrawlWave.ServerCommon.ICrawlWaveServer.SendLatestVersion(CrawlWave.Common.ClientInfo,System.String@)">
+            <summary>
+            Selects and returns the latest version of the client updates available.
+            </summary>
+            <param name="ci">The <see cref="T:CrawlWave.Common.ClientInfo"/> of the client performing the call.</param>
+            <param name="version">The latest version update available.</param>
+            <returns>Null if the operation succeeds, or <see cref="T:CrawlWave.Common.SerializedException"/> 
+            encapsulating the error that occured if the operation fails.</returns>
+        </member>
+        <member name="M:CrawlWave.ServerCommon.ICrawlWaveServer.SendServers(CrawlWave.Common.ClientInfo,System.Data.DataSet@)">
+            <summary>
+            Selects and returns a list of all the servers available.
+            </summary>
+            <param name="ci">The <see cref="T:CrawlWave.Common.ClientInfo"/> of the client performing the call.</param>
+            <param name="data">A <see cref="T:System.Data.DataSet"/> that will contain the list of servers.</param>
+            <returns>Null if the operation succeeds, or <see cref="T:CrawlWave.Common.SerializedException"/> 
+            encapsulating the error that occured if the operation fails.</returns>
+        </member>
+        <member name="M:CrawlWave.ServerCommon.ICrawlWaveServer.SendUpdatedVersion(CrawlWave.Common.ClientInfo,System.String,System.Byte[]@)">
+            <summary>
+            Selects and returns the requested client update version.
+            </summary>
+            <param name="ci">The <see cref="T:CrawlWave.Common.ClientInfo"/> of the client performing the call.</param>
+            <param name="version">The requested version.</param>
+            <param name="data">A <see cref="T:System.Data.DataSet"/> that will contain the list of servers.</param>
+            <returns>Null if the operation succeeds, or <see cref="T:CrawlWave.Common.SerializedException"/> 
+            encapsulating the error that occured if the operation fails.</returns>
+        </member>
+        <member name="M:CrawlWave.ServerCommon.ICrawlWaveServer.SendUrlsToCrawl(CrawlWave.Common.ClientInfo,CrawlWave.Common.InternetUrlToCrawl[]@)">
+            <summary>
+            Selects and returns a set of urls that are ready to be crawled.
+            </summary>
+            <param name="ci">The <see cref="T:CrawlWave.Common.ClientInfo"/> of the client requesting urls to crawl.</param>
+            <param name="data">An array of <see cref="T:CrawlWave.Common.InternetUrlToCrawl"/> objects containing the selected urls.</param>
+            <returns>Null if the operation succeeds, or <see cref="T:CrawlWave.Common.SerializedException"/> 
+            encapsulating the error that occured if the operation fails.</returns>
+        </member>
+        <member name="M:CrawlWave.ServerCommon.ICrawlWaveServer.SendUserStatistics(CrawlWave.Common.ClientInfo,CrawlWave.Common.UserStatistics@)">
+            <summary>
+            Selects and returns the statistics for a certain user.
+            </summary>
+            <param name="ci">The <see cref="T:CrawlWave.Common.ClientInfo"/> of the client requesting the statistics.</param>
+            <param name="stats">The <see cref="T:CrawlWave.Common.UserStatistics"/> of the user.</param>
+            <returns>Null if the operation succeeds, or <see cref="T:CrawlWave.Common.SerializedException"/> 
+            encapsulating the error that occured if the operation fails.</returns>
+        </member>
+        <member name="T:CrawlWave.ServerCommon.BannedHostsCache">
+            <summary>
+            BannedHostsCache is a Singleton class that holds a cache of the banned hosts. This
+            way it allows easy access to the list of banned hosts to all the plugins that need
+            it. It provides methods to add and remove entries to the cache, as well as events
+            for easy client notification.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerCommon.BannedHostsCache.#ctor">
+            <summary>
+            The constructor is private so that only the class itself can create an instance.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerCommon.BannedHostsCache.Instance">
+            <summary>
+            Provides a global access point for the single instance of the <see cref="T:CrawlWave.ServerCommon.BannedHostsCache"/>
+            class.
+            </summary>
+            <returns>A reference to the single instance of <see cref="T:CrawlWave.ServerCommon.BannedHostsCache"/>.</returns>
+        </member>
+        <member name="M:CrawlWave.ServerCommon.BannedHostsCache.AddEntry(System.String)">
+            <summary>
+            Adds a new banned host to the cache
+            </summary>
+            <param name="hostName">A string containing the hostname to add to the cache.</param>
+        </member>
+        <member name="M:CrawlWave.ServerCommon.BannedHostsCache.AddEntry(System.Byte[])">
+            <summary>
+            Adds a new banned host to the cache
+            </summary>
+            <param name="hostNameMD5">The md5 of the hostname to add to the cache.</param>
+        </member>
+        <member name="M:CrawlWave.ServerCommon.BannedHostsCache.RemoveEntry(System.String)">
+            <summary>
+            Removes a banned host from the cache.
+            </summary>
+            <param name="hostName">A string containing the hostname to remove from the cache.</param>
+        </member>
+        <member name="M:CrawlWave.ServerCommon.BannedHostsCache.RemoveEntry(System.Byte[])">
+            <summary>
+            Removes a banned host from the cache.
+            </summary>
+            <param name="hostNameMD5">The md5 of the hostname to remove from the cache.</param>
+        </member>
+        <member name="M:CrawlWave.ServerCommon.BannedHostsCache.IsBanned(System.String)">
+            <summary>
+            Checks if a host is banned.
+            </summary>
+            <param name="hostName">The hostname to check.</param>
+            <returns>True if the host is banned, false otherwise.</returns>
+        </member>
+        <member name="M:CrawlWave.ServerCommon.BannedHostsCache.IsBanned(System.Byte[])">
+            <summary>
+            Checks if a host is banned.
+            </summary>
+            <param name="hostNameMD5">The md5 of the name of the host to check.</param>
+            <returns>True if the host is banned, false otherwise.</returns>
+        </member>
+        <member name="M:CrawlWave.ServerCommon.BannedHostsCache.RefreshCache">
+            <summary>
+            Attempts to refresh the banned hosts cache.
+            </summary>
+        </member>
+        <member name="M:CrawlWave.ServerCommon.BannedHostsCache.OnCacheUpdated(System.EventArgs)">
+            <summary>
+            Raises the <see cref="E:CrawlWave.ServerCommon.BannedHostsCache.CacheUpdated"/> event.
+            </summary>
+            <param name="e">The <see cref="T:System.EventArgs"/> related to the event.</param>
+        </member>
+        <member name="M:CrawlWave.ServerCommon.BannedHostsCache.LoadCache">
+            <summary>
+            Loads the cache with the banned host entries stored in the database.
+            </summary>
+        </member>
+        <member name="E:CrawlWave.ServerCommon.BannedHostsCache.CacheUpdated">
+            <summary>
+            Occurs when the <see cref="T:CrawlWave.ServerCommon.BannedHostsCache"/> is updated (entries are added or removed).
+            </summary>
+        </member>
+    </members>
+</doc>

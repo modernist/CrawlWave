@@ -1,0 +1,51 @@
+<project SchemaVersion="1.3">
+    <assemblies>
+        <assembly location="C:\Documents and Settings\mod\My Documents\Visual Studio Projects\CrawlWave\CrawlWave.Common\bin\Debug\CrawlWave.Common.dll" documentation="C:\Documents and Settings\mod\My Documents\Visual Studio Projects\CrawlWave\CrawlWave.Common\doc\CrawlWave.Common.xml" />
+        <assembly location="C:\Documents and Settings\mod\My Documents\Visual Studio Projects\CrawlWave\CrawlWave.Client\bin\Debug\CrawlWave.Client.exe" documentation="C:\Documents and Settings\mod\My Documents\Visual Studio Projects\CrawlWave\CrawlWave.Client\doc\CrawlWave.Client.xml" />
+        <assembly location="C:\Documents and Settings\mod\My Documents\Visual Studio Projects\CrawlWave\CrawlWave.Common.UI\bin\Debug\CrawlWave.Common.UI.dll" documentation="C:\Documents and Settings\mod\My Documents\Visual Studio Projects\CrawlWave\CrawlWave.Common.UI\doc\CrawlWave.Common.UI.xml" />
+        <assembly location="C:\Documents and Settings\mod\My Documents\Visual Studio Projects\CrawlWave\CrawlWave.Common.WSCFilter\bin\Debug\CrawlWave.Common.WSCFilter.dll" documentation="C:\Documents and Settings\mod\My Documents\Visual Studio Projects\CrawlWave\CrawlWave.Common.WSCFilter\doc\CrawlWave.Common.WSCFilter.xml" />
+        <assembly location="C:\Documents and Settings\mod\My Documents\Visual Studio Projects\CrawlWave\CrawlWave.Server\bin\CrawlWave.Server.dll" documentation="C:\Documents and Settings\mod\My Documents\Visual Studio Projects\CrawlWave\CrawlWave.Server\doc\CrawlWave.Server.xml" />
+        <assembly location="C:\Documents and Settings\mod\My Documents\Visual Studio Projects\CrawlWave\CrawlWave.ServerCommon\bin\Debug\CrawlWave.ServerCommon.dll" documentation="C:\Documents and Settings\mod\My Documents\Visual Studio Projects\CrawlWave\CrawlWave.ServerCommon\doc\CrawlWave.ServerCommon.xml" />
+        <assembly location="C:\Documents and Settings\mod\My Documents\Visual Studio Projects\CrawlWave\CrawlWave.ServerPlugins.UrlSelection\bin\Debug\CrawlWave.ServerPlugins.UrlSelection.dll" documentation="C:\Documents and Settings\mod\My Documents\Visual Studio Projects\CrawlWave\CrawlWave.ServerPlugins.UrlSelection\doc\CrawlWave.ServerPlugins.UrlSelection.xml" />
+        <assembly location="C:\Documents and Settings\mod\My Documents\Visual Studio Projects\CrawlWave\CrawlWave.ServerPlugins.WordExtraction\bin\Debug\CrawlWave.ServerPlugins.WordExtraction.dll" documentation="C:\Documents and Settings\mod\My Documents\Visual Studio Projects\CrawlWave\CrawlWave.ServerPlugins.WordExtraction\doc\CrawlWave.ServerPlugins.WordExtraction.xml" />
+        <assembly location="C:\Documents and Settings\mod\My Documents\Visual Studio Projects\CrawlWave\CrawlWave.ServerPlugins.Initializer\bin\Debug\CrawlWave.ServerPlugins.Initializer.dll" documentation="C:\Documents and Settings\mod\My Documents\Visual Studio Projects\CrawlWave\CrawlWave.ServerPlugins.Initializer\doc\CrawlWave.ServerPlugins.Initializer.xml" />
+        <assembly location="C:\Documents and Settings\mod\My Documents\Visual Studio Projects\CrawlWave\CrawlWave.ServerPlugins.DBUpdater\bin\Debug\CrawlWave.ServerPlugins.DBUpdater.dll" documentation="C:\Documents and Settings\mod\My Documents\Visual Studio Projects\CrawlWave\CrawlWave.ServerPlugins.DBUpdater\doc\CrawlWave.ServerPlugins.DBUpdater.xml" />
+        <assembly location="C:\Documents and Settings\mod\My Documents\Visual Studio Projects\CrawlWave\CrawlWave.ServerWorker\bin\Debug\CrawlWave.ServerWorker.exe" documentation="C:\Documents and Settings\mod\My Documents\Visual Studio Projects\CrawlWave\CrawlWave.ServerWorker\doc\CrawlWave.ServerWorker.xml" />
+        <assembly location="C:\Documents and Settings\mod\My Documents\Visual Studio Projects\CrawlWave\CrawlWave.ServerManager\bin\Debug\CrawlWave.ServerManager.exe" documentation="C:\Documents and Settings\mod\My Documents\Visual Studio Projects\CrawlWave\CrawlWave.ServerManager\doc\CrawlWave.ServerManager.xml" />
+        <assembly location="..\CrawlWave.Client.Common\bin\Debug\CrawlWave.Client.Common.dll" documentation="..\CrawlWave.Client.Common\doc\CrawlWave.Client.Common.xml" />
+        <assembly location="..\CrawlWave.Client.UI\bin\Debug\CrawlWave.Client.UI.exe" documentation="..\CrawlWave.Client.UI\doc\CrawlWave.Client.UI.xml" />
+        <assembly location="..\CrawlWave.ServerInstaller\bin\Debug\CrawlWave.ServerInstaller.exe" documentation="..\CrawlWave.ServerInstaller\doc\CrawlWave.ServerInstaller.xml" />
+        <assembly location="..\CrawlWave.ServerPlugins.WordCleanup\bin\Debug\CrawlWave.ServerPlugins.WordCleanup.dll" documentation="..\CrawlWave.ServerPlugins.WordCleanup\doc\CrawlWave.ServerPlugins.WordCleanup.xml" />
+    </assemblies>
+    <documenters>
+        <documenter name="JavaDoc">
+            <property name="OutputDirectory" value=".\doc\" />
+        </documenter>
+        <documenter name="LaTeX">
+            <property name="OutputDirectory" value=".\doc\" />
+            <property name="TextFileFullName" value="Documentation.tex" />
+            <property name="TexFileBaseName" value="Documentation" />
+            <property name="LatexCompiler" value="latex" />
+            <property name="TexFileFullPath" value=".\doc\Documentation.tex" />
+        </documenter>
+        <documenter name="LinearHtml">
+            <property name="OutputDirectory" value=".\doc\" />
+            <property name="Title" value="An NDoc Documented Class Library" />
+        </documenter>
+        <documenter name="MSDN">
+            <property name="OutputDirectory" value=".\doc\" />
+            <property name="HtmlHelpName" value="CrawlWave" />
+            <property name="Title" value="CrawlWave Distributed Crawler Project" />
+            <property name="CopyrightText" value="© Kostas Stroggylos, MScIS 2003-2004" />
+            <property name="FeedbackEmailAddress" value="kostas@circular.gr" />
+        </documenter>
+        <documenter name="VS.NET 2003">
+            <property name="OutputDirectory" value=".\doc\" />
+            <property name="HtmlHelpName" value="Documentation" />
+            <property name="Title" value="An NDoc documented library" />
+        </documenter>
+        <documenter name="XML">
+            <property name="OutputFile" value=".\doc\doc.xml" />
+        </documenter>
+    </documenters>
+</project>
