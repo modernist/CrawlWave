@@ -9,7 +9,7 @@ namespace CrawlWave.Common
 	public enum BackoffSpeed
 	{
 		/// <summary>
-		/// Does not rise at all, causes <see cref="ExponentialBackoff.Next"/> to return
+		/// Does not rise at all, causes <see cref="Backoff.Next"/> to return
 		/// a constant delay of 30 seconds, not dependent on the number of calls.
 		/// </summary>
 		Constant,
@@ -32,15 +32,15 @@ namespace CrawlWave.Common
 	}
 
 	/// <summary>
-	/// ExponentialBackoff provides easy access to Exponential Backoff functions. It is
-	/// used whenever there is need for a method that provides delay intervals (in msec)
+	/// Backoff provides easy access to Backoff functions. It is
+	/// used whenever there is need for a method that provides delay intervals
 	/// based on the number of calls (that correspond to the number of failed attempts).
 	/// Written:10/07/2003
 	/// Updated:24/08/2004 -&gt; Changed variable names, added comments, general revision.
 	///			15/11/2004 -&gt; Added support for declining function.
 	///			17/01/2005 -&gt; Added MaximumDelay Property and constructor parameter checking.
 	/// </summary>
-	public class ExponentialBackoff
+	public class Backoff
 	{
 		#region Private variables
 
@@ -53,10 +53,10 @@ namespace CrawlWave.Common
 		#region Public Constructors
 
 		/// <summary>
-		/// Default contructor for an ExponentialBackoff object. It sets the <see cref="BackoffSpeed"/>
+		/// Default contructor for a Backoff object. It sets the <see cref="BackoffSpeed"/>
 		/// to Linear and the Maximum Delay to 10 minutes.
 		/// </summary>
-		public ExponentialBackoff()
+		public Backoff()
 		{
 			attempts=0;
 			maxDelay=600000;
@@ -64,10 +64,10 @@ namespace CrawlWave.Common
 		}
 
 		/// <summary>
-		/// Contructor for an ExponentialBackoff object, sets the Maximum Delay to 10 min.
+		/// Contructor for a Backoff object, sets the Maximum Delay to 10 min.
 		/// </summary>
 		/// <param name="Speed">The <see cref="BackoffSpeed"/> that will be used for this instance</param>
-		public ExponentialBackoff(BackoffSpeed Speed)
+		public Backoff(BackoffSpeed Speed)
 		{
 			attempts=0;
 			maxDelay=600000;
@@ -75,10 +75,10 @@ namespace CrawlWave.Common
 		}
 
 		/// <summary>
-		/// Contructor for an ExponentialBackoff object, sets the <see cref="BackoffSpeed"/> to Linear.
+		/// Contructor for a Backoff object, sets the <see cref="BackoffSpeed"/> to Linear.
 		/// </summary>
 		/// <param name="MaxDelay">The maximum delay that must be returned by the <see cref="Next"/> method, in milliseconds.</param>
-		public ExponentialBackoff(int MaxDelay)
+		public Backoff(int MaxDelay)
 		{
 			if(MaxDelay <= 0)
 			{
@@ -90,11 +90,11 @@ namespace CrawlWave.Common
 		}
 
 		/// <summary>
-		/// Contructor for an ExponentialBackoff object.
+		/// Contructor for a Backoff object.
 		/// </summary>
 		/// <param name="Speed">The <see cref="BackoffSpeed"/> that will be used for this instance</param>
 		/// <param name="MaxDelay">The maximum delay in milliseconds</param>
-		public ExponentialBackoff(BackoffSpeed Speed, int MaxDelay)
+		public Backoff(BackoffSpeed Speed, int MaxDelay)
 		{
 			if(MaxDelay <= 0)
 			{
@@ -152,8 +152,8 @@ namespace CrawlWave.Common
 			catch
 			{
 				//an exception has occured durnig the calculation of the interval.
-				//return the maximum delay time.
-				retVal=maxDelay;
+				//return the default delay time.
+				retVal=Backoff.DefaultBackoff;
 			}
 			return retVal;
 		}
@@ -162,7 +162,7 @@ namespace CrawlWave.Common
 		/// Resets the delay interval
 		/// </summary>
 		/// <remarks>
-		/// Reset() can be used whenever there is need to re-initialize the ExponentialBackOff
+		/// Reset() can be used whenever there is need to re-initialize the BackOff
 		/// object, that will start producing intervals as if it were just created.
 		/// </remarks>
 		public void Reset()
@@ -175,7 +175,7 @@ namespace CrawlWave.Common
 		#region Public Properties
 
 		/// <summary>
-		/// Gets or sets the <see cref="ExponentialBackoff"/> object's <see cref="BackoffSpeed"/>.
+		/// Gets or sets the <see cref="Backoff"/> object's <see cref="BackoffSpeed"/>.
 		/// </summary>
 		public BackoffSpeed Speed
 		{
@@ -184,7 +184,7 @@ namespace CrawlWave.Common
 		}
 
 		/// <summary>
-		/// Gets or sets the <see cref="ExponentialBackoff"/> object's Maximum delay in millisecods.
+		/// Gets or sets the <see cref="Backoff"/> object's Maximum delay in millisecods.
 		/// </summary>
 		public int MaximumDelay
 		{

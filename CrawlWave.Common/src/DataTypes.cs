@@ -519,7 +519,7 @@ namespace CrawlWave.Common
 		public HostRequestFilterEntry()
 		{
 			//by default we must not visit a host every 30 seconds
-			ExpirationDate = DateTime.Now.AddMilliseconds(ExponentialBackoff.DefaultBackoff);
+			ExpirationDate = DateTime.Now.AddMilliseconds(Backoff.DefaultBackoff);
 			Count = 1;
 		}
 	}

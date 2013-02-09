@@ -36,7 +36,7 @@ namespace CrawlWave.Scheduler
 		private ICrawlWaveServer proxy;
 		private System.Timers.Timer tmrStart;
 		private AlarmTimer startTimer;
-		private ExponentialBackoff updateBackoff;
+		private Backoff updateBackoff;
 		private bool updating;
 
 
@@ -66,7 +66,7 @@ namespace CrawlWave.Scheduler
 			startTimer.Enabled = true;
 			startTimer.OnAlarmBell += new EventHandler(startTimer_OnAlarmBell);
 			startTimer.Start();
-			updateBackoff = new ExponentialBackoff(BackoffSpeed.Linear);
+			updateBackoff = new Backoff(BackoffSpeed.Linear);
 			updating = false;
 		}
 
@@ -236,7 +236,7 @@ namespace CrawlWave.Scheduler
 		{
 			while(updating)
 			{
-				Thread.Sleep(ExponentialBackoff.DefaultBackoff); //wait for the update to finish
+				Thread.Sleep(Backoff.DefaultBackoff); //wait for the update to finish
 			}
 			try
 			{

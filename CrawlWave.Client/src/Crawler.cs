@@ -111,7 +111,7 @@ namespace CrawlWave.Client
 		// The threads that will be used to perform the crawling
 		private Thread []crawlingThreads;
 		// Will be used to determine the delay between requests after a failure
-		private ExponentialBackoff syncBackOff, downloadBackOff;
+		private Backoff syncBackOff, downloadBackOff;
 		// The queue that will hold the list of InternetUrlToCrawl objects to be crawled
 		private Queue urlsToCrawl;
 		// The queue that will hold the names of the files containing the crawl results 
@@ -178,8 +178,8 @@ namespace CrawlWave.Client
 			//sendResultsThread = null;
 			synchronizeThread = null;
 			crawlingThreads = null;
-			syncBackOff = new ExponentialBackoff(BackoffSpeed.Declining, 30000);
-			downloadBackOff = new ExponentialBackoff(BackoffSpeed.Fast);
+			syncBackOff = new Backoff(BackoffSpeed.Declining, 30000);
+			downloadBackOff = new Backoff(BackoffSpeed.Fast);
 			urlsToCrawl = new Queue();
 			resultFileNames = new Queue();
 			crawledUrls = new ArrayList();
@@ -385,12 +385,12 @@ namespace CrawlWave.Client
 				//wait for all the threads to finish
 				while(urlsToCrawl.Count>0)
 				{
-					Thread.Sleep(3000);//TODO ExponentialBackoff.DefaultBackoff);
+					Thread.Sleep(3000);//TODO Backoff.DefaultBackoff);
 				}
 				mustStop = true;
 				while(runningThreads > 0)
 				{
-					Thread.Sleep(3000);//TODO ExponentialBackoff.DefaultBackoff);
+					Thread.Sleep(3000);//TODO Backoff.DefaultBackoff);
 				}
 				stopping = false;
 				//store the crawl results on disk
@@ -606,7 +606,7 @@ namespace CrawlWave.Client
 				}
 				while(!InternetUtils.ConnectedToInternet())
 				{
-					Thread.Sleep(ExponentialBackoff.DefaultBackoff);
+					Thread.Sleep(Backoff.DefaultBackoff);
 				}
 				while((!mustStop)||(stopping))
 				{
@@ -825,7 +825,7 @@ namespace CrawlWave.Client
 				}
 				while(!InternetUtils.ConnectedToInternet())
 				{
-					for(int i=0; i<ExponentialBackoff.DefaultBackoff; i+=1000)
+					for(int i=0; i<Backoff.DefaultBackoff; i+=1000)
 					{
                         Thread.Sleep(1000);
 					}
@@ -956,7 +956,7 @@ namespace CrawlWave.Client
 					return;
 				}
 				pageRequest.UserAgent = globals.UserAgent;
-				pageRequest.Timeout=ExponentialBackoff.DefaultBackoff; //page timeout = 30 seconds
+				pageRequest.Timeout=Backoff.DefaultBackoff; //page timeout = 30 seconds
 				pageRequest.KeepAlive = false;
 				HttpWebResponse pageResponse=null;
 				try
@@ -2035,17 +2035,17 @@ namespace CrawlWave.Client
 		{
 			/*if(sendResultsThread.IsAlive)
 			{
-				sendResultsThread.Join(ExponentialBackoff.DefaultBackoff);
+				sendResultsThread.Join(Backoff.DefaultBackoff);
 			}*/
 			if(synchronizeThread.IsAlive)
 			{
-				synchronizeThread.Join(ExponentialBackoff.DefaultBackoff);
+				synchronizeThread.Join(Backoff.DefaultBackoff);
 			}
 			for(int i = 0; i< numThreads; i++)
 			{
 				if(crawlingThreads[i].IsAlive)
 				{
-					crawlingThreads[i].Join(ExponentialBackoff.DefaultBackoff);
+					crawlingThreads[i].Join(Backoff.DefaultBackoff);
 				}
 			}
 		}
@@ -2070,7 +2070,7 @@ namespace CrawlWave.Client
 				try
 				{
 					sendResultsThread.Abort();
-					sendResultsThread.Join(ExponentialBackoff.DefaultBackoff);
+					sendResultsThread.Join(Backoff.DefaultBackoff);
 				}
 				catch
 				{}

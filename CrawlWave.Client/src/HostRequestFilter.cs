@@ -99,14 +99,14 @@ namespace CrawlWave.Client
 					{
 						//the entry has expired, so we can visit the host and we must
 						//update the entry
-						hostTable[hostName].ExpirationDate = DateTime.Now.AddMilliseconds(ExponentialBackoff.DefaultBackoff);
+						hostTable[hostName].ExpirationDate = DateTime.Now.AddMilliseconds(Backoff.DefaultBackoff);
 						retVal = 0;
 					}
 					else
 					{
 						//we must update the entry and calculate the appropriate delay
 						retVal = ((TimeSpan)hostEntry.ExpirationDate.Subtract(DateTime.Now)).Milliseconds;
-						hostTable[hostName].ExpirationDate.AddMilliseconds(ExponentialBackoff.DefaultBackoff);
+						hostTable[hostName].ExpirationDate.AddMilliseconds(Backoff.DefaultBackoff);
 						hostTable[hostName].Count++;
 					}
 				}

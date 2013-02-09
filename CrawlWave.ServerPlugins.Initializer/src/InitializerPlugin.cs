@@ -249,7 +249,7 @@ namespace CrawlWave.ServerPlugins.Initializer
 				//wait for all the threads to finish
 				while(runningThreads > 0)
 				{
-					Thread.Sleep(1000); //TODO: exponential backoff
+					Thread.Sleep(1000); //TODO: Backoff
 				}
 				//Stop all threads
 				StopThreads();

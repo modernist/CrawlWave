@@ -29,7 +29,7 @@ namespace CrawlWave.ServerPlugins.WordExtraction
 		private DBConnectionStringProvider dbProvider;
 		private bool mustStop;
 		private SqlConnection dbcon;
-		private ExponentialBackoff backoff;
+		private Backoff backoff;
 
 		#endregion
 
@@ -59,7 +59,7 @@ namespace CrawlWave.ServerPlugins.WordExtraction
 			}
 			wordExtractor = WordExtractor.Instance();
 			cache = WordsCache.Instance();
-			backoff = new ExponentialBackoff(BackoffSpeed.Slow, 30000);
+			backoff = new Backoff(BackoffSpeed.Slow, 30000);
 		}
 
 		#endregion

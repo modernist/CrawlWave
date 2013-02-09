@@ -134,7 +134,7 @@ namespace CrawlWave.Client
 				while(!client.mustTerminate)
 				{
 					//Wait until it's time to exit
-					Thread.Sleep(ExponentialBackoff.DefaultBackoff);
+					Thread.Sleep(Backoff.DefaultBackoff);
 					if(Environment.HasShutdownStarted)
 					{
 						break;
