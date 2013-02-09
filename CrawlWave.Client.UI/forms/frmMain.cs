@@ -1072,8 +1072,7 @@ namespace CrawlWave.Client.UI.Forms
 			this.lblProjectUrl.Name = "lblProjectUrl";
 			this.lblProjectUrl.Size = new System.Drawing.Size(288, 32);
 			this.lblProjectUrl.TabIndex = 3;
-			this.lblProjectUrl.Text = "Project info page: http://www.spiderwave.aueb.gr/ Forum: http://www.circular.gr/c" +
-				"rawlwave/forum/ ";
+			this.lblProjectUrl.Text = "Project info page: http://www.spiderwave.aueb.gr/";
 			this.lblProjectUrl.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
 			// lblProject
@@ -1104,8 +1103,8 @@ namespace CrawlWave.Client.UI.Forms
 			this.lblInfo.Name = "lblInfo";
 			this.lblInfo.Size = new System.Drawing.Size(424, 40);
 			this.lblInfo.TabIndex = 1;
-			this.lblInfo.Text = "Uses SharpZipLib, © Mike Krueger, 2001-2004, XPDF Library (http://www.foolabs.com" +
-				"/xpdf/), Macromedia\'s SWF2HTML conversion SDK.";
+			this.lblInfo.Text = "Uses SharpZipLib, XPDF Library (http://www.foolabs.com" +
+				"/xpdf/), Macromedia\'s Flash Search SDK.";
 			this.lblInfo.TextAlign = System.Drawing.ContentAlignment.TopCenter;
 			// 
 			// picAbout

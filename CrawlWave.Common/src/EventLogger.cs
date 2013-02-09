@@ -45,9 +45,7 @@ namespace CrawlWave.Common
 
 	/// <summary>
 	/// SystemEventLogger allows creating System Event Logs (available on
-	/// Windows NT/2K/XP). It could be extended in order to create a custom
-	/// XML log file, but for the time being the System Log will have to do.
-	/// Author: Kostas Stroggylos [mod], kostas@circular.gr
+	/// Windows NT class operating systems).
 	/// Written:09/05/03
 	/// Updated:24/08/2004 -> Added the ILogger implementation and thread safety measures.
 	/// </summary>
@@ -327,7 +325,6 @@ namespace CrawlWave.Common
 	/// FileEventLogger is a simple thread-safe Event Logger that uses a flat text file as
 	/// the log entries' repository. It implements the <see cref="ILogger"/> interface and
 	/// provides some extra functionality, such as Backup and automatic log truncation.
-	/// Author:	Kostas Stroggylos [mod],kostas@circular.gr
 	/// </summary>
 	public class FileEventLogger : ILogger, IDisposable
 	{

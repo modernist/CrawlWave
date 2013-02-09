@@ -28,15 +28,10 @@ namespace CrawlWave.Common
 	/// AlarmTimer is a timer that raises an event at a specified time. The alarm
 	/// stops after raising the first OnAlarmTrigger/OnAlarmBell Event. It is used
 	/// as a simple Time Scheduler in applications that need to be 'waken up' at a
-	/// given time . The AlarmTimer supports simultaneous notification of multiple
-	/// clients (observers), by implementing the Observer Design Pattern for the 2
-	/// public events it publishes (OnAlarmBell + OnAlarmTrigger). The OnAlarmBell
-	/// event is a simple event that doesn't require the use of any any delegates.
-	/// OnAlarmTrigger on the other hand uses  the AlarmTriggerEventArgs delegate,
+	/// given time. OnAlarmTrigger uses  the AlarmTriggerEventArgs delegate,
 	/// so that the clients can find out the exact time the AlarmTimer was set to.
 	/// It has a (configurable) accuracy of 1 minute which is more than enough for
 	/// the scope of this project.
-	/// Author:	Kostas Stroggylos [mod], kostas@circular.gr
 	/// Written:10/05/2003
 	/// Updated:24/08/2004 -> Added the OnAlarmBell event.
 	/// </summary>

@@ -55,7 +55,6 @@ namespace CrawlWave.Client
 	/// </para>
 	/// <para>
 	/// <b>Remarks from previous version's implementation</b><br/>
-	/// Author:	Mod<br/>
 	/// Date:	11/05/03<br/>
 	/// Update History:
 	/// <list type="table">

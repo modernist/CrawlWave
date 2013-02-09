@@ -127,10 +127,6 @@
       <Project>{8404264A-0365-4255-8463-EF5B38368C4D}</Project>
       <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
     </ProjectReference>
-    <ProjectReference Include="..\CrawlWave.Client\CrawlWave.Client.csproj">
-      <Project>{1505814E-85A9-4E2F-9321-DAC746A3545F}</Project>
-      <Name>CrawlWave.Client</Name>
-    </ProjectReference>
     <ProjectReference Include="..\CrawlWave.Common\CrawlWave.Common.csproj">
       <Name>CrawlWave.Common</Name>
       <Project>{EE9BEAEB-5D8F-40FA-AB1B-6375A49B223F}</Project>

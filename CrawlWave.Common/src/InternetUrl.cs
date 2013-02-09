@@ -9,7 +9,6 @@ namespace CrawlWave.Common
 	/// and <see cref="InternetUrlToIndex"/> classes. Its instances are used to pass Url 
 	/// information between the Client and the Server and it was one of the most important
 	/// reasons that led to the creation of this common Dynamic Link Library (dll).
-	/// Author:	Mod
 	/// Written:10/05/03
 	/// Updated:29/08/03 -&gt; Added the Implementation of IComparable because without it
 	///						the HtmlParser failed to identify whether a Url already

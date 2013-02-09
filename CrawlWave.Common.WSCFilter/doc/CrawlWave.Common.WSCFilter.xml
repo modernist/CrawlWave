@@ -4,6 +4,109 @@
         <name>CrawlWave.Common.WSCFilter</name>
     </assembly>
     <members>
+        <member name="T:CrawlWave.Common.WSCFilter.WSCFUnzipFilter">
+            <summary>
+            WSCFUnzipFilter is a filter that when added to the pipeline decompresses the body
+            element attachment and sets the result as the soap message body. The filter will
+            only do so if it finds evidence that the <see cref="T:CrawlWave.Common.WSCFilter.WSCFZipFilter"/> has been used.
+            </summary>
+            <remarks>
+            <b>Prerequisites:</b>
+            <para>
+            WSE 2.0 release installed.<br/>
+            ICSharpZipLib available and referenced.
+            </para>
+            </remarks>
+            <example>
+            Adding a Filter to the pipeline:<br/>
+            Client side (i.e. WinForms app):<br/>
+            <para>
+            <code>Server.Pipeline.InputFilters.Add(new WSCFUnzipFilter());</code>
+            </para>
+            <br/>
+            Server side (i.e Web Service / ASP.Net): add the following section to the web.config
+            file, in the &lt;microsoft.web.services2&gt; section.
+            <code>
+              &lt;filters&gt;<br/>
+            	&lt;input&gt;<br/>
+            	  &lt;add type="CrawlWave.Common.WSCFilter.WSCFUnzipFilter,CrawlWave.Common.WSCFilter" /&gt;<br/>
+            	&lt;/input&gt;<br/>
+              &lt;/filters&gt;
+            </code>
+            </example>
+        </member>
+        <member name="M:CrawlWave.Common.WSCFilter.WSCFUnzipFilter.ProcessMessage(Microsoft.Web.Services2.SoapEnvelope)">
+            <summary>
+            Processes the SOAP Messages and decompresses them if necessary
+            </summary>
+            <param name="envelope">The <see cref="T:Microsoft.Web.Services2.SoapEnvelope"/> to process.</param>
+        </member>
+        <member name="T:CrawlWave.Common.WSCFilter.WSCFZipFilter">
+            <summary>
+            WSCFZipFilter is a filter that when added to the pipeline compresses the body element
+            and adds the result as an attachment to soap message. The body element is deleted,
+            so only the compressed element is transported over the network. On the receiving
+            side the <see cref="T:CrawlWave.Common.WSCFilter.WSCFUnzipFilter"/> should be added to the pipeline
+            </summary>
+            <remarks>
+            <b>Prerequisites:</b>
+            <para>
+            WSE 2.0 release installed.
+            ICSharpZipLib available and referenced.
+            </para>
+            </remarks>
+            <example>
+            Adding a Filter to the pipeline:<br/>
+            Client side (i.e. WinForms app):<br/>
+            <para>
+            <code>Server.Pipeline.InputFilters.Add(new WSCFUnzipFilter());</code>
+            </para>
+            <br/>
+            Server side (i.e WebService / ASP.Net): add the following section to the web.config
+            file, in the &lt; microsoft.web.services2&gt; section.<br/>
+            <code>
+              &lt;filters&gt;<br/>
+            	&lt;output&gt;<br/>
+            	  &lt;add type="CrawlWave.Common.WSCFilter.WSCFZipFilter,CrawlWave.Common.WSCFilter" /&gt;<br/>
+            	&lt;/output&gt;<br/>
+              &lt;/filters&gt;
+            </code>
+            </example>
+        </member>
+        <member name="F:CrawlWave.Common.WSCFilter.WSCFZipFilter.minFilterSize">
+            <summary>
+            The minimum size of the SOAP body element for compression to be enabled
+            </summary>
+        </member>
+        <member name="F:CrawlWave.Common.WSCFilter.WSCFZipFilter.enabled">
+            <summary>
+            A flag indicating if the filter is enabled
+            </summary>
+        </member>
+        <member name="M:CrawlWave.Common.WSCFilter.WSCFZipFilter.ProcessMessage(Microsoft.Web.Services2.SoapEnvelope)">
+            <summary>
+            Processes the SOAP Messages and compresses them if necessary
+            </summary>
+            <param name="envelope">The <see cref="T:Microsoft.Web.Services2.SoapEnvelope"/> to process.</param>
+        </member>
+        <member name="M:CrawlWave.Common.WSCFilter.WSCFZipFilter.CreateCustomHeader(System.Xml.XmlElement,System.String)">
+            <summary>
+            Creates a custom Xml header to be attached in a <see cref="T:Microsoft.Web.Services2.SoapEnvelope"/>.
+            </summary>
+            <param name="header">The original <see cref="T:System.Xml.XmlElement"/> SOAP header.</param>
+            <param name="AttributeValue">The value of the header attribute.</param>
+            <returns>A new <see cref="T:System.Xml.XmlElement"/> object containing a SOAP header.</returns>
+        </member>
+        <member name="P:CrawlWave.Common.WSCFilter.WSCFZipFilter.MinFilterSizeKB">
+            <summary>
+            Gets or sets the minimum message size in KB for compression to be enabled.
+            </summary>
+        </member>
+        <member name="P:CrawlWave.Common.WSCFilter.WSCFZipFilter.Enabled">
+            <summary>
+            Gets or sets a flag indicating whether the filter is enabled.
+            </summary>
+        </member>
         <member name="T:CrawlWave.Common.WSCFilter.CompressionType">
             <summary>
             Defines an enumeration of different compression algorithms that can be used.
@@ -132,109 +235,6 @@
             <summary>
             The constant size of 1KB (2^10)
             </summary>
-        </member>
-        <member name="T:CrawlWave.Common.WSCFilter.WSCFZipFilter">
-            <summary>
-            WSCFZipFilter is a filter that when added to the pipeline compresses the body element
-            and adds the result as an attachment to soap message. The body element is deleted,
-            so only the compressed element is transported over the network. On the receiving
-            side the <see cref="T:CrawlWave.Common.WSCFilter.WSCFUnzipFilter"/> should be added to the pipeline
-            </summary>
-            <remarks>
-            <b>Prerequisites:</b>
-            <para>
-            WSE 2.0 release installed.
-            ICSharpZipLib available and referenced.
-            </para>
-            </remarks>
-            <example>
-            Adding a Filter to the pipeline:<br/>
-            Client side (i.e. WinForms app):<br/>
-            <para>
-            <code>Server.Pipeline.InputFilters.Add(new WSCFUnzipFilter());</code>
-            </para>
-            <br/>
-            Server side (i.e WebService / ASP.Net): add the following section to the web.config
-            file, in the &lt; microsoft.web.services2&gt; section.<br/>
-            <code>
-              &lt;filters&gt;<br/>
-            	&lt;output&gt;<br/>
-            	  &lt;add type="CrawlWave.Common.WSCFilter.WSCFZipFilter,CrawlWave.Common.WSCFilter" /&gt;<br/>
-            	&lt;/output&gt;<br/>
-              &lt;/filters&gt;
-            </code>
-            </example>
-        </member>
-        <member name="F:CrawlWave.Common.WSCFilter.WSCFZipFilter.minFilterSize">
-            <summary>
-            The minimum size of the SOAP body element for compression to be enabled
-            </summary>
-        </member>
-        <member name="F:CrawlWave.Common.WSCFilter.WSCFZipFilter.enabled">
-            <summary>
-            A flag indicating if the filter is enabled
-            </summary>
-        </member>
-        <member name="M:CrawlWave.Common.WSCFilter.WSCFZipFilter.ProcessMessage(Microsoft.Web.Services2.SoapEnvelope)">
-            <summary>
-            Processes the SOAP Messages and compresses them if necessary
-            </summary>
-            <param name="envelope">The <see cref="T:Microsoft.Web.Services2.SoapEnvelope"/> to process.</param>
-        </member>
-        <member name="M:CrawlWave.Common.WSCFilter.WSCFZipFilter.CreateCustomHeader(System.Xml.XmlElement,System.String)">
-            <summary>
-            Creates a custom Xml header to be attached in a <see cref="T:Microsoft.Web.Services2.SoapEnvelope"/>.
-            </summary>
-            <param name="header">The original <see cref="T:System.Xml.XmlElement"/> SOAP header.</param>
-            <param name="AttributeValue">The value of the header attribute.</param>
-            <returns>A new <see cref="T:System.Xml.XmlElement"/> object containing a SOAP header.</returns>
-        </member>
-        <member name="P:CrawlWave.Common.WSCFilter.WSCFZipFilter.MinFilterSizeKB">
-            <summary>
-            Gets or sets the minimum message size in KB for compression to be enabled.
-            </summary>
-        </member>
-        <member name="P:CrawlWave.Common.WSCFilter.WSCFZipFilter.Enabled">
-            <summary>
-            Gets or sets a flag indicating whether the filter is enabled.
-            </summary>
-        </member>
-        <member name="T:CrawlWave.Common.WSCFilter.WSCFUnzipFilter">
-            <summary>
-            WSCFUnzipFilter is a filter that when added to the pipeline decompresses the body
-            element attachment and sets the result as the soap message body. The filter will
-            only do so if it finds evidence that the <see cref="T:CrawlWave.Common.WSCFilter.WSCFZipFilter"/> has been used.
-            </summary>
-            <remarks>
-            <b>Prerequisites:</b>
-            <para>
-            WSE 2.0 release installed.<br/>
-            ICSharpZipLib available and referenced.
-            </para>
-            </remarks>
-            <example>
-            Adding a Filter to the pipeline:<br/>
-            Client side (i.e. WinForms app):<br/>
-            <para>
-            <code>Server.Pipeline.InputFilters.Add(new WSCFUnzipFilter());</code>
-            </para>
-            <br/>
-            Server side (i.e Web Service / ASP.Net): add the following section to the web.config
-            file, in the &lt;microsoft.web.services2&gt; section.
-            <code>
-              &lt;filters&gt;<br/>
-            	&lt;input&gt;<br/>
-            	  &lt;add type="CrawlWave.Common.WSCFilter.WSCFUnzipFilter,CrawlWave.Common.WSCFilter" /&gt;<br/>
-            	&lt;/input&gt;<br/>
-              &lt;/filters&gt;
-            </code>
-            </example>
-        </member>
-        <member name="M:CrawlWave.Common.WSCFilter.WSCFUnzipFilter.ProcessMessage(Microsoft.Web.Services2.SoapEnvelope)">
-            <summary>
-            Processes the SOAP Messages and decompresses them if necessary
-            </summary>
-            <param name="envelope">The <see cref="T:Microsoft.Web.Services2.SoapEnvelope"/> to process.</param>
         </member>
     </members>
 </doc>

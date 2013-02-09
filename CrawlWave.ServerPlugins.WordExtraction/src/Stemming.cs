@@ -680,7 +680,6 @@ namespace CrawlWave.ServerPlugins.WordExtraction
 	/// Stemming is a Singleton class that performs stemming on English and Greek words. The
 	/// English Stemmer has been adapted from the PHP Implementation by Jon Abernathy,
 	/// jon@chuggnutt.com (http://www.chuggnutt.com). 
-	/// Author: Kostas Stroggylos, kostas@circular.gr.
 	/// </summary>
 	public class Stemming : IStemming
 	{

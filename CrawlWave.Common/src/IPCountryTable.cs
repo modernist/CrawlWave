@@ -1,7 +1,7 @@
 // Copyright © 2003 by Jeffrey Sax
 // All rights reserved.
 // http://www.extremeoptimization.com/
-// Filename: IPCountryLookup.cs + BinaryTrie.cs //[mod]
+// Filename: IPCountryLookup.cs + BinaryTrie.cs
 // First version: April 18, 2003.
 // Changes:
 //   May 16, 2003. Replaced GetKeyLength

@@ -52,7 +52,6 @@
             </para>
             <para>
             <b>Remarks from previous version's implementation</b><br/>
-            Author:	Mod<br/>
             Date:	11/05/03<br/>
             Update History:
             <list type="table">
@@ -1580,32 +1579,6 @@
         </member>
         <member name="P:CrawlWave.Client.CrawlWave.Server.SendUserStatisticsCompletedEventArgs.stats">
             <remarks/>
-        </member>
-        <member name="T:CrawlWave.Client.Forms.Form1">
-            <summary>
-            Summary description for Form1.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.Client.Forms.Form1.#ctor">
-            <summary>
-            Main Form
-            </summary>
-        </member>
-        <member name="M:CrawlWave.Client.Forms.Form1.Dispose(System.Boolean)">
-            <summary>
-            Clean up any resources being used.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.Client.Forms.Form1.InitializeComponent">
-            <summary>
-            Required method for Designer support - do not modify
-            the contents of this method with the code editor.
-            </summary>
-        </member>
-        <member name="M:CrawlWave.Client.Forms.Form1.test">
-            <summary>
-            The main entry point for the application.
-            </summary>
         </member>
         <member name="T:CrawlWave.Client.ParserEventArgs">
             <summary>

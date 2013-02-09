@@ -41,7 +41,7 @@ namespace CrawlWave.ServerPlugins.Initializer
 		private int runningThreads;
 		private int totalDomains;
 		private int processedDomains;
-		private static string UserAgent = String.Intern("CrawlWave/1.2 (crawlwave[at]circular.gr http://www.spiderwave.aueb.gr/");
+		private static string UserAgent = String.Intern("CrawlWave/1.2 (crawlwave[at]spiderwave.aueb.gr http://www.spiderwave.aueb.gr/");
 		private static string domain = ".gr";
 		private static string http = "http";
 		private static string httpscheme = "http://";

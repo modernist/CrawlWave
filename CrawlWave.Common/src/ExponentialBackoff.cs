@@ -35,7 +35,6 @@ namespace CrawlWave.Common
 	/// ExponentialBackoff provides easy access to Exponential Backoff functions. It is
 	/// used whenever there is need for a method that provides delay intervals (in msec)
 	/// based on the number of calls (that correspond to the number of failed attempts).
-	/// Author:	Kostas Stroggylos [mod], kostas@circular.gr
 	/// Written:10/07/2003
 	/// Updated:24/08/2004 -&gt; Changed variable names, added comments, general revision.
 	///			15/11/2004 -&gt; Added support for declining function.

@@ -7,7 +7,6 @@ using System.Threading;
 using System.Windows.Forms;
 using Microsoft.Win32;
 using CrawlWave;
-using CrawlWave.Client.Forms;
 using CrawlWave.Common;
 
 namespace CrawlWave.Client

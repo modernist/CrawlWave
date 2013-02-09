@@ -75,7 +75,7 @@ namespace CrawlWave.Client
 		private Globals()
 		{
 			//Initialize the variables. Interning the strings saves us some memory.
-			userAgent = String.Intern("CrawlWave/1.2 (crawlwave[at]circular.gr http://www.spiderwave.aueb.gr/");
+			userAgent = String.Intern("CrawlWave/1.2 (crawlwave[at]spiderwave.aueb.gr http://www.spiderwave.aueb.gr/");
 			string path = GetAppPath();
 			try
 			{

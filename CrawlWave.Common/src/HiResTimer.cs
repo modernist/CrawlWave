@@ -7,9 +7,9 @@ namespace CrawlWave.Common
 	/// The provided method returns results with accuracy of milliseconds.
 	/// It is currently being used by the Crawler class of the Client to
 	/// measure the time that it took for the data of a url to be downloaded.
-	/// Author:	Kostas Stroggylos [mod], kostas@circular.gr
 	/// Written:05/07/2003
 	/// Updated:24/08/2004 -&gt; General revision, better comments and naming conventions.
+    /// TODO: Replace by StopWatch
 	/// </summary>
 	public class HiResTimer
 	{

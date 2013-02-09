@@ -184,9 +184,6 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="forms\Form1.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -241,9 +238,6 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
     </Compile>
-    <EmbeddedResource Include="forms\Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
-    </EmbeddedResource>
     <Content Include="icons\App.ico" />
     <WebReferenceUrl Include="http://localhost/CrawlWave.Server/CrawlWaveServer.asmx">
       <RelPath>Web References\CrawlWave.Server\</RelPath>

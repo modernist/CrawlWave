@@ -97,7 +97,7 @@ namespace CrawlWave.ServerManager.Forms
 			this.lblCopyright.Name = "lblCopyright";
 			this.lblCopyright.Size = new System.Drawing.Size(208, 24);
 			this.lblCopyright.TabIndex = 3;
-			this.lblCopyright.Text = "© Kostas Stroggylos 2003-2004 MScIS";
+			this.lblCopyright.Text = "© Kostas Stroggylos 2003-2004";
 			this.lblCopyright.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
 			// lblVersion

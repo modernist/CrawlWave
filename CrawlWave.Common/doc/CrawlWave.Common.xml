@@ -360,9 +360,9 @@
             The provided method returns results with accuracy of milliseconds.
             It is currently being used by the Crawler class of the Client to
             measure the time that it took for the data of a url to be downloaded.
-            Author:	Kostas Stroggylos [mod], kostas@circular.gr
             Written:05/07/2003
             Updated:24/08/2004 -&gt; General revision, better comments and naming conventions.
+            TODO: Replace by StopWatch
             </summary>
         </member>
         <member name="M:CrawlWave.Common.HiResTimer.#ctor">
@@ -705,7 +705,6 @@
             ExponentialBackoff provides easy access to Exponential Backoff functions. It is
             used whenever there is need for a method that provides delay intervals (in msec)
             based on the number of calls (that correspond to the number of failed attempts).
-            Author:	Kostas Stroggylos [mod], kostas@circular.gr
             Written:10/07/2003
             Updated:24/08/2004 -&gt; Changed variable names, added comments, general revision.
             		15/11/2004 -&gt; Added support for declining function.
@@ -937,15 +936,10 @@
             AlarmTimer is a timer that raises an event at a specified time. The alarm
             stops after raising the first OnAlarmTrigger/OnAlarmBell Event. It is used
             as a simple Time Scheduler in applications that need to be 'waken up' at a
-            given time . The AlarmTimer supports simultaneous notification of multiple
-            clients (observers), by implementing the Observer Design Pattern for the 2
-            public events it publishes (OnAlarmBell + OnAlarmTrigger). The OnAlarmBell
-            event is a simple event that doesn't require the use of any any delegates.
-            OnAlarmTrigger on the other hand uses  the AlarmTriggerEventArgs delegate,
+            given time. OnAlarmTrigger uses  the AlarmTriggerEventArgs delegate,
             so that the clients can find out the exact time the AlarmTimer was set to.
             It has a (configurable) accuracy of 1 minute which is more than enough for
             the scope of this project.
-            Author:	Kostas Stroggylos [mod], kostas@circular.gr
             Written:10/05/2003
             Updated:24/08/2004 -> Added the OnAlarmBell event.
             </summary>
@@ -1002,7 +996,6 @@
             and <see cref="T:CrawlWave.Common.InternetUrlToIndex"/> classes. Its instances are used to pass Url 
             information between the Client and the Server and it was one of the most important
             reasons that led to the creation of this common Dynamic Link Library (dll).
-            Author:	Mod
             Written:10/05/03
             Updated:29/08/03 -&gt; Added the Implementation of IComparable because without it
             					the HtmlParser failed to identify whether a Url already
@@ -1591,9 +1584,7 @@
         <member name="T:CrawlWave.Common.SystemEventLogger">
             <summary>
             SystemEventLogger allows creating System Event Logs (available on
-            Windows NT/2K/XP). It could be extended in order to create a custom
-            XML log file, but for the time being the System Log will have to do.
-            Author: Kostas Stroggylos [mod], kostas@circular.gr
+            Windows NT class operating systems).
             Written:09/05/03
             Updated:24/08/2004 -> Added the ILogger implementation and thread safety measures.
             </summary>
@@ -1665,7 +1656,6 @@
             FileEventLogger is a simple thread-safe Event Logger that uses a flat text file as
             the log entries' repository. It implements the <see cref="T:CrawlWave.Common.ILogger"/> interface and
             provides some extra functionality, such as Backup and automatic log truncation.
-            Author:	Kostas Stroggylos [mod],kostas@circular.gr
             </summary>
         </member>
         <member name="M:CrawlWave.Common.FileEventLogger.#ctor(System.String,System.Boolean,System.Boolean,System.String)">
