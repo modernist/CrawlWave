@@ -121,7 +121,7 @@
     <Compile Include="src\Exceptions.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="src\ExponentialBackoff.cs">
+    <Compile Include="src\Backoff.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="src\FtpWebRequest.cs">
